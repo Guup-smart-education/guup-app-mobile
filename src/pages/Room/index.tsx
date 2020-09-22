@@ -62,12 +62,16 @@ export default ({navigation}: PropsApp) => {
       <ClassRoomData>
         <ClassRoomHeader>
           <ClassRoomTitle>
-            <Text preset="label" color="darkGrey">Development & TI</Text>
+            <Text preset="label" color="darkGrey">
+              Development & TI
+            </Text>
             <Separator size="lili" />
             <Text preset="title">Intro to development</Text>
           </ClassRoomTitle>
           <ClassRoomInfo>
-            <Text preset="title" bold color="primary">0%</Text>
+            <Text preset="title" bold color="primary">
+              0%
+            </Text>
             <Separator size="lili" />
             <Icon source="heart" tintColor="dark" />
             {/* <Action onPress={() => toggleAcordion(!acordion)}>
@@ -80,9 +84,9 @@ export default ({navigation}: PropsApp) => {
           <Text lineHeight={28}>
             {' '}
             Learn the basics of programming through HTML, CSS, and Python.
-            Explore possible programming paths with our final project
-            selection. Get confident in your ability to think and
-            problem-solve like a programmer.
+            Explore possible programming paths with our final project selection.
+            Get confident in your ability to think and problem-solve like a
+            programmer.
           </Text>
         </ClassRoomBody>
         {/* {acordion && (

@@ -17,10 +17,26 @@ import ProfileCourses from './Courses';
 import ProfileReviews from './Reviews';
 
 const TAB_LINKS = [
-  {id: GetUniqueId(), name: 'bio', label: 'Bio', active: true, component: ProfileBio},
+  {
+    id: GetUniqueId(),
+    name: 'bio',
+    label: 'Bio',
+    active: true,
+    component: ProfileBio,
+  },
   {id: GetUniqueId(), name: 'posts', label: 'Posts', component: ProfilePosts},
-  {id: GetUniqueId(), name: 'courses', label: 'Courses', component: ProfileCourses},
-  {id: GetUniqueId(), name: 'reviews', label: 'Reviews', component: ProfileReviews},
+  {
+    id: GetUniqueId(),
+    name: 'courses',
+    label: 'Courses',
+    component: ProfileCourses,
+  },
+  {
+    id: GetUniqueId(),
+    name: 'reviews',
+    label: 'Reviews',
+    component: ProfileReviews,
+  },
 ] as Array<ETabLinks>;
 
 export default ({navigation}: PropsApp) => {

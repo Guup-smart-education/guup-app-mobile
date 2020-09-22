@@ -7,6 +7,7 @@ export enum ESize {
   'small' = 'small',
   'medium' = 'medium',
   'large' = 'large',
+  'xLarge' = 'xLarge',
   'extraLarge' = 'extraLarge',
   'bigger' = 'bigger',
 }

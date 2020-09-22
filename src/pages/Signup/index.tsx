@@ -1,4 +1,5 @@
 import React, {useContext, useState, useEffect} from 'react';
+import {Alert} from 'react-native';
 import nextId from 'react-id-generator';
 import AuthContext from './../../contexts/auth';
 import {Separator, FormContainer, RowFullWidth} from './../../ui';
@@ -16,23 +17,31 @@ import {useForm} from 'react-hook-form';
 import {SignUpValidation} from './../../validations';
 import {SignupFormData} from './../../@types/forms.data';
 import FormSignup from './../../forms/form.signup';
+import {EnumUserRole, useAuthSignUpMutation} from './../../graphql/types.d';
 
 const SignSteps =
   'Opa!! fala teu nome para mim, eu gostaria de saber quem é você';
 
 const SignUpScreen: React.FC<PropsAuth> = ({navigation}) => {
-  const {signUp, loading} = useContext(AuthContext);
+  const {
+    provisionAccess: {user},
+    setSession,
+  } = useContext(AuthContext);
+  const [
+    requestSignUp,
+    {data: signupData, error: signupError, loading},
+  ] = useAuthSignUpMutation();
   const {handleSubmit, register, setValue, errors} = useForm<SignupFormData>({
     validationSchema: SignUpValidation,
     validateCriteriaMode: 'all',
     defaultValues: {
       username: undefined,
-      email: undefined,
       phone: undefined,
     },
   });
+  const formLength = FormSignup.length;
+  const [botMessage, setBotMessage] = useState<string | null>(null);
   const [step, setStep] = useState(0);
-  const [currentInput, setCurrentInput] = useState('');
   const nextStep: () => void = () => {
     if (step === FormSignup.length - 1) {
       return false;
@@ -46,26 +55,44 @@ const SignUpScreen: React.FC<PropsAuth> = ({navigation}) => {
     }
     setStep(step - 1);
   };
-
+  const signUp = ({phone, username}: SignupFormData) => {
+    console.log('signUp: phone', phone, 'username: ', username);
+    requestSignUp({
+      variables: {
+        email: user,
+        phone,
+        username,
+        role: EnumUserRole.Common,
+      },
+    });
+  };
   useEffect(() => {
     register({name: 'username'});
-    register({name: 'email'});
     register({name: 'phone'});
   }, [register]);
 
   useEffect(() => {
-    const inp = FormSignup[step].name;
-    console.log('Current input -> ', inp);
-    console.log('Current errors -> ', errors);
-    setCurrentInput(inp);
-  }, [step]);
+    if (signupData) {
+      const {authSignUp} = signupData;
+      if (authSignUp.__typename === 'ErrorResponse') {
+        setBotMessage(authSignUp.error.message || 'Opps!! Aconteceu um erro');
+      } else if (authSignUp.__typename === 'SignUpSuccess') {
+        setSession(
+          JSON.stringify(authSignUp.user),
+          authSignUp.access?.token || '',
+        );
+      }
+    } else if (signupError) {
+      setBotMessage(signupError.message || 'Opps!! Aconteceu um erro');
+    }
+  }, [signupData, signupError, setSession]);
 
   return (
     <KeyboardBlock hasKeyboardDismiss={false}>
       <FormContainer>
         <Separator size="bigger" />
         <RowFullWidth padding={50}>
-          <GuupBot message={SignSteps} />
+          <GuupBot message={botMessage || SignSteps} />
         </RowFullWidth>
         <Separator size="bigger" />
         <ContainerInputs>
@@ -75,7 +102,9 @@ const SignUpScreen: React.FC<PropsAuth> = ({navigation}) => {
             enabled={false}
             page={step}
             paging>
-            <SmartForm {...{register, setValue, errors, currentInput: step}}>
+            <SmartForm
+              {...{register, setValue, errors, currentInput: step}}
+              autoFocus>
               {FormSignup.map((i) => {
                 return (
                   <SmartInput
@@ -97,8 +126,8 @@ const SignUpScreen: React.FC<PropsAuth> = ({navigation}) => {
         }}
         rightAction={{
           disable: false,
-          text: step === 2 ? 'Enviar' : 'Próximo',
-          onPress: step === 2 ? handleSubmit(signUp) : nextStep,
+          text: step >= formLength - 1 ? 'Enviar' : 'Próximo',
+          onPress: step >= formLength - 1 ? handleSubmit(signUp) : nextStep,
         }}
       />
     </KeyboardBlock>

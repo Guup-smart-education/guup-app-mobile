@@ -5,6 +5,7 @@ export enum EAuth {
   'AuthSignIn' = 'AuthSignIn',
   'AuthOnboarding' = 'AuthOnboarding',
   'AuthSignUp' = 'AuthSignUp',
+  'AuthAccess' = 'AuthAccess',
   'AuthWaiting' = 'AuthWaiting',
 }
 
@@ -12,6 +13,11 @@ export type RootAuth = {
   AuthSignIn: undefined;
   AuthOnboarding: undefined;
   AuthSignUp: undefined;
+  AuthAccess: {
+    email: string;
+    expireIn: number | null | undefined;
+    token?: string;
+  };
   AuthWaiting: {
     image?: Blob;
     title?: string;
@@ -20,7 +26,7 @@ export type RootAuth = {
   };
 };
 
-export type AuthScreenRouteProp = RouteProp<RootAuth, 'AuthWaiting'>;
+export type AuthScreenRouteProp = RouteProp<RootAuth, 'AuthAccess'>;
 
 export type AuthScreenNavigationProp = StackNavigationProp<
   RootAuth,

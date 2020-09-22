@@ -1,21 +1,33 @@
 import React from 'react';
-import {Icon, Action} from './../ui';
+import {Icon, Action, Text} from './../ui';
 import {PropsApp} from './../@types/app.navigation';
+import {StackNavigationOptions} from '@react-navigation/stack';
 
-export const StackOption = {
+export const StackOption = ({
+  navigation,
+}: PropsApp): StackNavigationOptions => ({
   headerLeftContainerStyle: {paddingLeft: 25},
   headerRightContainerStyle: {paddingRight: 25},
   headerTransparent: false,
-  headerLeft: () => <Icon source="profile" />,
-  headerTitle: () => <Icon source="guup" />,
-  headerRight: () => <Icon source="search" />,
+  headerLeft: () => <Icon source="guup" />,
+  headerTitle: () => null,
+  headerRight: () => (
+    <Action onPress={() => navigation.navigate('GuupNews')}>
+      <Text preset="comment" bold underline>
+        criar conteudo +
+      </Text>
+    </Action>
+  ),
   headerTitleAlign: 'center',
   headerStyle: {
     elevation: 0,
+    backgroundColor: '#F6F6F6',
   },
-};
+});
 
-export const StackBackOption = ({navigation: {goBack}}: PropsApp) => ({
+export const StackBackOption = ({
+  navigation: {goBack},
+}: PropsApp): StackNavigationOptions => ({
   headerLeftContainerStyle: {paddingLeft: 25},
   headerRightContainerStyle: {paddingRight: 25},
   headerTransparent: false,
@@ -33,7 +45,7 @@ export const StackBackOption = ({navigation: {goBack}}: PropsApp) => ({
 
 export const StackBackOptionTransparent = ({
   navigation: {goBack},
-}: PropsApp) => ({
+}: PropsApp): StackNavigationOptions => ({
   headerLeftContainerStyle: {paddingLeft: 25},
   headerRightContainerStyle: {paddingRight: 25},
   headerTransparent: true,

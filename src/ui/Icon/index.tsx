@@ -1,5 +1,5 @@
 import React from 'react';
-import {ImageProps} from 'react-native';
+import {ImageProps, ImageURISource} from 'react-native';
 import {Icon} from './_styled';
 import {EIcons} from './../../@enum/icons.enum';
 import {EColors} from './../../@enum/color.enum';

@@ -19,3 +19,4 @@ export {default as CommentBot} from './CommentBot';
 export {default as CourseCover} from './CourseCover';
 export {default as ModuleLesson} from './Lesson';
 export {default as VideoPlayer} from './VideoPlayer';
+export {default as InputToken} from './InputToken';

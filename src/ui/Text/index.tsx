@@ -22,7 +22,7 @@ export enum EWeight {
   'seminBold' = 'seminBold',
 }
 
-export type IProps = {
+export interface IProps {
   children?: ReactNode;
   preset?: keyof typeof EPreset;
   weight?: keyof typeof EWeight;
@@ -32,8 +32,10 @@ export type IProps = {
   color?: keyof typeof EColors;
   lineHeight?: number;
   underline?: boolean;
-};
+}
 
 export default ({children, ...args}: IProps) => (
-  <Text {...args}>{children}</Text>
+  <Text {...args} allowFontScaling={false}>
+    {children}
+  </Text>
 );

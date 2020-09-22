@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import {Alert} from 'react-native';
 import {Text, Link} from './../../ui';
 import {GetUniqueId} from './../../helper';
 import {PostComment} from './../../components';
@@ -11,7 +10,6 @@ import {
   CommentsDetail,
   CommentsContent,
   CommentsActions,
-  CommentsList,
   FooterContainer,
   CommentsEmpty,
 } from './_styled';
@@ -28,7 +26,6 @@ const CommentsScreen: React.FC<PropsApp> = () => {
       ownerName: 'Marcos Rodriguez',
       ownerProsiffion: 'Javascript ENginner at Vivo',
     },
-    menu: true,
     showComments: true,
     comments: 15,
     postComment:
@@ -48,7 +45,7 @@ const CommentsScreen: React.FC<PropsApp> = () => {
       </CommentsContent>
       <FooterContainer>
         <CommentsActions>
-          <Link onPress={() => toggleComment()} color="ligth">
+          <Link onPress={() => toggleComment()} color="contrast">
             Faça um comentario
           </Link>
         </CommentsActions>

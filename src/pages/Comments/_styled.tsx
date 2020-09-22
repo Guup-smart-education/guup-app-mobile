@@ -40,7 +40,7 @@ export const CommentsList = styled.ScrollView`
 
 export const FooterContainer = styled.View`
   width: 100%;
-  background-color: ${({theme}) => theme.colors.secondary};
+  background-color: ${({theme}) => theme.colors.dark};
   min-height: ${Dimensions.get('screen').width / 4 + 'px'};
   padding-top: ${({theme}) => theme.spacing.padding[15]};
   padding-left: ${({theme}) => theme.spacing.padding[25]};

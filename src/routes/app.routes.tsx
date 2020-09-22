@@ -32,11 +32,12 @@ const HomeRouter: React.FC = () => {
     <AppTabStack.Navigator
       initialRouteName="GuupExplorer"
       tabBarOptions={{
-        activeTintColor: theme.colors.primary,
-        inactiveTintColor: theme.colors.dark,
+        activeTintColor: theme.colors.contrast,
+        inactiveTintColor: theme.colors.darkGrey,
         showLabel: false,
         style: {
-          borderTopColor: `${theme.colors.veryLigthGrey}`,
+          backgroundColor: `${theme.colors.dark}`,
+          borderTopColor: `${theme.colors.dark}`,
           borderTopWidth: 1.5,
           elevation: 0,
         },

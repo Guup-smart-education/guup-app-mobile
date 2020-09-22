@@ -1,5 +1,13 @@
-import React, {useState, ReactNode, ReactType, useRef, useEffect} from 'react';
-import {ScrollView} from 'react-native';
+import React, {
+  useState,
+  ReactNode,
+  ReactType,
+  useRef,
+  useEffect,
+  Children,
+  cloneElement,
+} from 'react';
+import {ScrollView, Animated, FlatList} from 'react-native';
 import nextId from 'react-id-generator';
 import {
   CarouselContainer,
@@ -24,6 +32,7 @@ interface IProps {
   dotsPosition?: keyof typeof EDotsPosition;
   horizontalPadding?: boolean;
   footerAction?: ReactNode;
+  scrollX?: Animated.Value;
 }
 
 const Carousel: React.FC<IProps> = ({
@@ -36,6 +45,7 @@ const Carousel: React.FC<IProps> = ({
   dotsPosition = 'center',
   horizontalPadding = false,
   footerAction,
+  scrollX,
 }) => {
   const carouselRef = useRef<ScrollView>(null);
   const dots = [...Array.from(Array(size).keys())];
@@ -71,6 +81,7 @@ const Carousel: React.FC<IProps> = ({
   return (
     <>
       <CarouselContainer
+        as={Animated.ScrollView}
         ref={carouselRef}
         keyboardDismissMode="on-drag"
         keyboardShouldPersistTaps="always"
@@ -82,10 +93,17 @@ const Carousel: React.FC<IProps> = ({
         onContentSizeChange={init}
         onMomentumScrollEnd={onScrollEnd}
         scrollEnabled={enabled}
+        onScroll={
+          scrollX &&
+          Animated.event([{nativeEvent: {contentOffset: {x: scrollX}}}], {
+            useNativeDriver: true,
+          })
+        }
         snapToAlignment="start"
         // snapToInterval={2}
         // snapToOffsets={[1, 2, 3]}
         pagingEnabled
+        renderToHardwareTextureAndroid
         {...{horizontalPadding}}>
         {children}
       </CarouselContainer>

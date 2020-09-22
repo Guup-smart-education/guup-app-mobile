@@ -1,0 +1,38 @@
+mutation authSignUp(
+  $email: String!
+  $phone: String!
+  $username: String!
+  $role: EnumUserRole!
+) {
+  authSignUp(
+    user: {
+      email: $email
+      phoneNumber: $phone
+      displayName: $username
+      role: $role
+    }
+  ) {
+    ... on SignUpSuccess {
+      access {
+        token
+        refreshToken
+      }
+      user {
+        uid
+        displayName
+        photoURL
+        profission
+        presentation
+      }
+      success {
+        message
+      }
+    }
+    ... on ErrorResponse {
+      error {
+        type
+        message
+      }
+    }
+  }
+}

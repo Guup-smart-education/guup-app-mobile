@@ -15,6 +15,8 @@ export const Separator = styled.View<IProps>`
         return theme.spacing[25];
       case ESize.large:
         return theme.spacing[30];
+      case ESize.xLarge:
+        return theme.spacing[35];
       case ESize.extraLarge:
         return theme.spacing[40];
       default:

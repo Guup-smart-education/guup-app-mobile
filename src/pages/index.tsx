@@ -1,6 +1,7 @@
 export {default as Onboarding} from './Onboarding';
 export {default as SignIn} from './Signin';
 export {default as SignUp} from './Signup';
+export {default as Access} from './Access';
 export {default as Home} from './Home';
 export {default as Waiting} from './Waiting';
 export {default as GuupExplorer} from './Explorer';

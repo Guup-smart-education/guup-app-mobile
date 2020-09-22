@@ -12,12 +12,13 @@ export const InputComponent = styled.TextInput.attrs(({theme}) => ({
   border-radius: ${({theme}) => theme.borderRadius[12]};
   color: ${({theme}) => theme.colors.dark};
   font-family: ${({theme}) => theme.fontFamily};
-  font-size: ${({theme}) => theme.fontSize.medium};
-  font-weight: ${({theme}) => theme.fontWeight.semiBold};
+  font-size: ${({theme}) => theme.fontSize.regular};
+  font-weight: ${({theme}) => theme.fontWeight.regular};
   padding-left: ${({theme}) => theme.spacing.padding[25]};
   padding-right: ${({theme}) => theme.spacing.padding[25]};
   padding-bottom: ${({theme}) => theme.spacing.padding[25]};
   padding-top: ${({theme}) => theme.spacing.padding[25]};
+  line-height: ${({theme}) => theme.spacing.lineHeigth.l24};
   width: 100%;
 `;
 

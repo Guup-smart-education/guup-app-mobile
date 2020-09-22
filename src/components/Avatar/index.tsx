@@ -9,9 +9,9 @@ export enum ESizes {
 
 export type IProps = {
   size?: keyof typeof ESizes;
-  image?: Blob;
-  firstText?: string | undefined;
-  secondText?: string | undefined;
+  image?: string | undefined | null;
+  firstText?: string | undefined | null;
+  secondText?: string | undefined | null;
 };
 
 export default ({
@@ -23,10 +23,10 @@ export default ({
   return (
     <AvatarContainer>
       <AvatarLeft>
-        <Avatarimage size={size} source={image} />
+        <Avatarimage size={size} source={{uri: image}} />
       </AvatarLeft>
       <AvatarRight>
-        <Text preset="paragraph" bold>
+        <Text preset="comment" bold>
           {firstText}
         </Text>
         <Text preset="label" color="darkGrey" light>

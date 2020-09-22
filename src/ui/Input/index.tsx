@@ -19,16 +19,12 @@ const CustomInput = forwardRef<any, IProps>(
     return (
       <InputWrapper>
         <InputComponent
-          {...args}
-          ref={ref}
-          // value={value}
-          autoCorrect={autoCorrect}
+          {...{...args, ref, autoCorrect}}
           autoCapitalize="none"
-          // onChangeText={(val) => setValue(val)}
         />
         <FlagError>
           <Text color="primary" preset="label" center bold>
-            Error - {error?.message}
+            {error?.message}
           </Text>
         </FlagError>
       </InputWrapper>

@@ -9,5 +9,6 @@ export interface SmartFormProps {
   register: ({name}: {name: string}) => void;
   errors: ErrorMap;
   currentInput?: number;
+  autoFocus?: boolean;
   setValue: (name: string, value: string, validate?: boolean) => void;
 }

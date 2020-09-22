@@ -1,11 +1,12 @@
 import React, {ReactNode} from 'react';
-import {TouchableWithoutFeedback, ActivityIndicator} from 'react-native';
-import {LinkWrapper, Link} from './_styled';
+import {TouchableWithoutFeedback} from 'react-native';
+import {LinkWrapper, Link, LinkOverlay, LinkLoadingIndicator} from './_styled';
 
 export enum EColors {
   'ligth' = 'ligth',
   'dark' = 'dark',
   'primary' = 'primary',
+  'contrast' = 'contrast',
 }
 
 export enum EPreset {
@@ -38,7 +39,12 @@ export default ({
         <Link {...{...args, loading, disable}}>{children}</Link>
       ) : (
         <LinkWrapper {...{...args, preset, loading, disable}}>
-          <Link {...{...args, preset}}>{children}</Link>
+          {loading && (
+            <LinkOverlay>
+              <LinkLoadingIndicator size="small" />
+            </LinkOverlay>
+          )}
+          <Link {...{...args, preset, loading}}>{children}</Link>
         </LinkWrapper>
       )}
     </TouchableWithoutFeedback>

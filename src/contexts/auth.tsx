@@ -1,35 +1,49 @@
 import React, {createContext, useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
-import {authSignin, authSignup} from './../services/auth';
-import {SigninFormData, SignupFormData} from './../@types/forms.data';
-import {WaitingPage} from './../@enum/waiting.enum';
 
+interface IProvisionAccess {
+  user: string;
+  accessToken: string;
+}
 interface AuthContextData {
   appLoading: boolean;
-  loading: boolean;
-  waitingPage: keyof typeof WaitingPage | undefined;
   signed: boolean;
+  provisionAccess: IProvisionAccess;
+  accessToken: string | null;
   user: object | null;
-  signIn: (data: SigninFormData) => Promise<void>;
-  signUp: (data: SignupFormData) => Promise<void>;
+  siginDisable: number;
   signOut: () => void;
-  goHome: () => Promise<void>;
+  setSession: (user: string, accessToken: string) => void;
+  setProvissionAccess: (user: string, accessToken: string) => void;
+  setSigninDisable: (locked: number) => void;
 }
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 export const AuthProvider: React.FC = ({children}) => {
+  // States
   const [user, setUser] = useState<object | null>(null);
+  const [provisionAccess, setProvisionAccess] = useState<IProvisionAccess>({});
+  const [signed, setSigned] = useState<boolean>(false);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
   const [appLoading, setAppLoading] = useState<boolean>(true);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [waitingPage, setWaitingPage] = useState<keyof typeof WaitingPage>();
-
+  const [siginDisable, setSiginDisable] = useState<number>(0);
+  // Effects
   useEffect(() => {
     (async () => {
       const storageUser = await AsyncStorage.getItem('@GUUPAuth:user');
       const storageToken = await AsyncStorage.getItem('@GUUPAuth:token');
+      const disable = await AsyncStorage.getItem('@GUUPAuth:signinDisable');
+      console.log('useEffect storageUser', storageUser);
+      console.log('useEffect storageToken', storageToken);
+      if (disable) {
+        // TODO: Adicionar limitador de solicitudes
+        setSiginDisable(parseInt(disable, 0));
+      }
       if (storageUser && storageToken) {
         setUser(JSON.parse(storageUser));
+        setAccessToken(storageToken);
+        setSigned(true);
       }
       await new Promise((resolve) =>
         setTimeout(() => {
@@ -38,45 +52,47 @@ export const AuthProvider: React.FC = ({children}) => {
       );
       setAppLoading(false);
     })();
-  }, []);
-  const signIn = async (data: SigninFormData) => {
-    setLoading(true);
-    const response = await authSignin();
-    setLoading(false);
-    return response;
-  };
-  const signUp = async (data: SignupFormData) => {
-    setLoading(true);
-    await authSignup();
-    setWaitingPage('signup');
-    setLoading(false);
-  };
+  }, [signed]);
   const signOut = () => {
-    AsyncStorage.clear().then(() => setUser(null));
+    AsyncStorage.clear().then(() => {
+      setUser(null);
+      setAccessToken(null);
+      setSigned(false);
+    });
   };
-  const goHome = async () => {
-    setLoading(true);
-    const response = {
-      user: {name: 'Kelvin Arnold', email: 'kelvin.arnold@guup.com'},
-      token: 'kelsjdjsdi293s=sksdamccl-asd-33232',
-    };
-    setUser(response.user);
-    await AsyncStorage.setItem('@GUUPAuth:user', JSON.stringify(response.user));
-    await AsyncStorage.setItem('@GUUPAuth:token', response.token);
-    setLoading(false);
+  const setSession = (user: string, accessToken: string) => {
+    AsyncStorage.setItem('@GUUPAuth:user', JSON.stringify(user));
+    AsyncStorage.setItem('@GUUPAuth:token', accessToken);
+    setSigned(true);
+  };
+  const setProvissionAccess = (user: string, accessToken: string) => {
+    setProvisionAccess({
+      user,
+      accessToken,
+    });
+  };
+  const setSigninDisable = (locked: number) => {
+    const count = locked >= 0 ? locked : 30;
+    if (count < 0) {
+      AsyncStorage.removeItem('@GUUPAuth:signinDisable');
+    } else {
+      AsyncStorage.setItem('@GUUPAuth:signinDisable', `${count}`);
+    }
+    setSiginDisable(count);
   };
   return (
     <AuthContext.Provider
       value={{
         appLoading,
-        loading,
-        waitingPage,
-        signed: !!user,
+        signed,
+        provisionAccess,
         user,
-        signIn,
+        accessToken,
+        siginDisable,
         signOut,
-        signUp,
-        goHome,
+        setSession,
+        setProvissionAccess,
+        setSigninDisable,
       }}>
       {children}
     </AuthContext.Provider>

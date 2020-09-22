@@ -1,0 +1,17 @@
+mutation authRequestAccess($email: String!) {
+  authRequestAccess(email: $email) {
+    __typename
+    ... on RequestAccess {
+      expireIn
+      success {
+        message
+      }
+    }
+    ... on ErrorResponse {
+      error {
+        type
+        message
+      }
+    }
+  }
+}

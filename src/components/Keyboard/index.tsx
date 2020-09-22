@@ -8,7 +8,7 @@ interface IProps {
   children: ReactNode;
   hasKeyboardDismiss?: boolean;
   paddingPageSheet?: boolean;
-};
+}
 
 export default ({
   hasKeyboardDismiss = true,

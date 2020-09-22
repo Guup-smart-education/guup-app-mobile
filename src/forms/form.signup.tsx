@@ -9,17 +9,12 @@ enum inputs {
 export default [
   {
     name: inputs.username,
-    placeholder: 'Como eu posso te chamar?',
+    placeholder: 'Me fala teu nome?',
     keyboardType: 'default',
   },
   {
-    name: inputs.email,
-    placeholder: 'Aqui seu e-mail',
-    keyboardType: 'email-address',
-  },
-  {
     name: inputs.phone,
-    placeholder: 'Digite seu telefone aqui',
+    placeholder: 'E teu telefone?',
     keyboardType: 'number-pad',
   },
 ] as Array<SmartInputProps>;

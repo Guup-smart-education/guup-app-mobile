@@ -5,13 +5,14 @@ import {Text, Separator} from './../../ui';
 export type Props = {
   readonly image?: Blob;
   readonly message?: string;
+  readonly error?: boolean;
 };
 
-const GuupBot: React.FC<Props> = ({image, message}) => {
+const GuupBot: React.FC<Props> = ({image, message, error}) => {
   return (
     <BotContainer>
-      <BotImage source={image} />
-      <Separator size="extraLarge" />
+      <BotImage source={image} {...{error}} />
+      <Separator size="large" />
       <BotMessage>
         <Text preset="chat" center>
           {message}

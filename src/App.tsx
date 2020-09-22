@@ -6,17 +6,21 @@ import {AuthProvider} from './contexts/auth';
 import {NavigationContainer} from '@react-navigation/native';
 import Routes from './routes';
 import {guupTheme} from './theme/guup.theme';
+import {ApolloProvider} from '@apollo/client';
+import {client} from './apollo/config';
 
 const App: React.FC = () => {
   return (
     <ThemeProvider theme={guupTheme}>
-      <SafeAreaProvider>
-        <NavigationContainer>
-          <AuthProvider>
-            <Routes />
-          </AuthProvider>
-        </NavigationContainer>
-      </SafeAreaProvider>
+      <ApolloProvider {...{client}}>
+        <SafeAreaProvider>
+          <NavigationContainer>
+            <AuthProvider>
+              <Routes />
+            </AuthProvider>
+          </NavigationContainer>
+        </SafeAreaProvider>
+      </ApolloProvider>
     </ThemeProvider>
   );
 };

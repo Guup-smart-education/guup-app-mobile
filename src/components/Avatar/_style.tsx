@@ -12,9 +12,7 @@ export const AvatarLeft = styled.View`
 
 export const AvatarRight = styled.View``;
 
-export const Avatarimage = styled.ImageBackground.attrs(({source}) => ({
-  source,
-}))<IProps>`
+export const Avatarimage = styled.ImageBackground<IProps>`
   height: ${({theme, size}) =>
     size === ESizes.normal ? theme.sizes.avatar[48] : theme.sizes.avatar[36]};
   width: ${({theme, size}) =>
@@ -24,4 +22,5 @@ export const Avatarimage = styled.ImageBackground.attrs(({source}) => ({
   border-top-right-radius: 24px;
   border-bottom-left-radius: 24px;
   border-bottom-right-radius: 24px;
+  overflow: hidden;
 `;

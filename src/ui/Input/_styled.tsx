@@ -6,6 +6,7 @@ export const InputWrapper = styled.View`
 
 export const InputComponent = styled.TextInput.attrs(({theme}) => ({
   placeholderTextColor: theme.colors.ligthGrey,
+  allowFontScaling: false,
 }))`
   height: 65px;
   border-radius: ${({theme}) => theme.borderRadius[12]};

@@ -1,132 +1,117 @@
-import React from 'react';
-import {View} from 'react-native';
-import {Separator} from './../../ui';
-import {CreatePost, PostComment} from './../../components';
+import React, {useEffect, useState} from 'react';
+import {FlatList, RefreshControl} from 'react-native';
+import {Separator, Text} from './../../ui';
+import {PostComment} from './../../components';
 import {NewsContainer, NewsHeader, NewsBody, NewsContent} from './_styled';
-import {PostProps} from './../../@types/post.comment';
 import {PropsApp} from './../../@types/app.navigation';
 import {GetUniqueId} from './../../helper';
+import {useGetAllPostsQuery, Post, UGetAllPost} from './../../graphql/types.d';
 
-const POSTS: Array<PostProps> = [
-  {
-    id: GetUniqueId(),
-    owner: {
-      ownerName: 'Marcos Rodriguez',
-      ownerProsiffion: 'Javascript ENginner at Vivo',
-    },
-    menu: true,
-    media: true,
-    showComments: true,
-    comments: 15,
-    postComment:
-      'Earlier this year, I decided that I was burned out in my current career as a tissue bank specialist (yes, it pays well... but the joke "I see dead people" is only clever the first 100 times you hear it).',
-  },
-  {
-    id: GetUniqueId(),
-    owner: {
-      ownerName: 'Marcos Rodriguez',
-      ownerProsiffion: 'Javascript ENginner at Vivo',
-    },
-    menu: true,
-    showComments: true,
-    comments: 15,
-    postComment:
-      'Earlier this year, I decided that I was burned out in my current career as a tissue bank specialist (yes, it pays well... but the joke "I see dead people" is only clever the first 100 times you hear it).',
-  },
-  {
-    id: GetUniqueId(),
-    owner: {
-      ownerName: 'Marcos Rodriguez',
-      ownerProsiffion: 'Javascript ENginner at Vivo',
-    },
-    menu: true,
-    media: true,
-    showComments: true,
-    comments: 15,
-    postComment:
-      'Earlier this year, I decided that I was burned out in my current career as a tissue bank specialist (yes, it pays well... but the joke "I see dead people" is only clever the first 100 times you hear it).',
-  },
-  {
-    id: GetUniqueId(),
-    owner: {
-      ownerName: 'Marcos Rodriguez',
-      ownerProsiffion: 'Javascript ENginner at Vivo',
-    },
-    menu: true,
-    showComments: true,
-    comments: 15,
-    postComment:
-      'Earlier this year, I decided that I was burned out in my current career as a tissue bank specialist (yes, it pays well... but the joke "I see dead people" is only clever the first 100 times you hear it).',
-  },
-  {
-    id: GetUniqueId(),
-    owner: {
-      ownerName: 'Marcos Rodriguez',
-      ownerProsiffion: 'Javascript ENginner at Vivo',
-    },
-    menu: true,
-    showComments: true,
-    comments: 15,
-    postComment:
-      'Earlier this year, I decided that I was burned out in my current career as a tissue bank specialist (yes, it pays well... but the joke "I see dead people" is only clever the first 100 times you hear it).',
-  },
-  {
-    id: GetUniqueId(),
-    owner: {
-      ownerName: 'Marcos Rodriguez',
-      ownerProsiffion: 'Javascript ENginner at Vivo',
-    },
-    menu: true,
-    media: true,
-    showComments: true,
-    comments: 15,
-    postComment:
-      'Earlier this year, I decided that I was burned out in my current career as a tissue bank specialist (yes, it pays well... but the joke "I see dead people" is only clever the first 100 times you hear it).',
-  },
-  {
-    id: GetUniqueId(),
-    owner: {
-      ownerName: 'Marcos Rodriguez',
-      ownerProsiffion: 'Javascript ENginner at Vivo',
-    },
-    menu: true,
-    showComments: true,
-    comments: 15,
-    postComment:
-      'Earlier this year, I decided that I was burned out in my current career as a tissue bank specialist (yes, it pays well... but the joke "I see dead people" is only clever the first 100 times you hear it).',
-  },
-  {
-    id: GetUniqueId(),
-    owner: {
-      ownerName: 'Marcos Rodriguez',
-      ownerProsiffion: 'Javascript ENginner at Vivo',
-    },
-    menu: true,
-    showComments: true,
-    comments: 15,
-    media: true,
-    postComment:
-      'Earlier this year, I decided that I was burned out in my current career as a tissue bank specialist (yes, it pays well... but the joke "I see dead people" is only clever the first 100 times you hear it).',
-  },
-];
+interface IProstItem {
+  item: Post;
+}
+
+const PostItem = ({item}: IProstItem) => {
+  const {id, ownerProfile, description, commentsCount, photoURL} = item;
+  return (
+    <>
+      <PostComment
+        owner={{
+          ownerName: ownerProfile?.displayName,
+          ownerPicture: ownerProfile?.photoURL,
+          ownerProsiffion: ownerProfile?.profission,
+        }}
+        id={id}
+        postComment={description}
+        showComments
+        comments={commentsCount || 0}
+        media={photoURL}
+      />
+      <Separator size="large" />
+    </>
+  );
+};
 
 const NewsScreen: React.FC<PropsApp> = () => {
+  const [allPostsData, setAllPostsData] = useState<Array<Post | null>>();
+  const {data, error, loading, fetchMore} = useGetAllPostsQuery();
+
+  useEffect(() => {
+    if (data?.getAllPosts?.__typename === 'GetPosts') {
+      const allPosts: Array<Post | null> = data.getAllPosts.allPost || [];
+      setAllPostsData(allPosts);
+    }
+  }, [data, allPostsData]);
+
+  if (data?.getAllPosts?.__typename === 'ErrorResponse') {
+    return (
+      <Text color="primary" bold>
+        {data.getAllPosts.error.message}
+      </Text>
+    );
+  }
+  if (error) {
+    return (
+      <Text color="primary" bold>
+        {error.message}
+      </Text>
+    );
+  }
+  if (loading) {
+    return (
+      <Text color="dark" bold>
+        Carregando
+      </Text>
+    );
+  }
+
+  const fetchMoreData = () => {
+    fetchMore({
+      updateQuery: (previus: any, {next}: any) => {
+        console.log('next', next);
+        if (!next) {
+          return true;
+        }
+        return Object.assign({}, previus, {
+          getAllPosts: {
+            allPost: [
+              ...previus.getAllPosts.allPost,
+              ...next.getAllPosts.allPost,
+            ],
+          },
+        });
+      },
+    });
+  };
+
   return (
-    <NewsContainer showsVerticalScrollIndicator={false}>
-      <NewsHeader>
-        <CreatePost />
-      </NewsHeader>
-      <Separator size="large" />
+    <NewsContainer>
       <NewsBody>
         <NewsContent>
-          {POSTS.map((post) => {
-            return (
-              <View key={GetUniqueId()}>
-                <PostComment key={post.id} {...post} />
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            keyExtractor={({id}) => id || GetUniqueId()}
+            data={allPostsData}
+            maxToRenderPerBatch={20}
+            nestedScrollEnabled
+            // FlatList inside components
+            renderItem={PostItem}
+            ListEmptyComponent={() => <Text>Nada para te mostrar</Text>}
+            ListHeaderComponent={() => (
+              <>
                 <Separator size="large" />
-              </View>
-            );
-          })}
+                <NewsHeader>
+                  <Text preset="largePrice">
+                    Confira as ultimas novidades na empresa
+                  </Text>
+                </NewsHeader>
+                <Separator size="large" />
+              </>
+            )}
+            ListFooterComponent={() => <Separator size="medium" />}
+            refreshing={loading}
+            onRefresh={() => fetchMoreData()}
+          />
         </NewsContent>
       </NewsBody>
     </NewsContainer>

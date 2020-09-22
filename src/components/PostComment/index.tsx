@@ -29,7 +29,6 @@ export default ({
   media,
 }: PostProps) => {
   const navigation = useNavigation<AppScreenNavigationProp>();
-  console.log('postComment', postComment);
   return (
     <PostContainer>
       <PostHeader>
@@ -41,7 +40,7 @@ export default ({
           }>
           <View>
             <Avatar
-              size="small"
+              size="normal"
               image={owner && owner.ownerPicture}
               firstText={owner && owner.ownerName}
               secondText={owner && owner.ownerProsiffion}
@@ -64,35 +63,37 @@ export default ({
         )}
       </PostHeader>
       <Separator size="tiny" />
-      <Action
-        onPress={() =>
-          navigateComments
-            ? navigation.navigate('GuupComments', {id: postID})
-            : {}
-        }>
-        <PostBody>
-          <PostContent>
-            <Text preset="comment">{postComment}</Text>
-          </PostContent>
-          <Separator size="tiny" />
-          {media && (
-            <PostMedia>
-              <PostMediaImage />
-              <Separator size="tiny" />
-            </PostMedia>
-          )}
-          {showComments && (
-            <PostActions>
+      <PostBody>
+        <PostContent>
+          <Text preset="comment">{postComment}</Text>
+        </PostContent>
+        <Separator size="small" />
+        {media && (
+          <PostMedia>
+            <PostMediaImage source={{uri: media}} />
+            <Separator size="small" />
+          </PostMedia>
+        )}
+        {showComments && (
+          <PostActions>
+            <Action
+              onPress={() =>
+                navigateComments
+                  ? navigation.navigate('GuupComments', {id: postID})
+                  : {}
+              }>
               <PostActionItem>
-                <Icon source="chat" />
-                <Text preset="label" color="darkGrey">
-                  {comments} Discussões
+                <Text preset="label" color="dark" bold underline>
+                  {comments} comentarios
                 </Text>
               </PostActionItem>
-            </PostActions>
-          )}
-        </PostBody>
-      </Action>
+            </Action>
+            <PostActionItem>
+              <Icon source="claps" />
+            </PostActionItem>
+          </PostActions>
+        )}
+      </PostBody>
     </PostContainer>
   );
 };

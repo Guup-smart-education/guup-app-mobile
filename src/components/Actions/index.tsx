@@ -17,7 +17,6 @@ type Props = {
 };
 
 const GuupActions: React.FC<Props> = ({leftAction, rightAction, loading}) => {
-  console.log('guup actions -> ', loading);
   return (
     <Actions>
       <Link

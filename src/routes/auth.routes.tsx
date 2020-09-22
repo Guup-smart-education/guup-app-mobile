@@ -1,12 +1,15 @@
 import React from 'react';
-import {SignIn, SignUp, Onboarding, Waiting} from './../pages';
-import {RootAuth, EAuth} from './../@types/auth.navigation';
-import {createStackNavigator} from '@react-navigation/stack';
-import {Link, CustomImage} from './../ui';
+import {SignIn, SignUp, Access, Onboarding, Waiting} from './../pages';
+import {RootAuth} from './../@types/auth.navigation';
+import {
+  createStackNavigator,
+  StackNavigationOptions,
+} from '@react-navigation/stack';
+import {CustomImage} from './../ui';
 
 const AuthStack = createStackNavigator<RootAuth>();
 
-const NoHeaderOptions = {
+const NoHeaderOptions: StackNavigationOptions = {
   headerShown: false,
 };
 
@@ -21,16 +24,11 @@ const AuthRouter: React.FC = () => {
         headerTransparent: false,
       }}>
       <AuthStack.Screen
-        options={({navigation}) => {
+        options={() => {
           return {
             headerLeft: () => <CustomImage module="logo" name="large" />,
             headerTitle: () => null,
             headerRight: () => null,
-            // headerRight: () => (
-            //   <Link onPress={() => navigation.navigate(EAuth.AuthSignIn)}>
-            //     Ja tenho conta
-            //   </Link>
-            // ),
           };
         }}
         name="AuthOnboarding"
@@ -45,6 +43,15 @@ const AuthRouter: React.FC = () => {
         options={NoHeaderOptions}
         name="AuthSignUp"
         component={SignUp}
+      />
+      <AuthStack.Screen
+        options={NoHeaderOptions}
+        name="AuthAccess"
+        component={Access}
+        initialParams={{
+          email: '',
+          token: '',
+        }}
       />
       <AuthStack.Screen
         options={NoHeaderOptions}

@@ -2,6 +2,12 @@ import styled from 'styled-components/native';
 
 export const PostContainer = styled.View`
   width: 100%;
+  background-color: ${({theme}) => theme.colors.ligth};
+  border-radius: ${({theme}) => theme.borderRadius[8]};
+  padding-top: ${({theme}) => theme.spacing.padding[20]};
+  padding-bottom: ${({theme}) => theme.spacing.padding[15]};
+  padding-left: ${({theme}) => theme.spacing.padding[15]};
+  padding-right: ${({theme}) => theme.spacing.padding[15]};
 `;
 
 export const PostHeader = styled.View`
@@ -12,20 +18,24 @@ export const PostHeader = styled.View`
 
 export const PostBody = styled.View`
   flex: 1;
-  padding-left: ${({theme}) => theme.sizes.avatar[36]};
-  margin-left: ${({theme}) => theme.spacing[15]};
+  flex-direction: column;
 `;
 
 export const PostContent = styled.View`
-  flex: 1;
+  padding-left: 5px;
+  padding-right: 5px;
 `;
 
 export const PostActions = styled.View`
+  align-items: center;
   flex: 1;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-left: 8px;
+  padding-right: 5px;
 `;
 
 export const PostActionItem = styled.View`
-  flex-direction: row;
   align-items: center;
 `;
 
@@ -40,7 +50,7 @@ export const PostMediaImage = styled.ImageBackground`
   border-top-right-radius: ${({theme}) => theme.borderRadius[8]};
   border-bottom-left-radius: ${({theme}) => theme.borderRadius[8]};
   border-bottom-right-radius: ${({theme}) => theme.borderRadius[8]};
-  height: 150px;
+  min-height: 150px;
   flex: 1;
 `;
 

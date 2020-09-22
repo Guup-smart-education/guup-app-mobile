@@ -1,5 +1,6 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {GetUniqueId} from './../../helper';
+import AuthContext from './../../contexts/auth';
 import {Link} from './../../ui';
 import {CommentBot, CourseCover} from './../../components';
 import {
@@ -33,6 +34,7 @@ const TEXT = {
 };
 
 const CoursesScreen: React.FC<PropsApp> = ({navigation}) => {
+  const {signOut} = useContext(AuthContext);
   return (
     <CoursesContainer>
       <CoursesHeader>
@@ -51,9 +53,10 @@ const CoursesScreen: React.FC<PropsApp> = ({navigation}) => {
               <CourseCover
                 key={course.courseId}
                 {...course}
-                onPress={() =>
-                  navigation.navigate('GuupClassRoom', {id: course.courseId})
-                }
+                onPress={() => signOut()}
+                // onPress={() =>
+                //   navigation.navigate('GuupClassRoom', {id: course.courseId})
+                // }
               />
             ))}
           </CoursesContent>

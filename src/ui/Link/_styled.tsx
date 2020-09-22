@@ -10,11 +10,14 @@ type IProps = {
 };
 
 export const LinkWrapper = styled.View<IProps>`
-  padding-top: 4px;
-  padding-bottom: 6px;
+  position: relative;
+  padding-top: 7px;
+  padding-bottom: 10px;
   padding-right: ${({theme}) => theme.spacing.padding[15]};
   padding-left: ${({theme}) => theme.spacing.padding[15]};
   border-radius: ${({theme}) => theme.borderRadius[4]};
+  align-items: center;
+  justify-content: center;
   background-color: ${({disable, preset, theme}) => {
     return disable
       ? theme.colors.smoothGrey
@@ -23,12 +26,15 @@ export const LinkWrapper = styled.View<IProps>`
       : theme.colors.secondary;
   }};
   border-style: solid;
-  opacity: ${({loading, disable}) => (loading || disable ? 0.5 : 1)};
+  /* opacity: ${({loading, disable}) => (loading || disable ? 0.5 : 1)}; */
+  overflow: hidden;
   ${({preset, theme}) =>
     preset === EPreset.outline && `border-width: ${theme.colors.primary}`};
 `;
 
-export const Link = styled.Text<IProps>`
+export const Link = styled.Text.attrs({
+  allowFontScaling: false,
+})<IProps>`
   color: ${({theme, color, preset}) =>
     preset === EPreset.solid
       ? theme.colors.ligth
@@ -45,5 +51,27 @@ export const Link = styled.Text<IProps>`
         ? theme.colors.ligth
         : theme.colors[color || 'dark']};
   letter-spacing: -0.45px;
-  opacity: ${({loading, disable}) => (loading || disable ? 0.5 : 1)};
+  /* opacity: ${({loading, disable}) => (loading || disable ? 0.5 : 1)}; */
+  ${({loading}) =>
+    loading &&
+    `color: transparent;
+  text-decoration: none;`}
 `;
+
+export const LinkOverlay = styled.View`
+  position: absolute;
+  z-index: 2;
+  padding-top: 4px;
+  padding-bottom: 6px;
+  width: 100%;
+  padding-top: 4px;
+  padding-bottom: 6px;
+  padding-right: ${({theme}) => theme.spacing.padding[15]};
+  padding-left: ${({theme}) => theme.spacing.padding[15]};
+`;
+
+export const LinkLoadingIndicator = styled.ActivityIndicator.attrs(
+  ({theme}) => ({
+    color: theme.colors.contrast,
+  }),
+)``;

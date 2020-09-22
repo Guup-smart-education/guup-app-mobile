@@ -1,0 +1,28 @@
+query getAllPosts {
+  getAllPosts {
+    ... on GetPosts {
+      allPost {
+        id
+        owner
+        ownerProfile {
+          displayName
+          photoURL
+          profission
+        }
+        title
+        description
+        commentsCount
+      }
+      success {
+        message
+        type
+      }
+    }
+    ... on ErrorResponse {
+      error {
+        type
+        message
+      }
+    }
+  }
+}

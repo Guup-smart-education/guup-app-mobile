@@ -1,0 +1,27 @@
+mutation authSignIn($email: String!, $tokenAccess: Int!) {
+  authSignIn(email: $email, tokenAccess: $tokenAccess) {
+    __typename
+    ... on SigInSuccess {
+      access {
+        token
+        refreshToken
+      }
+      user {
+        uid
+        displayName
+        photoURL
+        profission
+      }
+      success {
+        type
+        message
+      }
+    }
+    ... on ErrorResponse {
+      error {
+        type
+        message
+      }
+    }
+  }
+}

@@ -31,6 +31,7 @@ def add_flipper_pods!(versions = {})
   pod 'FlipperKit/FlipperKitHighlightOverlay', versions['Flipper'], :configuration => 'Debug'
   pod 'FlipperKit/FlipperKitLayoutTextSearchable', versions['Flipper'], :configuration => 'Debug'
   pod 'FlipperKit/FlipperKitNetworkPlugin', versions['Flipper'], :configuration => 'Debug'
+  pod 'flipper-plugin-react-native-performance', :path => "../node_modules/flipper-plugin-react-native-performance/ios", :configuration => 'Debug'
 end
 
 # Post Install processing for Flipper

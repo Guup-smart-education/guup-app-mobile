@@ -16,7 +16,7 @@ export default ({withIcon, text}: IProps) => {
           <Separator size="small" />
         </>
       )}
-      <Text center bold lineHeight={24}>
+      <Text center preset="comment" bold>
         {text}
       </Text>
     </CreateCommentBot>

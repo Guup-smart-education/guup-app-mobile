@@ -6,11 +6,12 @@ const SmartForm = ({
   children,
   errors,
   setValue,
-  currentInput,
+  currentInput = 0,
+  autoFocus = false,
 }: SmartFormProps) => {
   const Inputs = useRef<Array<TextInput>>([]);
   useEffect(() => {
-    currentInput && Inputs.current[currentInput].focus();
+    (autoFocus || currentInput) && Inputs.current[currentInput].focus();
   });
   return (
     <>

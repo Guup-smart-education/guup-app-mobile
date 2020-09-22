@@ -42,6 +42,7 @@ declare module 'styled-components' {
       chevron: Blob;
       video: Blob;
       article: Blob;
+      claps: Blob;
     };
     colors: {
       ligth: string;
@@ -110,6 +111,7 @@ declare module 'styled-components' {
       20: string;
       25: string;
       30: string;
+      35: string;
       40: string;
       50: string;
       80: string;

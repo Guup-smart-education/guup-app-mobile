@@ -1,11 +1,12 @@
-import React from 'react';
-import {ScrollView} from 'react-native';
-import {Container, Separator, Text} from './../../ui';
+import React, {useContext} from 'react';
+import AuthContext from './../../contexts/auth';
+import {Container} from './../../ui';
 import {LargeCard, Carousel} from './../../components';
 import {ExplorerContainer, HeaderStyle, ExplorerCourseItem} from './_styled';
 import {PropsApp} from './../../@types/app.navigation';
 
 const ExplorerScreen: React.FC<PropsApp> = ({navigation: {navigate}}) => {
+  const {signOut} = useContext(AuthContext);
   return (
     <Container>
       <ExplorerContainer>
@@ -34,7 +35,7 @@ const ExplorerScreen: React.FC<PropsApp> = ({navigation: {navigate}}) => {
               imageUri="https://source.unsplash.com/1200x1200/?programming"
               title="Some large course Name"
               description="Some short course duration"
-              onPress={() => console.log('aaaaa')}
+              onPress={() => signOut()}
             />
           </ExplorerCourseItem>
         </Carousel>

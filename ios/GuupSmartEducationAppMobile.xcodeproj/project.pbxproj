@@ -9,23 +9,23 @@
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* GuupSmartEducationAppMobileTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* GuupSmartEducationAppMobileTests.m */; };
 		0DE0A36E8BA04D8EB4FA221E /* SF-Pro-Display-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = F4057DA7E83840469FB5192E /* SF-Pro-Display-Bold.otf */; };
-		1280C14946698FAB5E988245 /* libPods-GuupSmartEducationAppMobile-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 31D18DC161F326130FDC0FE3 /* libPods-GuupSmartEducationAppMobile-tvOS.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		1724F9E9788F44419B0486EC /* SF-Pro-Display-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 879054E916064003A2042A15 /* SF-Pro-Display-Medium.otf */; };
+		22067C05848FD6D4EC4443A7 /* libPods-GuupSmartEducationAppMobile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 030AE2B72751440D58F9AD4E /* libPods-GuupSmartEducationAppMobile.a */; };
 		24E9FE7D6AB2483A957AD4ED /* SF-Pro-Display-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = D42AD8371EAC405B882370DA /* SF-Pro-Display-Regular.otf */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* GuupSmartEducationAppMobileTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* GuupSmartEducationAppMobileTests.m */; };
 		3F677D6ED89B40699F44BE2F /* SF-Pro-Display-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = DD2404C27CF941AB86652194 /* SF-Pro-Display-Light.otf */; };
-		DF7F62D22AE195FC105EAFFB /* libPods-GuupSmartEducationAppMobile-GuupSmartEducationAppMobileTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C401919DFC0D75BE56E534D /* libPods-GuupSmartEducationAppMobile-GuupSmartEducationAppMobileTests.a */; };
-		DFD2261DDECA75B45FC90C9C /* libPods-GuupSmartEducationAppMobile-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D2A91CE8DBB67EFD5414A003 /* libPods-GuupSmartEducationAppMobile-tvOSTests.a */; };
-		E73D38876D5D487B9F0A2ED4 /* SF-Pro-Display-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = C65D229B24C94F768952AB4E /* SF-Pro-Display-Semibold.otf */; };
-		E879041167E79685D582EB47 /* libPods-GuupSmartEducationAppMobile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B5B67DB6E3CBB01F61C1315 /* libPods-GuupSmartEducationAppMobile.a */; };
+		62E08A81118B24B2DFF27E5A /* libPods-GuupSmartEducationAppMobile-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC082E0F49A2690D70401A1 /* libPods-GuupSmartEducationAppMobile-tvOSTests.a */; };
 		76A085287F1E4A158A4463F9 /* SF-Pro-Display-Heavy.otf in Resources */ = {isa = PBXBuildFile; fileRef = 17855954846E4D488F03F95B /* SF-Pro-Display-Heavy.otf */; };
+		AA011DB6B506372C8FE838C7 /* libPods-GuupSmartEducationAppMobile-GuupSmartEducationAppMobileTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D9413571C51EDB217B38DDB /* libPods-GuupSmartEducationAppMobile-GuupSmartEducationAppMobileTests.a */; };
+		BCFB17616C8A286F17DFDC6E /* libPods-GuupSmartEducationAppMobile-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C6EB42D71E6E94A834569A9 /* libPods-GuupSmartEducationAppMobile-tvOS.a */; };
+		E73D38876D5D487B9F0A2ED4 /* SF-Pro-Display-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = C65D229B24C94F768952AB4E /* SF-Pro-Display-Semibold.otf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,8 +50,9 @@
 		00E356EE1AD99517003FC87E /* GuupSmartEducationAppMobileTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GuupSmartEducationAppMobileTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* GuupSmartEducationAppMobileTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GuupSmartEducationAppMobileTests.m; sourceTree = "<group>"; };
-		0899AF6883EB7BF4428BF277 /* Pods-GuupSmartEducationAppMobile-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GuupSmartEducationAppMobile-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-GuupSmartEducationAppMobile-tvOSTests/Pods-GuupSmartEducationAppMobile-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
-		0C401919DFC0D75BE56E534D /* libPods-GuupSmartEducationAppMobile-GuupSmartEducationAppMobileTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-GuupSmartEducationAppMobile-GuupSmartEducationAppMobileTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		030AE2B72751440D58F9AD4E /* libPods-GuupSmartEducationAppMobile.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-GuupSmartEducationAppMobile.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0DEB68EDB8D347253DFCE491 /* Pods-GuupSmartEducationAppMobile-GuupSmartEducationAppMobileTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GuupSmartEducationAppMobile-GuupSmartEducationAppMobileTests.debug.xcconfig"; path = "Target Support Files/Pods-GuupSmartEducationAppMobile-GuupSmartEducationAppMobileTests/Pods-GuupSmartEducationAppMobile-GuupSmartEducationAppMobileTests.debug.xcconfig"; sourceTree = "<group>"; };
+		0E401E9CFF08096A44311B80 /* Pods-GuupSmartEducationAppMobile-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GuupSmartEducationAppMobile-tvOS.release.xcconfig"; path = "Target Support Files/Pods-GuupSmartEducationAppMobile-tvOS/Pods-GuupSmartEducationAppMobile-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* GuupSmartEducationAppMobile.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GuupSmartEducationAppMobile.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = GuupSmartEducationAppMobile/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = GuupSmartEducationAppMobile/AppDelegate.m; sourceTree = "<group>"; };
@@ -59,26 +60,25 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = GuupSmartEducationAppMobile/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = GuupSmartEducationAppMobile/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = GuupSmartEducationAppMobile/main.m; sourceTree = "<group>"; };
+		17855954846E4D488F03F95B /* SF-Pro-Display-Heavy.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-Pro-Display-Heavy.otf"; path = "../assets/fonts/SF-Pro-Display-Heavy.otf"; sourceTree = "<group>"; };
+		27F249DA59270586027D3C23 /* Pods-GuupSmartEducationAppMobile-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GuupSmartEducationAppMobile-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-GuupSmartEducationAppMobile-tvOS/Pods-GuupSmartEducationAppMobile-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* GuupSmartEducationAppMobile-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "GuupSmartEducationAppMobile-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* GuupSmartEducationAppMobile-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "GuupSmartEducationAppMobile-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		31D18DC161F326130FDC0FE3 /* libPods-GuupSmartEducationAppMobile-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-GuupSmartEducationAppMobile-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		3B5B67DB6E3CBB01F61C1315 /* libPods-GuupSmartEducationAppMobile.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-GuupSmartEducationAppMobile.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		50F4588B0A8FE19D178DA09A /* Pods-GuupSmartEducationAppMobile.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GuupSmartEducationAppMobile.debug.xcconfig"; path = "Target Support Files/Pods-GuupSmartEducationAppMobile/Pods-GuupSmartEducationAppMobile.debug.xcconfig"; sourceTree = "<group>"; };
+		3309DFF96A2CBA2E1513005B /* Pods-GuupSmartEducationAppMobile-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GuupSmartEducationAppMobile-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-GuupSmartEducationAppMobile-tvOSTests/Pods-GuupSmartEducationAppMobile-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
+		3B8CF54DAF75181C69062889 /* Pods-GuupSmartEducationAppMobile-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GuupSmartEducationAppMobile-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-GuupSmartEducationAppMobile-tvOSTests/Pods-GuupSmartEducationAppMobile-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
+		4BC082E0F49A2690D70401A1 /* libPods-GuupSmartEducationAppMobile-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-GuupSmartEducationAppMobile-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		61928BAA7651AFAE9417489A /* Pods-GuupSmartEducationAppMobile-GuupSmartEducationAppMobileTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GuupSmartEducationAppMobile-GuupSmartEducationAppMobileTests.release.xcconfig"; path = "Target Support Files/Pods-GuupSmartEducationAppMobile-GuupSmartEducationAppMobileTests/Pods-GuupSmartEducationAppMobile-GuupSmartEducationAppMobileTests.release.xcconfig"; sourceTree = "<group>"; };
 		879054E916064003A2042A15 /* SF-Pro-Display-Medium.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-Pro-Display-Medium.otf"; path = "../assets/fonts/SF-Pro-Display-Medium.otf"; sourceTree = "<group>"; };
-		9B97B9A030B53DB4133C694F /* Pods-GuupSmartEducationAppMobile-GuupSmartEducationAppMobileTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GuupSmartEducationAppMobile-GuupSmartEducationAppMobileTests.release.xcconfig"; path = "Target Support Files/Pods-GuupSmartEducationAppMobile-GuupSmartEducationAppMobileTests/Pods-GuupSmartEducationAppMobile-GuupSmartEducationAppMobileTests.release.xcconfig"; sourceTree = "<group>"; };
-		A35E1AC4BFCA602D5C98BC8C /* Pods-GuupSmartEducationAppMobile.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GuupSmartEducationAppMobile.release.xcconfig"; path = "Target Support Files/Pods-GuupSmartEducationAppMobile/Pods-GuupSmartEducationAppMobile.release.xcconfig"; sourceTree = "<group>"; };
-		A77AFCB180A25EC4D63FDB3C /* Pods-GuupSmartEducationAppMobile-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GuupSmartEducationAppMobile-tvOS.release.xcconfig"; path = "Target Support Files/Pods-GuupSmartEducationAppMobile-tvOS/Pods-GuupSmartEducationAppMobile-tvOS.release.xcconfig"; sourceTree = "<group>"; };
+		8D9413571C51EDB217B38DDB /* libPods-GuupSmartEducationAppMobile-GuupSmartEducationAppMobileTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-GuupSmartEducationAppMobile-GuupSmartEducationAppMobileTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9C6EB42D71E6E94A834569A9 /* libPods-GuupSmartEducationAppMobile-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-GuupSmartEducationAppMobile-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C65D229B24C94F768952AB4E /* SF-Pro-Display-Semibold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-Pro-Display-Semibold.otf"; path = "../assets/fonts/SF-Pro-Display-Semibold.otf"; sourceTree = "<group>"; };
-		CC3D623181D6C79C40B99B4E /* Pods-GuupSmartEducationAppMobile-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GuupSmartEducationAppMobile-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-GuupSmartEducationAppMobile-tvOS/Pods-GuupSmartEducationAppMobile-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
-		D2A91CE8DBB67EFD5414A003 /* libPods-GuupSmartEducationAppMobile-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-GuupSmartEducationAppMobile-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D42AD8371EAC405B882370DA /* SF-Pro-Display-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-Pro-Display-Regular.otf"; path = "../assets/fonts/SF-Pro-Display-Regular.otf"; sourceTree = "<group>"; };
-		D8A3B610F4316EDBB5276578 /* Pods-GuupSmartEducationAppMobile-GuupSmartEducationAppMobileTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GuupSmartEducationAppMobile-GuupSmartEducationAppMobileTests.debug.xcconfig"; path = "Target Support Files/Pods-GuupSmartEducationAppMobile-GuupSmartEducationAppMobileTests/Pods-GuupSmartEducationAppMobile-GuupSmartEducationAppMobileTests.debug.xcconfig"; sourceTree = "<group>"; };
 		DD2404C27CF941AB86652194 /* SF-Pro-Display-Light.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-Pro-Display-Light.otf"; path = "../assets/fonts/SF-Pro-Display-Light.otf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
+		EDE755E1F6E753B9AAABA6F7 /* Pods-GuupSmartEducationAppMobile.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GuupSmartEducationAppMobile.release.xcconfig"; path = "Target Support Files/Pods-GuupSmartEducationAppMobile/Pods-GuupSmartEducationAppMobile.release.xcconfig"; sourceTree = "<group>"; };
+		F0E5988C03FB01E2FB51A2F6 /* Pods-GuupSmartEducationAppMobile.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GuupSmartEducationAppMobile.debug.xcconfig"; path = "Target Support Files/Pods-GuupSmartEducationAppMobile/Pods-GuupSmartEducationAppMobile.debug.xcconfig"; sourceTree = "<group>"; };
 		F4057DA7E83840469FB5192E /* SF-Pro-Display-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-Pro-Display-Bold.otf"; path = "../assets/fonts/SF-Pro-Display-Bold.otf"; sourceTree = "<group>"; };
-		FA0C7F7C23874BE0A4D2519E /* Pods-GuupSmartEducationAppMobile-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GuupSmartEducationAppMobile-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-GuupSmartEducationAppMobile-tvOSTests/Pods-GuupSmartEducationAppMobile-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
-		17855954846E4D488F03F95B /* SF-Pro-Display-Heavy.otf */ = {isa = PBXFileReference; name = "SF-Pro-Display-Heavy.otf"; path = "../assets/fonts/SF-Pro-Display-Heavy.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,7 +86,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DF7F62D22AE195FC105EAFFB /* libPods-GuupSmartEducationAppMobile-GuupSmartEducationAppMobileTests.a in Frameworks */,
+				AA011DB6B506372C8FE838C7 /* libPods-GuupSmartEducationAppMobile-GuupSmartEducationAppMobileTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -94,7 +94,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E879041167E79685D582EB47 /* libPods-GuupSmartEducationAppMobile.a in Frameworks */,
+				22067C05848FD6D4EC4443A7 /* libPods-GuupSmartEducationAppMobile.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -102,7 +102,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1280C14946698FAB5E988245 /* libPods-GuupSmartEducationAppMobile-tvOS.a in Frameworks */,
+				BCFB17616C8A286F17DFDC6E /* libPods-GuupSmartEducationAppMobile-tvOS.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -110,7 +110,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DFD2261DDECA75B45FC90C9C /* libPods-GuupSmartEducationAppMobile-tvOSTests.a in Frameworks */,
+				62E08A81118B24B2DFF27E5A /* libPods-GuupSmartEducationAppMobile-tvOSTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -153,10 +153,10 @@
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
-				3B5B67DB6E3CBB01F61C1315 /* libPods-GuupSmartEducationAppMobile.a */,
-				0C401919DFC0D75BE56E534D /* libPods-GuupSmartEducationAppMobile-GuupSmartEducationAppMobileTests.a */,
-				31D18DC161F326130FDC0FE3 /* libPods-GuupSmartEducationAppMobile-tvOS.a */,
-				D2A91CE8DBB67EFD5414A003 /* libPods-GuupSmartEducationAppMobile-tvOSTests.a */,
+				030AE2B72751440D58F9AD4E /* libPods-GuupSmartEducationAppMobile.a */,
+				8D9413571C51EDB217B38DDB /* libPods-GuupSmartEducationAppMobile-GuupSmartEducationAppMobileTests.a */,
+				9C6EB42D71E6E94A834569A9 /* libPods-GuupSmartEducationAppMobile-tvOS.a */,
+				4BC082E0F49A2690D70401A1 /* libPods-GuupSmartEducationAppMobile-tvOSTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -164,14 +164,14 @@
 		5FC495FCD8FC196052CE9350 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				50F4588B0A8FE19D178DA09A /* Pods-GuupSmartEducationAppMobile.debug.xcconfig */,
-				A35E1AC4BFCA602D5C98BC8C /* Pods-GuupSmartEducationAppMobile.release.xcconfig */,
-				D8A3B610F4316EDBB5276578 /* Pods-GuupSmartEducationAppMobile-GuupSmartEducationAppMobileTests.debug.xcconfig */,
-				9B97B9A030B53DB4133C694F /* Pods-GuupSmartEducationAppMobile-GuupSmartEducationAppMobileTests.release.xcconfig */,
-				CC3D623181D6C79C40B99B4E /* Pods-GuupSmartEducationAppMobile-tvOS.debug.xcconfig */,
-				A77AFCB180A25EC4D63FDB3C /* Pods-GuupSmartEducationAppMobile-tvOS.release.xcconfig */,
-				0899AF6883EB7BF4428BF277 /* Pods-GuupSmartEducationAppMobile-tvOSTests.debug.xcconfig */,
-				FA0C7F7C23874BE0A4D2519E /* Pods-GuupSmartEducationAppMobile-tvOSTests.release.xcconfig */,
+				F0E5988C03FB01E2FB51A2F6 /* Pods-GuupSmartEducationAppMobile.debug.xcconfig */,
+				EDE755E1F6E753B9AAABA6F7 /* Pods-GuupSmartEducationAppMobile.release.xcconfig */,
+				0DEB68EDB8D347253DFCE491 /* Pods-GuupSmartEducationAppMobile-GuupSmartEducationAppMobileTests.debug.xcconfig */,
+				61928BAA7651AFAE9417489A /* Pods-GuupSmartEducationAppMobile-GuupSmartEducationAppMobileTests.release.xcconfig */,
+				27F249DA59270586027D3C23 /* Pods-GuupSmartEducationAppMobile-tvOS.debug.xcconfig */,
+				0E401E9CFF08096A44311B80 /* Pods-GuupSmartEducationAppMobile-tvOS.release.xcconfig */,
+				3309DFF96A2CBA2E1513005B /* Pods-GuupSmartEducationAppMobile-tvOSTests.debug.xcconfig */,
+				3B8CF54DAF75181C69062889 /* Pods-GuupSmartEducationAppMobile-tvOSTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -230,7 +230,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "GuupSmartEducationAppMobileTests" */;
 			buildPhases = (
-				002597EE20952A05B2AD90C0 /* [CP] Check Pods Manifest.lock */,
+				D1B64FFE2F72F81CFECD1B9A /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
@@ -249,7 +249,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "GuupSmartEducationAppMobile" */;
 			buildPhases = (
-				B83777A77BDB62EA97D2B3F6 /* [CP] Check Pods Manifest.lock */,
+				2D51D4173B9C7ED99CDFCFF2 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
@@ -269,7 +269,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "GuupSmartEducationAppMobile-tvOS" */;
 			buildPhases = (
-				40B0DD6499F42EBD318A587A /* [CP] Check Pods Manifest.lock */,
+				8AE1861DFD39C289F0037D41 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F122414F3F0027D42C /* Start Packager */,
 				2D02E4771E0B4A5D006451C7 /* Sources */,
 				2D02E4781E0B4A5D006451C7 /* Frameworks */,
@@ -289,7 +289,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "GuupSmartEducationAppMobile-tvOSTests" */;
 			buildPhases = (
-				CE57449B0FFABC5DCB0D9906 /* [CP] Check Pods Manifest.lock */,
+				EC3049C0E4A62AC47BB4531F /* [CP] Check Pods Manifest.lock */,
 				2D02E48C1E0B4A5D006451C7 /* Sources */,
 				2D02E48D1E0B4A5D006451C7 /* Frameworks */,
 				2D02E48E1E0B4A5D006451C7 /* Resources */,
@@ -393,28 +393,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		002597EE20952A05B2AD90C0 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-GuupSmartEducationAppMobile-GuupSmartEducationAppMobileTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
 		00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -443,29 +421,7 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
 		};
-		40B0DD6499F42EBD318A587A /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-GuupSmartEducationAppMobile-tvOS-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		B83777A77BDB62EA97D2B3F6 /* [CP] Check Pods Manifest.lock */ = {
+		2D51D4173B9C7ED99CDFCFF2 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -487,7 +443,51 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		CE57449B0FFABC5DCB0D9906 /* [CP] Check Pods Manifest.lock */ = {
+		8AE1861DFD39C289F0037D41 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-GuupSmartEducationAppMobile-tvOS-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D1B64FFE2F72F81CFECD1B9A /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-GuupSmartEducationAppMobile-GuupSmartEducationAppMobileTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		EC3049C0E4A62AC47BB4531F /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -614,7 +614,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D8A3B610F4316EDBB5276578 /* Pods-GuupSmartEducationAppMobile-GuupSmartEducationAppMobileTests.debug.xcconfig */;
+			baseConfigurationReference = 0DEB68EDB8D347253DFCE491 /* Pods-GuupSmartEducationAppMobile-GuupSmartEducationAppMobileTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -637,7 +637,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9B97B9A030B53DB4133C694F /* Pods-GuupSmartEducationAppMobile-GuupSmartEducationAppMobileTests.release.xcconfig */;
+			baseConfigurationReference = 61928BAA7651AFAE9417489A /* Pods-GuupSmartEducationAppMobile-GuupSmartEducationAppMobileTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -657,7 +657,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 50F4588B0A8FE19D178DA09A /* Pods-GuupSmartEducationAppMobile.debug.xcconfig */;
+			baseConfigurationReference = F0E5988C03FB01E2FB51A2F6 /* Pods-GuupSmartEducationAppMobile.debug.xcconfig */;
 			buildSettings = {
 				APP_DISPLAY_NAME = Guup;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -686,7 +686,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A35E1AC4BFCA602D5C98BC8C /* Pods-GuupSmartEducationAppMobile.release.xcconfig */;
+			baseConfigurationReference = EDE755E1F6E753B9AAABA6F7 /* Pods-GuupSmartEducationAppMobile.release.xcconfig */;
 			buildSettings = {
 				APP_DISPLAY_NAME = Guup;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -709,7 +709,7 @@
 		};
 		2D02E4971E0B4A5E006451C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = CC3D623181D6C79C40B99B4E /* Pods-GuupSmartEducationAppMobile-tvOS.debug.xcconfig */;
+			baseConfigurationReference = 27F249DA59270586027D3C23 /* Pods-GuupSmartEducationAppMobile-tvOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -737,7 +737,7 @@
 		};
 		2D02E4981E0B4A5E006451C7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A77AFCB180A25EC4D63FDB3C /* Pods-GuupSmartEducationAppMobile-tvOS.release.xcconfig */;
+			baseConfigurationReference = 0E401E9CFF08096A44311B80 /* Pods-GuupSmartEducationAppMobile-tvOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -765,7 +765,7 @@
 		};
 		2D02E4991E0B4A5E006451C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0899AF6883EB7BF4428BF277 /* Pods-GuupSmartEducationAppMobile-tvOSTests.debug.xcconfig */;
+			baseConfigurationReference = 3309DFF96A2CBA2E1513005B /* Pods-GuupSmartEducationAppMobile-tvOSTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
@@ -792,7 +792,7 @@
 		};
 		2D02E49A1E0B4A5E006451C7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FA0C7F7C23874BE0A4D2519E /* Pods-GuupSmartEducationAppMobile-tvOSTests.release.xcconfig */;
+			baseConfigurationReference = 3B8CF54DAF75181C69062889 /* Pods-GuupSmartEducationAppMobile-tvOSTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;

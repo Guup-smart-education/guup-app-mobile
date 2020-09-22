@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, Icon, Separator, InputArea} from './../../../ui';
+import {InputArea} from './../../../ui';
 import {
   Modal,
   GuupActions,
