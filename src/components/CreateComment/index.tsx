@@ -1,46 +1,56 @@
-import React from 'react';
-import {InputArea} from './../../../ui';
-import {
-  Modal,
-  GuupActions,
-  KeyboardBlock,
-  CommentBot,
-} from './../../../components';
+import React, {useState} from 'react';
+import {InputArea} from './../../ui';
+import {Modal, GuupActions, KeyboardBlock, CommentBot} from './../';
 import {
   CreateCommentContainer,
   CreateCommentInputArea,
   CreateCommentFooter,
 } from './_styled';
-import {Alert} from 'react-native';
 
 type CreatePost = {
+  readonly bootMessage?: string;
+  readonly inputPlaceholder?: string;
   readonly show: boolean;
   readonly toggleModal: () => void;
+  readonly onSendMessage: (comment: string) => void;
+  readonly loading?: boolean;
 };
 
-export default ({show, toggleModal}: CreatePost) => {
+export default ({
+  show,
+  toggleModal,
+  bootMessage,
+  inputPlaceholder,
+  onSendMessage,
+  loading = false,
+}: CreatePost) => {
+  const [comment, setComment] = useState<string>('');
   return (
     <Modal visible={show} presentationStyle="pageSheet">
       <CreateCommentContainer>
         <CommentBot
           withIcon
-          text="Lembra que qualquer ajuda é boa, você aprende, todos aprendemos"
+          text={
+            bootMessage ||
+            'Lembra que qualquer ajuda é boa, você aprende, todos aprendemos'
+          }
         />
         <KeyboardBlock paddingPageSheet>
           <CreateCommentInputArea>
             <InputArea
               autoFocus
-              error={false}
               name="createComment"
-              placeholder="Digite seu comentario aqui"
+              onChangeText={(val: string) => setComment(val)}
+              placeholder={inputPlaceholder || 'Digite alguma coisa aqui'}
             />
           </CreateCommentInputArea>
           <CreateCommentFooter>
             <GuupActions
-              loading={false}
+              loading={loading}
               rightAction={{
                 text: 'Enviar',
-                onPress: () => Alert.alert('Send response'),
+                onPress: () => onSendMessage(comment),
+                disable: !comment,
               }}
               leftAction={{text: 'Fechar', onPress: () => toggleModal()}}
             />

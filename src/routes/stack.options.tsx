@@ -20,9 +20,11 @@ export const StackOption = ({
   ),
   headerTitleAlign: 'center',
   headerStyle: {
-    elevation: 0,
     backgroundColor: '#F6F6F6',
+    elevation: 0,
+    paddingBottom: 5,
   },
+  header: () => null,
 });
 
 export const StackBackOption = ({

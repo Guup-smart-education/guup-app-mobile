@@ -1,0 +1,29 @@
+query getAllPosts($lastPost: String) {
+  getAllPosts(lastPost: $lastPost) {
+    ... on GetPosts {
+      allPost {
+        id
+        owner
+        ownerProfile {
+          displayName
+          thumbnailURL
+          profission
+        }
+        title
+        description
+        commentsCount
+        createdAt
+      }
+      success {
+        message
+        type
+      }
+    }
+    ... on ErrorResponse {
+      error {
+        type
+        message
+      }
+    }
+  }
+}

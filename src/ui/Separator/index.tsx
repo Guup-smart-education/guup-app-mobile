@@ -2,6 +2,7 @@ import React from 'react';
 import {Separator} from './_styled';
 
 export enum ESize {
+  'stroke' = 'stroke',
   'lili' = 'lili',
   'tiny' = 'tiny',
   'small' = 'small',

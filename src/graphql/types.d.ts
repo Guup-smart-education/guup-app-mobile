@@ -9,9 +9,11 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  Date: any;
   /** The `Upload` scalar type represents a file upload. */
   Upload: any;
 };
+
 
 export enum EnumLevels {
   Junior = 'JUNIOR',
@@ -108,6 +110,7 @@ export type Comments = {
   owner?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
   ownerProfile?: Maybe<UserProfile>;
+  createdAt?: Maybe<Scalars['Date']>;
 };
 
 export type CourseModuleContent = {
@@ -194,6 +197,7 @@ export type Course = {
   commentsCount?: Maybe<Scalars['Float']>;
   comments?: Maybe<Array<Maybe<Comments>>>;
   ownerProfile?: Maybe<UserProfile>;
+  createdAt?: Maybe<Scalars['Date']>;
 };
 
 export type User = {
@@ -219,6 +223,7 @@ export type UserProfile = {
   uid?: Maybe<Scalars['String']>;
   displayName?: Maybe<Scalars['String']>;
   photoURL?: Maybe<Scalars['String']>;
+  thumbnailURL?: Maybe<Scalars['String']>;
   profission?: Maybe<Scalars['String']>;
   presentation?: Maybe<Scalars['String']>;
   experience?: Maybe<Scalars['String']>;
@@ -259,6 +264,7 @@ export type Post = {
   clapsCount?: Maybe<Scalars['Float']>;
   comments?: Maybe<Array<Maybe<Comments>>>;
   ownerProfile?: Maybe<UserProfile>;
+  createdAt?: Maybe<Scalars['Date']>;
 };
 
 export type Review = {
@@ -340,6 +346,7 @@ export type Query = {
   __typename?: 'Query';
   authQuery?: Maybe<User>;
   getCommentByCourse?: Maybe<UGetComment>;
+  getCommentByPost?: Maybe<UGetComment>;
   getAllCompanies?: Maybe<UGetCompanies>;
   getAllCompanyByID?: Maybe<UGetCompany>;
   getCourses?: Maybe<UGetCourses>;
@@ -370,6 +377,11 @@ export type QueryGetCommentByCourseArgs = {
 };
 
 
+export type QueryGetCommentByPostArgs = {
+  post: Scalars['String'];
+};
+
+
 export type QueryGetAllCompanyByIdArgs = {
   id?: Maybe<Scalars['String']>;
 };
@@ -397,6 +409,11 @@ export type QueryGetPathsByOwnerArgs = {
 
 export type QueryGetPathByIdArgs = {
   id: Scalars['String'];
+};
+
+
+export type QueryGetAllPostsArgs = {
+  lastPost?: Maybe<Scalars['String']>;
 };
 
 
@@ -522,7 +539,7 @@ export type GetComment = {
 
 export type PostComment = {
   __typename?: 'PostComment';
-  comment?: Maybe<Scalars['String']>;
+  comment?: Maybe<Comments>;
   success?: Maybe<Success>;
 };
 
@@ -662,7 +679,7 @@ export type UGetPath = GetPath | ErrorResponse;
 export type UCreatePath = CreatePath | ErrorResponse;
 
 export type InputPost = {
-  title: Scalars['String'];
+  title?: Maybe<Scalars['String']>;
   description: Scalars['String'];
   photoURL?: Maybe<Scalars['String']>;
   linkURL?: Maybe<Scalars['String']>;
@@ -682,7 +699,7 @@ export type GetPost = {
 
 export type CreatePost = {
   __typename?: 'CreatePost';
-  createPost?: Maybe<Scalars['String']>;
+  createPost?: Maybe<Post>;
   success?: Maybe<Success>;
 };
 
@@ -779,6 +796,69 @@ export enum CacheControlScope {
 }
 
 
+export type CreateCommentMutationVariables = Exact<{
+  collection: CommentFor;
+  post: Scalars['String'];
+  description: Scalars['String'];
+}>;
+
+
+export type CreateCommentMutation = (
+  { __typename?: 'Mutation' }
+  & { createComment?: Maybe<(
+    { __typename?: 'PostComment' }
+    & { comment?: Maybe<(
+      { __typename?: 'Comments' }
+      & Pick<Comments, 'id' | 'owner' | 'description' | 'createdAt'>
+      & { ownerProfile?: Maybe<(
+        { __typename?: 'UserProfile' }
+        & Pick<UserProfile, 'displayName' | 'photoURL' | 'profission'>
+      )> }
+    )>, success?: Maybe<(
+      { __typename?: 'Success' }
+      & Pick<Success, 'message'>
+    )> }
+  ) | (
+    { __typename?: 'ErrorResponse' }
+    & { error: (
+      { __typename?: 'Error' }
+      & Pick<Error, 'type' | 'message'>
+    ) }
+  )> }
+);
+
+export type CreatePostMutationVariables = Exact<{
+  title?: Maybe<Scalars['String']>;
+  description: Scalars['String'];
+  photoURL?: Maybe<Scalars['String']>;
+  linkURL?: Maybe<Scalars['String']>;
+}>;
+
+
+export type CreatePostMutation = (
+  { __typename?: 'Mutation' }
+  & { createPost?: Maybe<(
+    { __typename?: 'CreatePost' }
+    & { createPost?: Maybe<(
+      { __typename?: 'Post' }
+      & Pick<Post, 'id' | 'owner' | 'title' | 'description' | 'photoURL' | 'linkURL' | 'viewsCount' | 'commentsCount' | 'clapsCount' | 'createdAt'>
+      & { ownerProfile?: Maybe<(
+        { __typename?: 'UserProfile' }
+        & Pick<UserProfile, 'displayName' | 'photoURL' | 'profission'>
+      )> }
+    )>, success?: Maybe<(
+      { __typename?: 'Success' }
+      & Pick<Success, 'message'>
+    )> }
+  ) | (
+    { __typename?: 'ErrorResponse' }
+    & { error: (
+      { __typename?: 'Error' }
+      & Pick<Error, 'type' | 'message'>
+    ) }
+  )> }
+);
+
 export type AuthRequestAccessMutationVariables = Exact<{
   email: Scalars['String'];
 }>;
@@ -862,7 +942,9 @@ export type AuthSignUpMutation = (
   ) }
 );
 
-export type GetAllPostsQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetAllPostsQueryVariables = Exact<{
+  lastPost?: Maybe<Scalars['String']>;
+}>;
 
 
 export type GetAllPostsQuery = (
@@ -871,10 +953,10 @@ export type GetAllPostsQuery = (
     { __typename?: 'GetPosts' }
     & { allPost?: Maybe<Array<Maybe<(
       { __typename?: 'Post' }
-      & Pick<Post, 'id' | 'owner' | 'title' | 'description' | 'commentsCount'>
+      & Pick<Post, 'id' | 'owner' | 'title' | 'description' | 'commentsCount' | 'createdAt'>
       & { ownerProfile?: Maybe<(
         { __typename?: 'UserProfile' }
-        & Pick<UserProfile, 'displayName' | 'photoURL' | 'profission'>
+        & Pick<UserProfile, 'displayName' | 'thumbnailURL' | 'profission'>
       )> }
     )>>>, success?: Maybe<(
       { __typename?: 'Success' }
@@ -889,7 +971,150 @@ export type GetAllPostsQuery = (
   )> }
 );
 
+export type GetCommentByPostQueryVariables = Exact<{
+  post: Scalars['String'];
+}>;
 
+
+export type GetCommentByPostQuery = (
+  { __typename?: 'Query' }
+  & { getCommentByPost?: Maybe<(
+    { __typename?: 'GetComment' }
+    & { comments?: Maybe<Array<Maybe<(
+      { __typename?: 'Comments' }
+      & Pick<Comments, 'id' | 'owner' | 'description' | 'createdAt'>
+      & { ownerProfile?: Maybe<(
+        { __typename?: 'UserProfile' }
+        & Pick<UserProfile, 'uid' | 'displayName' | 'thumbnailURL' | 'profission'>
+      )> }
+    )>>> }
+  ) | (
+    { __typename?: 'ErrorResponse' }
+    & { error: (
+      { __typename?: 'Error' }
+      & Pick<Error, 'type' | 'message'>
+    ) }
+  )> }
+);
+
+
+export const CreateCommentDocument = gql`
+    mutation createComment($collection: CommentFor!, $post: String!, $description: String!) {
+  createComment(collection: $collection, comment: {post: $post, description: $description}) {
+    ... on PostComment {
+      comment {
+        id
+        owner
+        description
+        createdAt
+        ownerProfile {
+          displayName
+          photoURL
+          profission
+        }
+      }
+      success {
+        message
+      }
+    }
+    ... on ErrorResponse {
+      error {
+        type
+        message
+      }
+    }
+  }
+}
+    `;
+export type CreateCommentMutationFn = Apollo.MutationFunction<CreateCommentMutation, CreateCommentMutationVariables>;
+
+/**
+ * __useCreateCommentMutation__
+ *
+ * To run a mutation, you first call `useCreateCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCommentMutation, { data, loading, error }] = useCreateCommentMutation({
+ *   variables: {
+ *      collection: // value for 'collection'
+ *      post: // value for 'post'
+ *      description: // value for 'description'
+ *   },
+ * });
+ */
+export function useCreateCommentMutation(baseOptions?: Apollo.MutationHookOptions<CreateCommentMutation, CreateCommentMutationVariables>) {
+        return Apollo.useMutation<CreateCommentMutation, CreateCommentMutationVariables>(CreateCommentDocument, baseOptions);
+      }
+export type CreateCommentMutationHookResult = ReturnType<typeof useCreateCommentMutation>;
+export type CreateCommentMutationResult = Apollo.MutationResult<CreateCommentMutation>;
+export type CreateCommentMutationOptions = Apollo.BaseMutationOptions<CreateCommentMutation, CreateCommentMutationVariables>;
+export const CreatePostDocument = gql`
+    mutation createPost($title: String, $description: String!, $photoURL: String, $linkURL: String) {
+  createPost(post: {title: $title, description: $description, photoURL: $photoURL, linkURL: $linkURL}) {
+    ... on CreatePost {
+      createPost {
+        id
+        owner
+        title
+        description
+        photoURL
+        linkURL
+        viewsCount
+        commentsCount
+        clapsCount
+        createdAt
+        ownerProfile {
+          displayName
+          photoURL
+          profission
+        }
+      }
+      success {
+        message
+      }
+    }
+    ... on ErrorResponse {
+      error {
+        type
+        message
+      }
+    }
+  }
+}
+    `;
+export type CreatePostMutationFn = Apollo.MutationFunction<CreatePostMutation, CreatePostMutationVariables>;
+
+/**
+ * __useCreatePostMutation__
+ *
+ * To run a mutation, you first call `useCreatePostMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePostMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPostMutation, { data, loading, error }] = useCreatePostMutation({
+ *   variables: {
+ *      title: // value for 'title'
+ *      description: // value for 'description'
+ *      photoURL: // value for 'photoURL'
+ *      linkURL: // value for 'linkURL'
+ *   },
+ * });
+ */
+export function useCreatePostMutation(baseOptions?: Apollo.MutationHookOptions<CreatePostMutation, CreatePostMutationVariables>) {
+        return Apollo.useMutation<CreatePostMutation, CreatePostMutationVariables>(CreatePostDocument, baseOptions);
+      }
+export type CreatePostMutationHookResult = ReturnType<typeof useCreatePostMutation>;
+export type CreatePostMutationResult = Apollo.MutationResult<CreatePostMutation>;
+export type CreatePostMutationOptions = Apollo.BaseMutationOptions<CreatePostMutation, CreatePostMutationVariables>;
 export const AuthRequestAccessDocument = gql`
     mutation authRequestAccess($email: String!) {
   authRequestAccess(email: $email) {
@@ -1046,20 +1271,21 @@ export type AuthSignUpMutationHookResult = ReturnType<typeof useAuthSignUpMutati
 export type AuthSignUpMutationResult = Apollo.MutationResult<AuthSignUpMutation>;
 export type AuthSignUpMutationOptions = Apollo.BaseMutationOptions<AuthSignUpMutation, AuthSignUpMutationVariables>;
 export const GetAllPostsDocument = gql`
-    query getAllPosts {
-  getAllPosts {
+    query getAllPosts($lastPost: String) {
+  getAllPosts(lastPost: $lastPost) {
     ... on GetPosts {
       allPost {
         id
         owner
         ownerProfile {
           displayName
-          photoURL
+          thumbnailURL
           profission
         }
         title
         description
         commentsCount
+        createdAt
       }
       success {
         message
@@ -1088,6 +1314,7 @@ export const GetAllPostsDocument = gql`
  * @example
  * const { data, loading, error } = useGetAllPostsQuery({
  *   variables: {
+ *      lastPost: // value for 'lastPost'
  *   },
  * });
  */
@@ -1100,3 +1327,55 @@ export function useGetAllPostsLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type GetAllPostsQueryHookResult = ReturnType<typeof useGetAllPostsQuery>;
 export type GetAllPostsLazyQueryHookResult = ReturnType<typeof useGetAllPostsLazyQuery>;
 export type GetAllPostsQueryResult = Apollo.QueryResult<GetAllPostsQuery, GetAllPostsQueryVariables>;
+export const GetCommentByPostDocument = gql`
+    query getCommentByPost($post: String!) {
+  getCommentByPost(post: $post) {
+    ... on GetComment {
+      comments {
+        id
+        owner
+        description
+        ownerProfile {
+          uid
+          displayName
+          thumbnailURL
+          profission
+        }
+        createdAt
+      }
+    }
+    ... on ErrorResponse {
+      error {
+        type
+        message
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetCommentByPostQuery__
+ *
+ * To run a query within a React component, call `useGetCommentByPostQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCommentByPostQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCommentByPostQuery({
+ *   variables: {
+ *      post: // value for 'post'
+ *   },
+ * });
+ */
+export function useGetCommentByPostQuery(baseOptions?: Apollo.QueryHookOptions<GetCommentByPostQuery, GetCommentByPostQueryVariables>) {
+        return Apollo.useQuery<GetCommentByPostQuery, GetCommentByPostQueryVariables>(GetCommentByPostDocument, baseOptions);
+      }
+export function useGetCommentByPostLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCommentByPostQuery, GetCommentByPostQueryVariables>) {
+          return Apollo.useLazyQuery<GetCommentByPostQuery, GetCommentByPostQueryVariables>(GetCommentByPostDocument, baseOptions);
+        }
+export type GetCommentByPostQueryHookResult = ReturnType<typeof useGetCommentByPostQuery>;
+export type GetCommentByPostLazyQueryHookResult = ReturnType<typeof useGetCommentByPostLazyQuery>;
+export type GetCommentByPostQueryResult = Apollo.QueryResult<GetCommentByPostQuery, GetCommentByPostQueryVariables>;

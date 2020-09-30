@@ -40,6 +40,15 @@ export const Text = styled.Text<IProps>`
           font-weight: ${theme.fontWeight.bold};
           letter-spacing: 0.20px;
         `;
+      case EPreset.date:
+        return `
+          ${
+            Platform.OS !== 'ios' &&
+            `font-family: ${theme.fontFamilyAndroid.light}`
+          };
+          font-size: ${theme.fontSize.tiny};
+          letter-spacing: -0.01px;
+        `;
       case EPreset.tiny:
         return `
           ${
@@ -99,6 +108,16 @@ export const Text = styled.Text<IProps>`
           };
           font-size: ${theme.fontSize.small};
           font-weight: ${theme.fontWeight.regular};
+        `;
+      case EPreset.postComment:
+        return `
+          ${
+            Platform.OS !== 'ios' &&
+            `font-family: ${theme.fontFamilyAndroid.regular}`
+          };
+          font-size: ${theme.fontSize.small};
+          font-weight: ${theme.fontWeight.regular};
+          line-height: ${theme.spacing.lineHeigth.l21};
         `;
       case EPreset.button:
         return `

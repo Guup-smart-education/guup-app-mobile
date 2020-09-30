@@ -5,6 +5,8 @@ export const Separator = styled.View<IProps>`
   width: 100%;
   height: ${({size, theme}) => {
     switch (size) {
+      case ESize.stroke:
+        return theme.spacing[1];
       case ESize.lili:
         return theme.spacing[5];
       case ESize.tiny:
@@ -23,4 +25,6 @@ export const Separator = styled.View<IProps>`
         return theme.spacing[50];
     }
   }};
+  ${({size, theme}) =>
+    size === ESize.stroke && `background-color: ${theme.colors.veryLigthGrey}`}
 `;

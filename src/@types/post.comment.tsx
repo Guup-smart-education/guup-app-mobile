@@ -1,4 +1,5 @@
 export type Owner = {
+  readonly id?: string | undefined | null;
   readonly ownerName?: string | undefined | null;
   readonly ownerProsiffion?: string | undefined | null;
   readonly ownerPicture?: string | undefined | null;
@@ -14,5 +15,8 @@ export type PostProps = {
   readonly showComments?: boolean | undefined | null;
   readonly navigateComments?: boolean | undefined | null;
   readonly comments?: number | undefined | null;
+  readonly claps?: number | undefined | null;
   readonly media?: string | undefined | null;
+  readonly card?: boolean | undefined | null;
+  readonly createdAt?: string | undefined | null;
 };

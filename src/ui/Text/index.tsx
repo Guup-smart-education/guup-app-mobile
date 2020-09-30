@@ -11,8 +11,10 @@ export enum EPreset {
   'button' = 'button',
   'tiny' = 'tiny',
   'largePrice' = 'largePrice',
+  'postComment' = 'postComment',
   'comment' = 'comment',
   'tall' = 'tall',
+  'date' = 'date',
 }
 
 export enum EWeight {

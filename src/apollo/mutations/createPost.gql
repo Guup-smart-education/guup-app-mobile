@@ -1,0 +1,44 @@
+mutation createPost(
+  $title: String
+  $description: String!
+  $photoURL: String
+  $linkURL: String
+) {
+  createPost(
+    post: {
+      title: $title
+      description: $description
+      photoURL: $photoURL
+      linkURL: $linkURL
+    }
+  ) {
+    ... on CreatePost {
+      createPost {
+        id
+        owner
+        title
+        description
+        photoURL
+        linkURL
+        viewsCount
+        commentsCount
+        clapsCount
+        createdAt
+        ownerProfile {
+          displayName
+          photoURL
+          profission
+        }
+      }
+      success {
+        message
+      }
+    }
+    ... on ErrorResponse {
+      error {
+        type
+        message
+      }
+    }
+  }
+}

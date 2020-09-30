@@ -1,0 +1,33 @@
+mutation createComment(
+  $collection: CommentFor!
+  $post: String!
+  $description: String!
+) {
+  createComment(
+    collection: $collection
+    comment: {post: $post, description: $description}
+  ) {
+    ... on PostComment {
+      comment {
+        id
+        owner
+        description
+        createdAt
+        ownerProfile {
+          displayName
+          photoURL
+          profission
+        }
+      }
+      success {
+        message
+      }
+    }
+    ... on ErrorResponse {
+      error {
+        type
+        message
+      }
+    }
+  }
+}

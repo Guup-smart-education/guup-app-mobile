@@ -1,21 +1,17 @@
-query getAllPosts {
-  getAllPosts {
-    ... on GetPosts {
-      allPost {
+query getCommentByPost($post: String!) {
+  getCommentByPost(post: $post) {
+    ... on GetComment {
+      comments {
         id
         owner
+        description
         ownerProfile {
+          uid
           displayName
-          photoURL
+          thumbnailURL
           profission
         }
-        title
-        description
-        commentsCount
-      }
-      success {
-        message
-        type
+        createdAt
       }
     }
     ... on ErrorResponse {

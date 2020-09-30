@@ -38,7 +38,28 @@ const error = onError(({graphQLErrors, networkError}) => {
   }
 });
 
+const paginationPolicy = () => ({
+  merge(existing: any[], incoming: any[]) {
+    const merged = [...(incoming || [])];
+    return merged;
+  },
+  read(existing: any[]) {
+    return existing;
+  },
+});
+
 export const client = new ApolloClient({
-  cache: new InMemoryCache(),
   link: from([error, authMiddleware, httpLink]),
+  cache: new InMemoryCache({
+    resultCaching: true,
+    typePolicies: {
+      GetPosts: {
+        queryType: true,
+        keyFields: ['allPost'],
+        fields: {
+          allPost: paginationPolicy(),
+        },
+      },
+    },
+  }),
 });

@@ -1,8 +1,10 @@
-import React from 'react';
+import React, {useContext} from 'react';
+import {ThemeContext} from 'styled-components';
 import {Text} from './../../ui';
 import {AvatarContainer, AvatarLeft, AvatarRight, Avatarimage} from './_style';
 
 export enum ESizes {
+  'comment' = 'comment',
   'small' = 'small',
   'normal' = 'normal',
 }
@@ -20,13 +22,19 @@ export default ({
   secondText,
   size = ESizes.normal,
 }: IProps) => {
+  const theme = useContext(ThemeContext);
   return (
     <AvatarContainer>
       <AvatarLeft>
-        <Avatarimage size={size} source={{uri: image}} />
+        <Avatarimage
+          size={size}
+          {...(image
+            ? {source: {uri: image}}
+            : {source: theme.images.avatar.blank})}
+        />
       </AvatarLeft>
       <AvatarRight>
-        <Text preset="comment" bold>
+        <Text preset={size === 'comment' ? 'label' : 'comment'} bold>
           {firstText}
         </Text>
         <Text preset="label" color="darkGrey" light>

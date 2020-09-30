@@ -11,6 +11,9 @@ declare module 'styled-components' {
       onboarding: {
         welcome: Blob;
       };
+      avatar: {
+        blank: Blob;
+      };
     };
     device: {
       header: {
@@ -105,6 +108,7 @@ declare module 'styled-components' {
       };
     };
     spacing: {
+      1: string;
       5: string;
       10: string;
       15: string;
@@ -133,6 +137,7 @@ declare module 'styled-components' {
         50: string;
       };
       lineHeigth: {
+        l21: string;
         l24: string;
         l38: string;
         l42: string;

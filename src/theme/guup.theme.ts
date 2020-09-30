@@ -12,6 +12,9 @@ export const guupTheme: DefaultTheme = {
     onboarding: {
       welcome: require('./../../assets/images/guupOnboardFirst.png'),
     },
+    avatar: {
+      blank: require('./../../assets/images/guupBlankAvatar.png'),
+    },
   },
   device: {
     header: {
@@ -106,6 +109,7 @@ export const guupTheme: DefaultTheme = {
     },
   },
   spacing: {
+    '1': `${PixelRatio.getFontScale() * 1}px`,
     '5': `${PixelRatio.getFontScale() * 5}px`,
     '10': `${PixelRatio.getFontScale() * 10}px`,
     '15': `${PixelRatio.getFontScale() * 15}px`,
@@ -134,6 +138,7 @@ export const guupTheme: DefaultTheme = {
       '50': `${PixelRatio.getFontScale() * 50}px`,
     },
     lineHeigth: {
+      l21: `${RFValue(22, 775)}px`,
       l24: `${RFValue(26, 775)}px`,
       l38: `${RFValue(38, 775)}px`,
       l42: `${RFValue(42, 775)}px`,

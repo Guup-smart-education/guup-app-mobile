@@ -4,16 +4,18 @@ export const PostContainer = styled.View`
   width: 100%;
   background-color: ${({theme}) => theme.colors.ligth};
   border-radius: ${({theme}) => theme.borderRadius[8]};
-  padding-top: ${({theme}) => theme.spacing.padding[20]};
-  padding-bottom: ${({theme}) => theme.spacing.padding[15]};
-  padding-left: ${({theme}) => theme.spacing.padding[15]};
-  padding-right: ${({theme}) => theme.spacing.padding[15]};
+  padding-top: ${({theme}) => theme.spacing.padding[15]};
+  padding-bottom: ${({theme}) => theme.spacing[10]};
 `;
 
-export const PostHeader = styled.View`
+export const PostHeader = styled.View<{card: boolean}>`
   justify-content: space-between;
   flex: 1;
   flex-direction: row;
+  padding-left: ${({theme, card}) =>
+    card ? theme.spacing.padding[15] : theme.spacing.padding[25]};
+  padding-right: ${({theme, card}) =>
+    card ? theme.spacing.padding[15] : theme.spacing.padding[25]};
 `;
 
 export const PostBody = styled.View`
@@ -21,18 +23,25 @@ export const PostBody = styled.View`
   flex-direction: column;
 `;
 
-export const PostContent = styled.View`
+export const PostContent = styled.View<{card: boolean}>`
   padding-left: 5px;
   padding-right: 5px;
+  padding-left: ${({theme, card}) =>
+    card ? theme.spacing.padding[20] : theme.spacing[30]};
+  padding-right: ${({theme, card}) =>
+    card ? theme.spacing.padding[20] : theme.spacing[30]};
 `;
 
-export const PostActions = styled.View`
+export const PostActions = styled.View<{card: boolean}>`
   align-items: center;
   flex: 1;
   flex-direction: row;
   justify-content: space-between;
-  padding-left: 8px;
-  padding-right: 5px;
+  padding-top: ${({theme}) => theme.spacing[5]};
+  padding-left: ${({theme, card}) =>
+    card ? theme.spacing.padding[20] : theme.spacing[30]};
+  padding-right: ${({theme, card}) =>
+    card ? theme.spacing.padding[20] : theme.spacing[30]};
 `;
 
 export const PostActionItem = styled.View`

@@ -2,13 +2,14 @@ import styled from 'styled-components/native';
 
 type Props = {
   readonly dark?: boolean;
+  readonly center?: boolean;
 };
 
-export const SafeContainer = styled.SafeAreaView`
-  background-color: ${({theme}) => theme.colors.ligth};
+export const SafeContainer = styled.SafeAreaView<Props>`
+  background-color: ${({dark, theme}) =>
+    dark ? theme.colors.dark : theme.colors.veryLigthGrey};
   flex: 1;
-  justify-content: center;
-  align-items: center;
+  ${({center}) => center && 'justify-content: center; align-items: center'};
 `;
 
 export const ContainerGradient = styled.ImageBackground.attrs(({theme}) => ({
