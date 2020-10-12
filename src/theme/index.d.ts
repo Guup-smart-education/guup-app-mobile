@@ -46,6 +46,9 @@ declare module 'styled-components' {
       video: Blob;
       article: Blob;
       claps: Blob;
+      clapsActive: Blob;
+      bell: Blob;
+      save: Blob;
     };
     colors: {
       ligth: string;

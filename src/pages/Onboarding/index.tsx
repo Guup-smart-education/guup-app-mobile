@@ -84,7 +84,7 @@ const OnboardItem: React.FC<IOnboardItem> = ({
 const OnboardScreen: React.FC<PropsAuth> = ({navigation}) => {
   const scrollX = useRef(new Animated.Value(0)).current;
   return (
-    <Container safe>
+    <Container safe light>
       <Carousel
         scrollX={scrollX}
         size={DataOnboarding.slider.length}

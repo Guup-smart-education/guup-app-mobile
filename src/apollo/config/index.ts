@@ -60,6 +60,13 @@ export const client = new ApolloClient({
           allPost: paginationPolicy(),
         },
       },
+      // GetPaths: {
+      //   queryType: true,
+      //   keyFields: ['allPaths'],
+      //   fields: {
+      //     allPost: paginationPolicy(),
+      //   },
+      // },
     },
   }),
 });

@@ -47,6 +47,9 @@ export const guupTheme: DefaultTheme = {
     video: require('./../../assets/icons/guupIconVideo.png'),
     article: require('./../../assets/icons/guupIconArticle.png'),
     claps: require('./../../assets/icons/guupIconClaps.png'),
+    clapsActive: require('./../../assets/icons/guupIconClapsActive.png'),
+    bell: require('./../../assets/icons/guupIconBell.png'),
+    save: require('./../../assets/icons/guupIconSave.png'),
   },
   colors: {
     ligth: '#FFFFFF',
@@ -55,7 +58,7 @@ export const guupTheme: DefaultTheme = {
     primary: '#FF395C',
     secondary: '#3967FF',
     veryLigthGrey: '#F6F6F6',
-    contrast: '#60FFCA',
+    contrast: '#22FFA2',
     yellow: '#FFBC39',
     ligthGrey: '#DEDEDE',
     smoothGrey: '#E9E9E9',

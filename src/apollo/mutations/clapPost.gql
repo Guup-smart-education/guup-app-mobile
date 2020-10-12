@@ -1,0 +1,17 @@
+mutation clapPost($collection: ClapFor!, $post: String!) {
+  clapPost(collection: $collection, post: $post) {
+    ... on ClapPost {
+      post
+      success {
+        type
+        message
+      }
+    }
+    ... on ErrorResponse {
+      error {
+        type
+        message
+      }
+    }
+  }
+}

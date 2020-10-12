@@ -1,0 +1,15 @@
+mutation createCourse($course: ICourse) {
+  createCourse(course: $course) {
+    ... on CreateCourse {
+      createCourse
+      success {
+        message
+      }
+    }
+    ... on ErrorResponse {
+      error {
+        message
+      }
+    }
+  }
+}

@@ -18,6 +18,9 @@ export enum EIcons {
   'video',
   'article',
   'claps',
+  'clapsActive',
+  'bell',
+  'save',
 }
 
 export enum ETabIcon {

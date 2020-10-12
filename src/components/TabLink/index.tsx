@@ -20,7 +20,7 @@ export default ({links = LINKS, onPress, active}: EProps) => {
   return (
     <TabLinkContainer>
       {links.map((link) => (
-        <TabLinkItem key={link.id} >
+        <TabLinkItem key={link.id}>
           <TabLinkTouch onPress={() => onPress(link)}>
             <Text
               bold

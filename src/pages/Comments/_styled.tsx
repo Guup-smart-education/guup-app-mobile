@@ -4,6 +4,7 @@ import styled from 'styled-components/native';
 export const CommentsContainer = styled.View`
   width: 100%;
   flex: 1;
+  position: relative;
 `;
 
 export const CommentsDetailContainer = styled.View`
@@ -42,12 +43,10 @@ export const CommentListItem = styled.View`
 export const FooterContainer = styled.View`
   width: 100%;
   background-color: ${({theme}) => theme.colors.dark};
-  min-height: ${Dimensions.get('screen').width / 4 + 'px'};
+  min-height: ${Dimensions.get('screen').width / 5 + 'px'};
   padding-top: ${({theme}) => theme.spacing.padding[15]};
   padding-left: ${({theme}) => theme.spacing.padding[25]};
   padding-right: ${({theme}) => theme.spacing.padding[25]};
-  border-top-left-radius: ${({theme}) => theme.borderRadius[8]};
-  border-top-right-radius: ${({theme}) => theme.borderRadius[8]};
 `;
 
 export const CommentsActions = styled.View`

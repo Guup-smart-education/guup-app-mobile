@@ -12,7 +12,7 @@ export const StackOption = ({
   headerLeft: () => <Icon source="guup" />,
   headerTitle: () => null,
   headerRight: () => (
-    <Action onPress={() => navigation.navigate('GuupNews')}>
+    <Action onPress={navigation.navigate('GuupNews')}>
       <Text preset="comment" bold underline>
         criar conteudo +
       </Text>
@@ -34,7 +34,7 @@ export const StackBackOption = ({
   headerRightContainerStyle: {paddingRight: 25},
   headerTransparent: false,
   headerLeft: () => (
-    <Action onPress={() => goBack()}>
+    <Action onPress={goBack()}>
       <Icon source="arrow" />
     </Action>
   ),
@@ -43,6 +43,7 @@ export const StackBackOption = ({
   headerStyle: {
     elevation: 0,
   },
+  header: () => null,
 });
 
 export const StackBackOptionTransparent = ({
@@ -52,7 +53,7 @@ export const StackBackOptionTransparent = ({
   headerRightContainerStyle: {paddingRight: 25},
   headerTransparent: true,
   headerLeft: () => (
-    <Action onPress={() => goBack()}>
+    <Action onPress={goBack()}>
       <Icon source="arrow" />
     </Action>
   ),
@@ -61,4 +62,5 @@ export const StackBackOptionTransparent = ({
   headerStyle: {
     elevation: 0,
   },
+  header: () => null,
 });

@@ -1,3 +1,5 @@
+import {UserProfile} from './../graphql/types';
+
 export type Owner = {
   readonly id?: string | undefined | null;
   readonly ownerName?: string | undefined | null;
@@ -15,7 +17,9 @@ export type PostProps = {
   readonly showComments?: boolean | undefined | null;
   readonly navigateComments?: boolean | undefined | null;
   readonly comments?: number | undefined | null;
-  readonly claps?: number | undefined | null;
+  readonly claps?: Array<any> | undefined | null;
+  readonly clapsCount?: number | undefined | null;
+  readonly clapped?: boolean;
   readonly media?: string | undefined | null;
   readonly card?: boolean | undefined | null;
   readonly createdAt?: string | undefined | null;

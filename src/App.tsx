@@ -3,6 +3,7 @@ import {ThemeProvider} from 'styled-components/native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import React from 'react';
 import {AuthProvider} from './contexts/auth';
+import {PathProvider} from './contexts/path';
 import {NavigationContainer} from '@react-navigation/native';
 import Routes from './routes';
 import {guupTheme} from './theme/guup.theme';
@@ -16,7 +17,9 @@ const App: React.FC = () => {
         <SafeAreaProvider>
           <NavigationContainer>
             <AuthProvider>
-              <Routes />
+              <PathProvider>
+                <Routes />
+              </PathProvider>
             </AuthProvider>
           </NavigationContainer>
         </SafeAreaProvider>

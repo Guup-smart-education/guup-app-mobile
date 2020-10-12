@@ -2,12 +2,17 @@ import styled from 'styled-components/native';
 
 type Props = {
   readonly dark?: boolean;
+  readonly light?: boolean;
   readonly center?: boolean;
 };
 
 export const SafeContainer = styled.SafeAreaView<Props>`
-  background-color: ${({dark, theme}) =>
-    dark ? theme.colors.dark : theme.colors.veryLigthGrey};
+  background-color: ${({dark, light, theme}) =>
+    dark
+      ? theme.colors.dark
+      : light
+      ? theme.colors.ligth
+      : theme.colors.veryLigthGrey};
   flex: 1;
   ${({center}) => center && 'justify-content: center; align-items: center'};
 `;

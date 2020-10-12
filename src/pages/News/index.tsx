@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import R from 'ramda';
-import React, {useEffect, useState, useCallback} from 'react';
+import React, {useEffect, useState, useCallback, useContext} from 'react';
 import {Alert, FlatList, ActivityIndicator} from 'react-native';
 import {Separator, Text, Icon, Link, Container} from './../../ui';
 import {PostComment, GuupHeader, CreateComment} from './../../components';
@@ -16,12 +16,14 @@ import {
 } from './_styled';
 import {PropsApp} from './../../@types/app.navigation';
 import {GetUniqueId} from './../../helper';
+import {LIMIT_PER_PAGE} from './../../constants';
 import {
   Post,
   useCreatePostMutation,
   useGetAllPostsLazyQuery,
 } from './../../graphql/types.d';
 import NewsLoading from './_loading';
+import Authcontext from './../../contexts/auth';
 
 interface IProstItem {
   item: Post;
@@ -50,6 +52,7 @@ const ListLoadMore = ({loading}) => {
 };
 // Principal component
 const NewsScreen: React.FC<PropsApp> = () => {
+  const authContext = useContext(Authcontext);
   const [allPostsData, setAllPostsData] = useState<Array<Post>>([]);
   const [loadMore, setLoadMore] = useState<boolean>(false);
   const [isRefetch, setIsRefetch] = useState<boolean>(false);
@@ -72,9 +75,9 @@ const NewsScreen: React.FC<PropsApp> = () => {
     R.isEmpty(allPostsData) && getAllPosts();
   }, [getAllPosts]);
 
-  // useEffect(() => {
-  //   refetch && refetch();
-  // }, [refetch, isRefetch]);
+  useEffect(() => {
+    refetch && refetch();
+  }, [refetch, isRefetch]);
 
   useEffect(() => {
     if (fetchMore && loadMore && snapshot) {
@@ -86,7 +89,6 @@ const NewsScreen: React.FC<PropsApp> = () => {
 
   useEffect(() => {
     if (data?.getAllPosts?.__typename === 'GetPosts') {
-      console.log('data?.getAllPosts', data.getAllPosts.allPost);
       const allPosts: Array<Post> =
         data.getAllPosts.allPost || Array(0).fill({});
       setIsNoMorePosts(R.isEmpty(allPosts));
@@ -127,9 +129,12 @@ const NewsScreen: React.FC<PropsApp> = () => {
       description,
       commentsCount,
       photoURL,
+      claps,
       clapsCount,
       createdAt,
     } = item;
+    const authUser = authContext.user || {};
+    const clapped = claps && R.includes(`${authUser.uid}`, claps);
     return (
       <NewsPost>
         <PostComment
@@ -144,8 +149,10 @@ const NewsScreen: React.FC<PropsApp> = () => {
           showComments
           comments={commentsCount || 0}
           media={photoURL}
-          claps={clapsCount}
+          claps={claps || []}
+          clapsCount={clapsCount}
           createdAt={createdAt}
+          clapped={clapped}
         />
         <Separator size="large" />
       </NewsPost>
@@ -200,7 +207,13 @@ const NewsScreen: React.FC<PropsApp> = () => {
 
   // Handlers
   const handlefetchMoreData = () => {
-    if (!loadMore && !snapshot && !isNoMorePosts) {
+    if (
+      !loadMore &&
+      !snapshot &&
+      !isNoMorePosts &&
+      allPostsData.length === LIMIT_PER_PAGE
+    ) {
+      console.log('handlefetchMoreData news');
       const lastPost = R.last(allPostsData)?.id;
       setLoadMore(true);
       setSnapshot(lastPost || null);

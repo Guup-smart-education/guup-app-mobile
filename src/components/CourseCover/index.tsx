@@ -1,6 +1,6 @@
 import React from 'react';
+import IconList from './../IconList';
 import {Text, Icon, Separator, Link} from './../../ui';
-import {IconList} from './../../components';
 import {IconsList as IconListType} from './../../@types/icons.list';
 import {ICourseCover} from './../../@types/course.cover';
 
@@ -10,7 +10,6 @@ import {
   CourseCoverBody,
   CourseCoverFooter,
 } from './_styled';
-import {Alert} from 'react-native';
 
 const createList: (
   projectsCompleted: number,

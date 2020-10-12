@@ -1,0 +1,16 @@
+mutation createPath($path: InputPath!, $access: PathAccess!) {
+  createPath(path: $path, access: $access) {
+    ... on CreatePath {
+      createPath
+      success {
+        message
+      }
+    }
+    ... on ErrorResponse {
+      error {
+        type
+        message
+      }
+    }
+  }
+}

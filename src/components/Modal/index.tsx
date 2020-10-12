@@ -1,5 +1,5 @@
 import React, {ReactChild} from 'react';
-import {Text, ModalProps} from 'react-native';
+import {ModalProps} from 'react-native';
 import {ModalContainer, Modal} from './_styled';
 
 interface ICustomProps {

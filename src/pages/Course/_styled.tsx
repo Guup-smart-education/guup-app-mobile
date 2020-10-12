@@ -3,18 +3,25 @@ import styled from 'styled-components/native';
 
 interface ScrollProps extends ScrollViewProps {}
 
-export const CourseDetailContainer = styled.ScrollView`
-  padding-left: ${({theme}) => theme.spacing.padding[25]};
-  padding-right: ${({theme}) => theme.spacing.padding[25]};
-  padding-top: ${({theme}) => theme.spacing.padding[15]};
-  /* padding-bottom: ${({theme}) => theme.spacing.padding[25]}; */
+export const CourseDetailContainer = styled.View`
   width: 100%;
+  flex: 1;
+  position: relative;
 `;
 
 export const CourseDetailHeader = styled.View`
+  padding-left: ${({theme}) => theme.spacing.padding[25]};
+  padding-right: ${({theme}) => theme.spacing.padding[25]};
+  padding-bottom: ${({theme}) => theme.spacing[30]};
+  background-color: ${({theme}) => theme.colors.ligth};
+`;
+
+export const CourseDetailHeaderTop = styled.View``;
+export const CourseDetailHeaderBody = styled.View`
   flex-direction: row;
   justify-content: space-between;
 `;
+export const CourseDetailHeaderBottom = styled.View``;
 
 export const CourseDetailHeaderRight = styled.View`
   width: 75%;
@@ -23,11 +30,10 @@ export const CourseDetailHeaderRight = styled.View`
 export const CourseDetailHeaderLeft = styled.View``;
 
 export const CourseDetailContent = styled.View`
-  width: ${Dimensions.get('screen').width + 'px'};
-  border-top-width: 1px;
-  border-top-color: ${({theme}) => theme.colors.ligthGrey};
-  margin-top: ${({theme}) => theme.spacing.margin[20]};
-  margin-left: -25px;
+  /* padding-left: ${({theme}) => theme.spacing.padding[25]};
+  padding-right: ${({theme}) => theme.spacing.padding[25]};
+  padding-top: ${({theme}) => theme.spacing.padding[25]};
+  padding-bottom: ${({theme}) => theme.spacing.padding[25]}; */
 `;
 
 export const CourseTabContent = styled.View`
@@ -39,10 +45,8 @@ export const CourseTabContent = styled.View`
 
 export const FooterContainer = styled.View`
   width: 100%;
-  background-color: ${({theme}) => theme.colors.secondary};
-  border-top-left-radius: ${({theme}) => theme.borderRadius[8]};
-  border-top-right-radius: ${({theme}) => theme.borderRadius[8]};
-  min-height: ${Dimensions.get('screen').width / 4 + 'px'};
+  background-color: ${({theme}) => theme.colors.dark};
+  min-height: ${Dimensions.get('screen').width / 5 + 'px'};
   padding-top: ${({theme}) => theme.spacing.padding[15]};
   padding-left: ${({theme}) => theme.spacing.padding[25]};
   padding-right: ${({theme}) => theme.spacing.padding[25]};
@@ -50,6 +54,5 @@ export const FooterContainer = styled.View`
 
 export const FooterLabels = styled.View`
   align-items: center;
-  flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
 `;

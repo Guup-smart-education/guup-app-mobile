@@ -1,5 +1,6 @@
 import React, {createContext, useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
+import {UserProfile} from './../graphql/types.d';
 
 interface IProvisionAccess {
   user: string;
@@ -10,7 +11,7 @@ interface AuthContextData {
   signed: boolean;
   provisionAccess: IProvisionAccess;
   accessToken: string | null;
-  user: object | null;
+  user: UserProfile | null;
   siginDisable: number;
   signOut: () => void;
   setSession: (user: string, accessToken: string) => void;
@@ -34,14 +35,15 @@ export const AuthProvider: React.FC = ({children}) => {
       const storageUser = await AsyncStorage.getItem('@GUUPAuth:user');
       const storageToken = await AsyncStorage.getItem('@GUUPAuth:token');
       const disable = await AsyncStorage.getItem('@GUUPAuth:signinDisable');
-      console.log('useEffect storageUser', storageUser);
-      console.log('useEffect storageToken', storageToken);
       if (disable) {
         // TODO: Adicionar limitador de solicitudes
         setSiginDisable(parseInt(disable, 0));
       }
       if (storageUser && storageToken) {
-        setUser(JSON.parse(storageUser));
+        const userParse = JSON.parse(storageUser);
+        console.log('useEffect storageUser', userParse);
+        console.log('useEffect storageToken', storageToken);
+        setUser(JSON.parse(userParse));
         setAccessToken(storageToken);
         setSigned(true);
       }

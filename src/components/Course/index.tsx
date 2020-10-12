@@ -11,7 +11,7 @@ type CourseProps = {
   readonly largeName: string;
   readonly contentHours: string;
   readonly priceValue: string;
-}
+};
 
 export default ({largeName, contentHours, priceValue}: CourseProps) => {
   return (
@@ -24,7 +24,7 @@ export default ({largeName, contentHours, priceValue}: CourseProps) => {
           <Text preset="paragraph" bold>
             {largeName}
           </Text>
-          <Separator size="lili"/>
+          <Separator size="lili" />
           <Text preset="label">{contentHours}</Text>
         </CourseData>
       </CourseContent>

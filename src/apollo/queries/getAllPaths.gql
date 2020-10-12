@@ -1,0 +1,42 @@
+query getAllPaths($lastPath: String) {
+  getAllPaths(lastPath: $lastPath) {
+    ... on GetPaths {
+      allPaths {
+        id
+        owner
+        title
+        description
+        photoURL
+        ownerProfile {
+          displayName
+          profission
+          photoURL
+          thumbnailURL
+        }
+        owners {
+          uid
+          displayName
+          thumbnailURL
+        }
+        owners {
+          displayName
+          photoURL
+          thumbnailURL
+          profission
+        }
+        area
+        access
+        createdAt
+      }
+      success {
+        message
+      }
+    }
+    ... on ErrorResponse {
+      error {
+        type
+        message
+      }
+    }
+  }
+}

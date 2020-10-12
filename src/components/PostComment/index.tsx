@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {Avatar} from './../';
 import {Text, Separator, Icon, Action} from './../../ui';
 import {
@@ -15,7 +15,7 @@ import {useNavigation} from '@react-navigation/native';
 import {PostProps} from './../../@types/post.comment';
 import {AppScreenNavigationProp} from './../../@types/app.navigation';
 import {Alert, View} from 'react-native';
-import {Post} from './../../graphql/types.d';
+import {ClapFor, Post, useClapPostMutation} from './../../graphql/types.d';
 import GuupDate from './../Date';
 
 export default ({
@@ -30,10 +30,14 @@ export default ({
   comments,
   media,
   claps,
+  clapsCount,
+  clapped = false,
   card = true,
   createdAt,
 }: PostProps) => {
   const navigation = useNavigation<AppScreenNavigationProp>();
+  const [isClapped, setIsClapped] = useState<boolean>(clapped);
+  const [sendClap, {data, error}] = useClapPostMutation();
   const cleanPost: Post = {
     id: postID,
     description: postComment,
@@ -44,8 +48,28 @@ export default ({
       thumbnailURL: owner?.ownerPicture,
       profission: owner?.ownerProsiffion,
     },
-    clapsCount: claps,
+    claps,
+    clapsCount,
     createdAt,
+    clapped,
+  };
+  // Effects
+  useEffect(() => {
+    if (data?.clapPost?.__typename === 'ErrorResponse') {
+      Alert.alert('Aconteceu um problema', `${data.clapPost.error.message}`);
+    } else if (error) {
+      Alert.alert('Aconteceu um problema', `${error.message}`);
+    }
+  }, [data, error]);
+  // Handlers
+  const clapPost = () => {
+    setIsClapped(!isClapped);
+    sendClap({
+      variables: {
+        collection: ClapFor.Post,
+        post: `${postID}`,
+      },
+    });
   };
   return (
     <PostContainer>
@@ -113,9 +137,11 @@ export default ({
                 </Text>
               </PostActionItem>
             </Action>
-            <PostActionItem>
-              <Icon source="claps" />
-            </PostActionItem>
+            <Action onPress={() => clapPost()}>
+              <PostActionItem>
+                <Icon source={isClapped ? 'clapsActive' : 'claps'} />
+              </PostActionItem>
+            </Action>
           </PostActions>
         )}
       </PostBody>

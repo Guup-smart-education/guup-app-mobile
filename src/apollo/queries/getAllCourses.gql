@@ -1,0 +1,40 @@
+query getCourses {
+  getCourses {
+    ... on GetCourses {
+      courses {
+        id
+        path
+        title
+        description
+        area
+        difficult
+        photoURL
+        typeContent
+        viewsCount
+        clapsCount
+        commentsCount
+        comments {
+          id
+          owner
+          description
+        }
+        ownerProfile {
+          uid
+          displayName
+          photoURL
+          profission
+        }
+        createdAt
+      }
+      success {
+        message
+      }
+    }
+    ... on ErrorResponse {
+      error {
+        type
+        message
+      }
+    }
+  }
+}

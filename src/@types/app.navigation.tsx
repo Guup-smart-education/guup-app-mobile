@@ -19,9 +19,7 @@ export enum EApp {
 export type RootApp = {
   GuupExplorer: undefined;
   GuupCourse: undefined;
-  GuupCourseDetail: {
-    id?: string;
-  };
+  GuupCourseDetail: undefined;
   GuupNews: undefined;
   GuupUserProfile: {
     type?: keyof typeof EProfileType;

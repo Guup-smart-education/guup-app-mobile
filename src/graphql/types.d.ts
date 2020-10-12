@@ -95,13 +95,18 @@ export type Path = {
   owner?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
+  photoURL?: Maybe<Scalars['String']>;
   views?: Maybe<Scalars['Int']>;
   comments?: Maybe<Scalars['Int']>;
   claps?: Maybe<Scalars['Int']>;
   disabled?: Maybe<Scalars['Boolean']>;
   dateCreation?: Maybe<Scalars['String']>;
+  ownerProfile?: Maybe<UserProfile>;
   owners?: Maybe<Array<Maybe<UserProfile>>>;
   area?: Maybe<Array<Maybe<Scalars['String']>>>;
+  access?: Maybe<Scalars['String']>;
+  status?: Maybe<Scalars['String']>;
+  createdAt?: Maybe<Scalars['Date']>;
 };
 
 export type Comments = {
@@ -194,6 +199,7 @@ export type Course = {
   difficult?: Maybe<Scalars['String']>;
   viewsCount?: Maybe<Scalars['Float']>;
   clapsCount?: Maybe<Scalars['Float']>;
+  claps?: Maybe<Array<Maybe<Scalars['String']>>>;
   commentsCount?: Maybe<Scalars['Float']>;
   comments?: Maybe<Array<Maybe<Comments>>>;
   ownerProfile?: Maybe<UserProfile>;
@@ -262,6 +268,7 @@ export type Post = {
   viewsCount?: Maybe<Scalars['Float']>;
   commentsCount?: Maybe<Scalars['Float']>;
   clapsCount?: Maybe<Scalars['Float']>;
+  claps?: Maybe<Array<Maybe<Scalars['String']>>>;
   comments?: Maybe<Array<Maybe<Comments>>>;
   ownerProfile?: Maybe<UserProfile>;
   createdAt?: Maybe<Scalars['Date']>;
@@ -402,6 +409,11 @@ export type QueryGetCourseByIdArgs = {
 };
 
 
+export type QueryGetAllPathsArgs = {
+  lastPath?: Maybe<Scalars['String']>;
+};
+
+
 export type QueryGetPathsByOwnerArgs = {
   owner?: Maybe<Scalars['String']>;
 };
@@ -453,6 +465,7 @@ export type Mutation = {
   createCourse?: Maybe<UCreateCourse>;
   createPath?: Maybe<UCreatePath>;
   createPost?: Maybe<UCreatePost>;
+  clapPost?: Maybe<UClapPost>;
   createReview?: Maybe<UPostReview>;
   createUser?: Maybe<UCreateUser>;
   updateUserProfile?: Maybe<UUpdateProfile>;
@@ -498,11 +511,18 @@ export type MutationCreateCourseArgs = {
 
 export type MutationCreatePathArgs = {
   path: InputPath;
+  access: PathAccess;
 };
 
 
 export type MutationCreatePostArgs = {
   post: InputPost;
+};
+
+
+export type MutationClapPostArgs = {
+  collection: ClapFor;
+  post: Scalars['String'];
 };
 
 
@@ -649,9 +669,20 @@ export type UGetCourses = GetCourses | ErrorResponse;
 
 export type UGetCourseDetail = GetCourseDetail | ErrorResponse;
 
+export enum PathType {
+  Path = 'PATH',
+  Course = 'COURSE'
+}
+
+export enum PathAccess {
+  LimitAccess = 'LIMIT_ACCESS',
+  ForEveryone = 'FOR_EVERYONE'
+}
+
 export type InputPath = {
   title: Scalars['String'];
   description: Scalars['String'];
+  photoURL: Scalars['String'];
 };
 
 export type GetPaths = {
@@ -678,6 +709,11 @@ export type UGetPath = GetPath | ErrorResponse;
 
 export type UCreatePath = CreatePath | ErrorResponse;
 
+export enum ClapFor {
+  Course = 'COURSE',
+  Post = 'POST'
+}
+
 export type InputPost = {
   title?: Maybe<Scalars['String']>;
   description: Scalars['String'];
@@ -703,11 +739,19 @@ export type CreatePost = {
   success?: Maybe<Success>;
 };
 
+export type ClapPost = {
+  __typename?: 'ClapPost';
+  post?: Maybe<Scalars['String']>;
+  success?: Maybe<Success>;
+};
+
 export type UGetAllPost = GetPosts | ErrorResponse;
 
 export type UGetPost = GetPost | ErrorResponse;
 
 export type UCreatePost = CreatePost | ErrorResponse;
+
+export type UClapPost = ClapPost | ErrorResponse;
 
 export type IPostReview = {
   post: Scalars['String'];
@@ -796,6 +840,30 @@ export enum CacheControlScope {
 }
 
 
+export type ClapPostMutationVariables = Exact<{
+  collection: ClapFor;
+  post: Scalars['String'];
+}>;
+
+
+export type ClapPostMutation = (
+  { __typename?: 'Mutation' }
+  & { clapPost?: Maybe<(
+    { __typename?: 'ClapPost' }
+    & Pick<ClapPost, 'post'>
+    & { success?: Maybe<(
+      { __typename?: 'Success' }
+      & Pick<Success, 'type' | 'message'>
+    )> }
+  ) | (
+    { __typename?: 'ErrorResponse' }
+    & { error: (
+      { __typename?: 'Error' }
+      & Pick<Error, 'type' | 'message'>
+    ) }
+  )> }
+);
+
 export type CreateCommentMutationVariables = Exact<{
   collection: CommentFor;
   post: Scalars['String'];
@@ -815,6 +883,53 @@ export type CreateCommentMutation = (
         & Pick<UserProfile, 'displayName' | 'photoURL' | 'profission'>
       )> }
     )>, success?: Maybe<(
+      { __typename?: 'Success' }
+      & Pick<Success, 'message'>
+    )> }
+  ) | (
+    { __typename?: 'ErrorResponse' }
+    & { error: (
+      { __typename?: 'Error' }
+      & Pick<Error, 'type' | 'message'>
+    ) }
+  )> }
+);
+
+export type CreateCourseMutationVariables = Exact<{
+  course?: Maybe<ICourse>;
+}>;
+
+
+export type CreateCourseMutation = (
+  { __typename?: 'Mutation' }
+  & { createCourse?: Maybe<(
+    { __typename?: 'CreateCourse' }
+    & Pick<CreateCourse, 'createCourse'>
+    & { success?: Maybe<(
+      { __typename?: 'Success' }
+      & Pick<Success, 'message'>
+    )> }
+  ) | (
+    { __typename?: 'ErrorResponse' }
+    & { error: (
+      { __typename?: 'Error' }
+      & Pick<Error, 'message'>
+    ) }
+  )> }
+);
+
+export type CreatePathMutationVariables = Exact<{
+  path: InputPath;
+  access: PathAccess;
+}>;
+
+
+export type CreatePathMutation = (
+  { __typename?: 'Mutation' }
+  & { createPath?: Maybe<(
+    { __typename?: 'CreatePath' }
+    & Pick<CreatePath, 'createPath'>
+    & { success?: Maybe<(
       { __typename?: 'Success' }
       & Pick<Success, 'message'>
     )> }
@@ -942,6 +1057,68 @@ export type AuthSignUpMutation = (
   ) }
 );
 
+export type GetCoursesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetCoursesQuery = (
+  { __typename?: 'Query' }
+  & { getCourses?: Maybe<(
+    { __typename?: 'GetCourses' }
+    & { courses?: Maybe<Array<Maybe<(
+      { __typename?: 'Course' }
+      & Pick<Course, 'id' | 'path' | 'title' | 'description' | 'area' | 'difficult' | 'photoURL' | 'typeContent' | 'viewsCount' | 'clapsCount' | 'commentsCount' | 'createdAt'>
+      & { comments?: Maybe<Array<Maybe<(
+        { __typename?: 'Comments' }
+        & Pick<Comments, 'id' | 'owner' | 'description'>
+      )>>>, ownerProfile?: Maybe<(
+        { __typename?: 'UserProfile' }
+        & Pick<UserProfile, 'uid' | 'displayName' | 'photoURL' | 'profission'>
+      )> }
+    )>>>, success?: Maybe<(
+      { __typename?: 'Success' }
+      & Pick<Success, 'message'>
+    )> }
+  ) | (
+    { __typename?: 'ErrorResponse' }
+    & { error: (
+      { __typename?: 'Error' }
+      & Pick<Error, 'type' | 'message'>
+    ) }
+  )> }
+);
+
+export type GetAllPathsQueryVariables = Exact<{
+  lastPath?: Maybe<Scalars['String']>;
+}>;
+
+
+export type GetAllPathsQuery = (
+  { __typename?: 'Query' }
+  & { getAllPaths?: Maybe<(
+    { __typename?: 'GetPaths' }
+    & { allPaths?: Maybe<Array<Maybe<(
+      { __typename?: 'Path' }
+      & Pick<Path, 'id' | 'owner' | 'title' | 'description' | 'photoURL' | 'area' | 'access' | 'createdAt'>
+      & { ownerProfile?: Maybe<(
+        { __typename?: 'UserProfile' }
+        & Pick<UserProfile, 'displayName' | 'profission' | 'photoURL' | 'thumbnailURL'>
+      )>, owners?: Maybe<Array<Maybe<(
+        { __typename?: 'UserProfile' }
+        & Pick<UserProfile, 'uid' | 'displayName' | 'thumbnailURL' | 'photoURL' | 'profission'>
+      )>>> }
+    )>>>, success?: Maybe<(
+      { __typename?: 'Success' }
+      & Pick<Success, 'message'>
+    )> }
+  ) | (
+    { __typename?: 'ErrorResponse' }
+    & { error: (
+      { __typename?: 'Error' }
+      & Pick<Error, 'type' | 'message'>
+    ) }
+  )> }
+);
+
 export type GetAllPostsQueryVariables = Exact<{
   lastPost?: Maybe<Scalars['String']>;
 }>;
@@ -953,7 +1130,7 @@ export type GetAllPostsQuery = (
     { __typename?: 'GetPosts' }
     & { allPost?: Maybe<Array<Maybe<(
       { __typename?: 'Post' }
-      & Pick<Post, 'id' | 'owner' | 'title' | 'description' | 'commentsCount' | 'createdAt'>
+      & Pick<Post, 'id' | 'owner' | 'title' | 'description' | 'claps' | 'clapsCount' | 'commentsCount' | 'createdAt'>
       & { ownerProfile?: Maybe<(
         { __typename?: 'UserProfile' }
         & Pick<UserProfile, 'displayName' | 'thumbnailURL' | 'profission'>
@@ -997,7 +1174,84 @@ export type GetCommentByPostQuery = (
   )> }
 );
 
+export type GetCoursesByPathQueryVariables = Exact<{
+  path: Scalars['String'];
+}>;
 
+
+export type GetCoursesByPathQuery = (
+  { __typename?: 'Query' }
+  & { getCoursesByPath?: Maybe<(
+    { __typename?: 'GetCourses' }
+    & { courses?: Maybe<Array<Maybe<(
+      { __typename?: 'Course' }
+      & Pick<Course, 'id' | 'title' | 'description' | 'area' | 'typeContent' | 'difficult' | 'viewsCount' | 'commentsCount' | 'createdAt'>
+      & { comments?: Maybe<Array<Maybe<(
+        { __typename?: 'Comments' }
+        & Pick<Comments, 'id' | 'owner' | 'description'>
+      )>>>, ownerProfile?: Maybe<(
+        { __typename?: 'UserProfile' }
+        & Pick<UserProfile, 'displayName' | 'photoURL' | 'thumbnailURL' | 'profission'>
+      )> }
+    )>>>, success?: Maybe<(
+      { __typename?: 'Success' }
+      & Pick<Success, 'message'>
+    )> }
+  ) | (
+    { __typename?: 'ErrorResponse' }
+    & { error: (
+      { __typename?: 'Error' }
+      & Pick<Error, 'message'>
+    ) }
+  )> }
+);
+
+
+export const ClapPostDocument = gql`
+    mutation clapPost($collection: ClapFor!, $post: String!) {
+  clapPost(collection: $collection, post: $post) {
+    ... on ClapPost {
+      post
+      success {
+        type
+        message
+      }
+    }
+    ... on ErrorResponse {
+      error {
+        type
+        message
+      }
+    }
+  }
+}
+    `;
+export type ClapPostMutationFn = Apollo.MutationFunction<ClapPostMutation, ClapPostMutationVariables>;
+
+/**
+ * __useClapPostMutation__
+ *
+ * To run a mutation, you first call `useClapPostMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useClapPostMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [clapPostMutation, { data, loading, error }] = useClapPostMutation({
+ *   variables: {
+ *      collection: // value for 'collection'
+ *      post: // value for 'post'
+ *   },
+ * });
+ */
+export function useClapPostMutation(baseOptions?: Apollo.MutationHookOptions<ClapPostMutation, ClapPostMutationVariables>) {
+        return Apollo.useMutation<ClapPostMutation, ClapPostMutationVariables>(ClapPostDocument, baseOptions);
+      }
+export type ClapPostMutationHookResult = ReturnType<typeof useClapPostMutation>;
+export type ClapPostMutationResult = Apollo.MutationResult<ClapPostMutation>;
+export type ClapPostMutationOptions = Apollo.BaseMutationOptions<ClapPostMutation, ClapPostMutationVariables>;
 export const CreateCommentDocument = gql`
     mutation createComment($collection: CommentFor!, $post: String!, $description: String!) {
   createComment(collection: $collection, comment: {post: $post, description: $description}) {
@@ -1053,6 +1307,92 @@ export function useCreateCommentMutation(baseOptions?: Apollo.MutationHookOption
 export type CreateCommentMutationHookResult = ReturnType<typeof useCreateCommentMutation>;
 export type CreateCommentMutationResult = Apollo.MutationResult<CreateCommentMutation>;
 export type CreateCommentMutationOptions = Apollo.BaseMutationOptions<CreateCommentMutation, CreateCommentMutationVariables>;
+export const CreateCourseDocument = gql`
+    mutation createCourse($course: ICourse) {
+  createCourse(course: $course) {
+    ... on CreateCourse {
+      createCourse
+      success {
+        message
+      }
+    }
+    ... on ErrorResponse {
+      error {
+        message
+      }
+    }
+  }
+}
+    `;
+export type CreateCourseMutationFn = Apollo.MutationFunction<CreateCourseMutation, CreateCourseMutationVariables>;
+
+/**
+ * __useCreateCourseMutation__
+ *
+ * To run a mutation, you first call `useCreateCourseMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCourseMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCourseMutation, { data, loading, error }] = useCreateCourseMutation({
+ *   variables: {
+ *      course: // value for 'course'
+ *   },
+ * });
+ */
+export function useCreateCourseMutation(baseOptions?: Apollo.MutationHookOptions<CreateCourseMutation, CreateCourseMutationVariables>) {
+        return Apollo.useMutation<CreateCourseMutation, CreateCourseMutationVariables>(CreateCourseDocument, baseOptions);
+      }
+export type CreateCourseMutationHookResult = ReturnType<typeof useCreateCourseMutation>;
+export type CreateCourseMutationResult = Apollo.MutationResult<CreateCourseMutation>;
+export type CreateCourseMutationOptions = Apollo.BaseMutationOptions<CreateCourseMutation, CreateCourseMutationVariables>;
+export const CreatePathDocument = gql`
+    mutation createPath($path: InputPath!, $access: PathAccess!) {
+  createPath(path: $path, access: $access) {
+    ... on CreatePath {
+      createPath
+      success {
+        message
+      }
+    }
+    ... on ErrorResponse {
+      error {
+        type
+        message
+      }
+    }
+  }
+}
+    `;
+export type CreatePathMutationFn = Apollo.MutationFunction<CreatePathMutation, CreatePathMutationVariables>;
+
+/**
+ * __useCreatePathMutation__
+ *
+ * To run a mutation, you first call `useCreatePathMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePathMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPathMutation, { data, loading, error }] = useCreatePathMutation({
+ *   variables: {
+ *      path: // value for 'path'
+ *      access: // value for 'access'
+ *   },
+ * });
+ */
+export function useCreatePathMutation(baseOptions?: Apollo.MutationHookOptions<CreatePathMutation, CreatePathMutationVariables>) {
+        return Apollo.useMutation<CreatePathMutation, CreatePathMutationVariables>(CreatePathDocument, baseOptions);
+      }
+export type CreatePathMutationHookResult = ReturnType<typeof useCreatePathMutation>;
+export type CreatePathMutationResult = Apollo.MutationResult<CreatePathMutation>;
+export type CreatePathMutationOptions = Apollo.BaseMutationOptions<CreatePathMutation, CreatePathMutationVariables>;
 export const CreatePostDocument = gql`
     mutation createPost($title: String, $description: String!, $photoURL: String, $linkURL: String) {
   createPost(post: {title: $title, description: $description, photoURL: $photoURL, linkURL: $linkURL}) {
@@ -1270,6 +1610,145 @@ export function useAuthSignUpMutation(baseOptions?: Apollo.MutationHookOptions<A
 export type AuthSignUpMutationHookResult = ReturnType<typeof useAuthSignUpMutation>;
 export type AuthSignUpMutationResult = Apollo.MutationResult<AuthSignUpMutation>;
 export type AuthSignUpMutationOptions = Apollo.BaseMutationOptions<AuthSignUpMutation, AuthSignUpMutationVariables>;
+export const GetCoursesDocument = gql`
+    query getCourses {
+  getCourses {
+    ... on GetCourses {
+      courses {
+        id
+        path
+        title
+        description
+        area
+        difficult
+        photoURL
+        typeContent
+        viewsCount
+        clapsCount
+        commentsCount
+        comments {
+          id
+          owner
+          description
+        }
+        ownerProfile {
+          uid
+          displayName
+          photoURL
+          profission
+        }
+        createdAt
+      }
+      success {
+        message
+      }
+    }
+    ... on ErrorResponse {
+      error {
+        type
+        message
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetCoursesQuery__
+ *
+ * To run a query within a React component, call `useGetCoursesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCoursesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCoursesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetCoursesQuery(baseOptions?: Apollo.QueryHookOptions<GetCoursesQuery, GetCoursesQueryVariables>) {
+        return Apollo.useQuery<GetCoursesQuery, GetCoursesQueryVariables>(GetCoursesDocument, baseOptions);
+      }
+export function useGetCoursesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCoursesQuery, GetCoursesQueryVariables>) {
+          return Apollo.useLazyQuery<GetCoursesQuery, GetCoursesQueryVariables>(GetCoursesDocument, baseOptions);
+        }
+export type GetCoursesQueryHookResult = ReturnType<typeof useGetCoursesQuery>;
+export type GetCoursesLazyQueryHookResult = ReturnType<typeof useGetCoursesLazyQuery>;
+export type GetCoursesQueryResult = Apollo.QueryResult<GetCoursesQuery, GetCoursesQueryVariables>;
+export const GetAllPathsDocument = gql`
+    query getAllPaths($lastPath: String) {
+  getAllPaths(lastPath: $lastPath) {
+    ... on GetPaths {
+      allPaths {
+        id
+        owner
+        title
+        description
+        photoURL
+        ownerProfile {
+          displayName
+          profission
+          photoURL
+          thumbnailURL
+        }
+        owners {
+          uid
+          displayName
+          thumbnailURL
+          photoURL
+          profission
+        }
+        owners {
+          displayName
+          photoURL
+          thumbnailURL
+          profission
+        }
+        area
+        access
+        createdAt
+      }
+      success {
+        message
+      }
+    }
+    ... on ErrorResponse {
+      error {
+        type
+        message
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetAllPathsQuery__
+ *
+ * To run a query within a React component, call `useGetAllPathsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllPathsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllPathsQuery({
+ *   variables: {
+ *      lastPath: // value for 'lastPath'
+ *   },
+ * });
+ */
+export function useGetAllPathsQuery(baseOptions?: Apollo.QueryHookOptions<GetAllPathsQuery, GetAllPathsQueryVariables>) {
+        return Apollo.useQuery<GetAllPathsQuery, GetAllPathsQueryVariables>(GetAllPathsDocument, baseOptions);
+      }
+export function useGetAllPathsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllPathsQuery, GetAllPathsQueryVariables>) {
+          return Apollo.useLazyQuery<GetAllPathsQuery, GetAllPathsQueryVariables>(GetAllPathsDocument, baseOptions);
+        }
+export type GetAllPathsQueryHookResult = ReturnType<typeof useGetAllPathsQuery>;
+export type GetAllPathsLazyQueryHookResult = ReturnType<typeof useGetAllPathsLazyQuery>;
+export type GetAllPathsQueryResult = Apollo.QueryResult<GetAllPathsQuery, GetAllPathsQueryVariables>;
 export const GetAllPostsDocument = gql`
     query getAllPosts($lastPost: String) {
   getAllPosts(lastPost: $lastPost) {
@@ -1284,6 +1763,8 @@ export const GetAllPostsDocument = gql`
         }
         title
         description
+        claps
+        clapsCount
         commentsCount
         createdAt
       }
@@ -1379,3 +1860,67 @@ export function useGetCommentByPostLazyQuery(baseOptions?: Apollo.LazyQueryHookO
 export type GetCommentByPostQueryHookResult = ReturnType<typeof useGetCommentByPostQuery>;
 export type GetCommentByPostLazyQueryHookResult = ReturnType<typeof useGetCommentByPostLazyQuery>;
 export type GetCommentByPostQueryResult = Apollo.QueryResult<GetCommentByPostQuery, GetCommentByPostQueryVariables>;
+export const GetCoursesByPathDocument = gql`
+    query getCoursesByPath($path: String!) {
+  getCoursesByPath(path: $path) {
+    ... on GetCourses {
+      courses {
+        id
+        title
+        description
+        area
+        typeContent
+        difficult
+        viewsCount
+        commentsCount
+        comments {
+          id
+          owner
+          description
+        }
+        ownerProfile {
+          displayName
+          photoURL
+          thumbnailURL
+          profission
+        }
+        createdAt
+      }
+      success {
+        message
+      }
+    }
+    ... on ErrorResponse {
+      error {
+        message
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetCoursesByPathQuery__
+ *
+ * To run a query within a React component, call `useGetCoursesByPathQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCoursesByPathQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCoursesByPathQuery({
+ *   variables: {
+ *      path: // value for 'path'
+ *   },
+ * });
+ */
+export function useGetCoursesByPathQuery(baseOptions?: Apollo.QueryHookOptions<GetCoursesByPathQuery, GetCoursesByPathQueryVariables>) {
+        return Apollo.useQuery<GetCoursesByPathQuery, GetCoursesByPathQueryVariables>(GetCoursesByPathDocument, baseOptions);
+      }
+export function useGetCoursesByPathLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCoursesByPathQuery, GetCoursesByPathQueryVariables>) {
+          return Apollo.useLazyQuery<GetCoursesByPathQuery, GetCoursesByPathQueryVariables>(GetCoursesByPathDocument, baseOptions);
+        }
+export type GetCoursesByPathQueryHookResult = ReturnType<typeof useGetCoursesByPathQuery>;
+export type GetCoursesByPathLazyQueryHookResult = ReturnType<typeof useGetCoursesByPathLazyQuery>;
+export type GetCoursesByPathQueryResult = Apollo.QueryResult<GetCoursesByPathQuery, GetCoursesByPathQueryVariables>;

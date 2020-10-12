@@ -1,0 +1,36 @@
+query getCoursesByPath($path: String!) {
+  getCoursesByPath(path: $path) {
+    ... on GetCourses {
+      courses {
+        id
+        title
+        description
+        area
+        typeContent
+        difficult
+        viewsCount
+        commentsCount
+        comments {
+          id
+          owner
+          description
+        }
+        ownerProfile {
+          displayName
+          photoURL
+          thumbnailURL
+          profission
+        }
+        createdAt
+      }
+      success {
+        message
+      }
+    }
+    ... on ErrorResponse {
+      error {
+        message
+      }
+    }
+  }
+}

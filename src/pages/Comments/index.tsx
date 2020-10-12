@@ -1,7 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import R from 'ramda';
 import React, {useState, useEffect, useCallback} from 'react';
-import {Text, Link, Separator, Action, Icon, Container} from './../../ui';
+import {
+  Text,
+  Link,
+  Separator,
+  Action,
+  Icon,
+  Container,
+  HeaderPatch,
+  FooterPatch,
+} from './../../ui';
 import {GetUniqueId} from './../../helper';
 import {
   PostComment,
@@ -26,13 +35,12 @@ import {
   Comments,
   useGetCommentByPostLazyQuery,
   useCreateCommentMutation,
-  GetCommentByPostDocument,
   CommentFor,
   Post,
 } from './../../graphql/types.d';
 import {FlatList, ActivityIndicator, Alert} from 'react-native';
-// import {useNavigation} from '@react-navigation/native';
-// import {CommentScreenNavigationProp} from './../../@types/app.navigation';
+import {useNavigation} from '@react-navigation/native';
+import {CommentScreenNavigationProp} from './../../@types/app.navigation';
 
 // List component
 const CommentListSection: React.FC<{
@@ -40,11 +48,11 @@ const CommentListSection: React.FC<{
   newComment?: Comments;
   myCommentsCount: number;
 }> = ({post, newComment, myCommentsCount}) => {
-  // const navigation = useNavigation<CommentScreenNavigationProp>();
+  const navigation = useNavigation<CommentScreenNavigationProp>();
   const [comments, setComments] = useState<Array<Comments>>([]);
   const [
     getAllComments,
-    {data, loading, error, refetch, client},
+    {data, loading, error, refetch},
   ] = useGetCommentByPostLazyQuery({
     variables: {post: post.id || ''},
   });
@@ -60,12 +68,6 @@ const CommentListSection: React.FC<{
   // useEffect(() => {
   //   refetch && refetch();
   // }, [refetch]);
-
-  // useEffect(() => {
-  //   if (client) {
-  //     client.readQuery({query: GetCommentByPostDocument});
-  //   }
-  // }, [client]);
 
   useEffect(() => {
     if (data?.getCommentByPost?.__typename === 'ErrorResponse') {
@@ -117,7 +119,7 @@ const CommentListSection: React.FC<{
   const CommentDetail = useCallback(() => {
     return (
       <>
-        {/* <CommentNav>
+        <CommentNav>
           <GuupHeader
             leftRenderIntem={
               <Action onPress={() => navigation.goBack()}>
@@ -125,7 +127,7 @@ const CommentListSection: React.FC<{
               </Action>
             }
           />
-        </CommentNav> */}
+        </CommentNav>
         <CommentsDetailContainer>
           <CommentsDetail focusable={false} scrollEnabled={false}>
             <PostComment
@@ -145,6 +147,7 @@ const CommentListSection: React.FC<{
               showComments
               card={false}
               navigateComments={false}
+              clapped={post.clapped}
             />
           </CommentsDetail>
         </CommentsDetailContainer>
@@ -244,7 +247,8 @@ const CommentsScreen: React.FC<CommentPropsApp> = ({
   // End handlers
 
   return (
-    <Container center={false}>
+    <Container safe center={false}>
+      <HeaderPatch />
       <CommentsContainer>
         <CommentsContent>
           <CommentListSection
@@ -269,6 +273,7 @@ const CommentsScreen: React.FC<CommentPropsApp> = ({
         toggleModal={toggleComment}
         onSendMessage={(message: string) => sendComment(message)}
       />
+      <FooterPatch />
     </Container>
   );
 };

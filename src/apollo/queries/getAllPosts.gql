@@ -11,6 +11,8 @@ query getAllPosts($lastPost: String) {
         }
         title
         description
+        claps
+        clapsCount
         commentsCount
         createdAt
       }
