@@ -2,7 +2,7 @@
 import R from 'ramda';
 import React, {useState, useEffect, useCallback} from 'react';
 import {Alert, View, FlatList, ActivityIndicator, Modal} from 'react-native';
-import {Container, Text, Link, Icon, Separator} from './../../ui';
+import {Container, Text, Link, Icon, Separator, Action} from './../../ui';
 import {
   GuupHeader,
   TabLink,
@@ -17,6 +17,7 @@ import {
   ExplorerAction,
   ExplorerTitle,
   ExplorerHeaderPatch,
+  ExplorerEmpty,
 } from './_styled';
 import {ETabLinks} from './../../@types/tablink';
 import {AppScreenNavigationProp} from './../../@types/app.navigation';
@@ -59,13 +60,21 @@ const ExplorerScreen: React.FC = () => {
   };
   const [
     getAllPaths,
-    {data, loading, error, refetch, fetchMore, networkStatus},
+    {data, loading, error, refetch, fetchMore, updateQuery, called},
   ] = useGetAllPathsLazyQuery();
-
   // Effects
   useEffect(() => {
     R.isEmpty(allPathsData) && getAllPaths();
   }, [allPathsData, getAllPaths]);
+
+  useEffect(() => {
+    if (updateQuery) {
+      console.log('updateQuery');
+    }
+    if (called) {
+      console.log('called');
+    }
+  }, [updateQuery, called]);
 
   // useEffect(() => {
   //   refetch && refetch();
@@ -75,13 +84,17 @@ const ExplorerScreen: React.FC = () => {
     if (fetchMore && loadMore && snapshot && !isNoMorePaths) {
       fetchMore({
         variables: {lastPath: snapshot},
+        // updateQuery: (previousResult, {fetchMoreResult}) => {
+        //   console.log('updateQuery fetchMoreResult: ', fetchMoreResult);
+        //   console.log('updateQuery previousResult: ', previousResult);
+        //   return true;
+        // },
       });
     }
   }, [snapshot, loadMore]);
 
   useEffect(() => {
     if (data?.getAllPaths?.__typename === 'GetPaths') {
-      console.log('networkStatus', networkStatus);
       const allPaths: Array<any> = [...(data.getAllPaths.allPaths || [])];
       console.log('data?.getAllPaths', allPaths);
       setIsNoMorePaths(R.isEmpty(allPaths));
@@ -95,6 +108,30 @@ const ExplorerScreen: React.FC = () => {
   }, [data]);
   // End effects
 
+  // Handlers
+  const handlefetchMoreData = () => {
+    if (
+      !loadMore &&
+      !snapshot &&
+      !isNoMorePaths &&
+      allPathsData.length === LIMIT_PER_PAGE
+    ) {
+      console.log(`handlefetchMoreData > ${LIMIT_PER_PAGE}`);
+      const lastPath = R.last(allPathsData)?.id;
+      setLoadMore(true);
+      setSnapshot(lastPath || null);
+    }
+  };
+
+  const handleRefresh = () => {
+    // setAllPostsData([]);
+    setIsNoMorePaths(false);
+    setLoadMore(false);
+    setIsRefetch(true);
+    refetch && refetch();
+  };
+  // End handlers
+
   // Callbacks
   const keyExtractor = useCallback(
     ({id}: Path) => `explorer-path-${id || GetUniqueId()}`,
@@ -102,23 +139,19 @@ const ExplorerScreen: React.FC = () => {
   );
 
   const CourseItem = useCallback(({item}: {item: Path}) => {
-    console.log('CourseItem', item);
     return (
       <View>
         <Separator size="large" />
         <GuupCourseCard
           type="PATH"
-          imageUri={
-            item.photoURL ||
-            'https://images.unsplash.com/photo-1601666621148-7100d0f63ff9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1164&q=80'
-          }
+          imageUri={item.photoURL || ''}
           title={item.title || 'Guup course'}
           content="12 conteudos"
-          owner={item.ownerProfile}
+          owner={item.ownerProfile || {}}
           owners={item.owners}
           onPress={() => {
             dispatch({type: PathTypes.SET_CURRENT_PATH, payload: item});
-            navigation.navigate('GuupCourseDetail');
+            navigation.navigate('GuupCourseDetail', {mode: 'ONLY_VIEW'});
           }}
         />
       </View>
@@ -134,7 +167,8 @@ const ExplorerScreen: React.FC = () => {
             rightRenderIntem={
               <Link
                 preset="simple"
-                onPress={() => setToggleModal(!toggleModal)}>
+                onPress={() => navigation.navigate('GuupContentCreate')}>
+                {/* onPress={() => setToggleModal(!toggleModal)}> */}
                 Criar +
               </Link>
             }
@@ -158,12 +192,11 @@ const ExplorerScreen: React.FC = () => {
   const ListLoadMore = useCallback(() => {
     if (loadMore) {
       return (
-        <View>
-          <Text center>Carregando mais coisas</Text>
+        <ExplorerEmpty>
           <Separator size="lili" />
           <ActivityIndicator />
           <Separator size="extraLarge" />
-        </View>
+        </ExplorerEmpty>
       );
     }
     return <Separator size="large" />;
@@ -186,38 +219,6 @@ const ExplorerScreen: React.FC = () => {
     );
   }
   // End branchs
-
-  // Handlers
-  const handlefetchMoreData = () => {
-    if (
-      !loadMore &&
-      !snapshot &&
-      !isNoMorePaths &&
-      allPathsData.length === LIMIT_PER_PAGE
-    ) {
-      console.log(`handlefetchMoreData > ${LIMIT_PER_PAGE}`);
-      const lastPath = R.last(allPathsData)?.id;
-      setLoadMore(true);
-      setSnapshot(lastPath || null);
-    }
-  };
-
-  // const handleCreateNewPath = (postComment: string) => {
-  //   creaPostMutation({
-  //     variables: {
-  //       description: postComment,
-  //     },
-  //   });
-  // };
-
-  const handleRefresh = () => {
-    // setAllPostsData([]);
-    setIsNoMorePaths(false);
-    setLoadMore(false);
-    setIsRefetch(true);
-    refetch && refetch();
-  };
-  // End handlers
 
   return (
     <Container safe>
@@ -248,11 +249,18 @@ const ExplorerScreen: React.FC = () => {
         <GuupCard
           title="Criar um topico"
           description="Crie um espaço para compartilhar conteudo de um tema especifico entre amigos e colegas de trabalho"
+          onPress={() => {
+            setToggleModal(!toggleModal);
+            navigation.navigate('GuupContentCreate');
+          }}
         />
         <Separator size="medium" />
         <GuupCard
           title="Criar um conteudo"
           description="Crie um conteudo e compartilhe seu conhecimento com seu amigos e colegas de trabalho"
+          onPress={() =>
+            Alert.alert('Create collection', 'Create some collections')
+          }
         />
       </Popover>
     </Container>

@@ -17,6 +17,7 @@ import {
   CreateComment,
   GuupComment,
   GuupHeader,
+  GuupFooter,
 } from './../../components';
 import {CommentPropsApp} from './../../@types/app.navigation';
 import {
@@ -25,7 +26,6 @@ import {
   CommentsDetail,
   CommentsContent,
   CommentsActions,
-  FooterContainer,
   CommentsEmpty,
   CommentsList,
   CommentListItem,
@@ -119,15 +119,6 @@ const CommentListSection: React.FC<{
   const CommentDetail = useCallback(() => {
     return (
       <>
-        <CommentNav>
-          <GuupHeader
-            leftRenderIntem={
-              <Action onPress={() => navigation.goBack()}>
-                <Icon source="arrow" />
-              </Action>
-            }
-          />
-        </CommentNav>
         <CommentsDetailContainer>
           <CommentsDetail focusable={false} scrollEnabled={false}>
             <PostComment
@@ -185,6 +176,28 @@ const CommentListSection: React.FC<{
 
   return (
     <CommentsList>
+      <CommentNav>
+        <GuupHeader
+          leftRenderIntem={
+            <Action onPress={() => navigation.goBack()}>
+              <Icon source="arrow" />
+            </Action>
+          }
+          centerRenderItem={
+            <Text preset="comment" bold>
+              Comentarios
+            </Text>
+          }
+          rightRenderIntem={
+            <Action
+              onPress={() =>
+                Alert.alert('Options comments', 'Show comments options')
+              }>
+              <Icon source="dots" backColor="veryLigthGrey" />
+            </Action>
+          }
+        />
+      </CommentNav>
       <FlatList
         data={comments}
         showsVerticalScrollIndicator={false}
@@ -259,13 +272,13 @@ const CommentsScreen: React.FC<CommentPropsApp> = ({
             newComment={newComment}
           />
         </CommentsContent>
-        <FooterContainer>
+        <GuupFooter>
           <CommentsActions>
             <Link onPress={() => toggleComment()} color="contrast">
               Faça um comentario
             </Link>
           </CommentsActions>
-        </FooterContainer>
+        </GuupFooter>
       </CommentsContainer>
       <CreateComment
         show={createComment}

@@ -16,8 +16,6 @@ export const CardSectionTop = styled.ImageBackground`
 `;
 
 export const CardSectionBody = styled.View`
-  /* border-top-width: 1px;
-  border-top-color: ${({theme}) => theme.colors.ligthGrey}; */
   flex-direction: row;
   justify-content: space-between;
   padding-bottom: ${({theme}) => theme.spacing.padding[20]};
@@ -27,7 +25,13 @@ export const CardSectionBody = styled.View`
 `;
 
 export const CardContent = styled.View`
-  width: 70%;
+  flex: 1;
+  padding-right: ${({theme}) => theme.spacing.padding[20]};
 `;
 
 export const CardActions = styled.View``;
+
+export const CardBottomActions = styled.View`
+  flex-direction: row;
+  align-items: center;
+`;

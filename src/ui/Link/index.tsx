@@ -22,6 +22,7 @@ export type IProps = {
   disable?: boolean;
   onPress: Function;
   loading?: boolean;
+  center?: boolean;
 };
 
 export default ({
@@ -33,8 +34,7 @@ export default ({
   ...args
 }: IProps) => {
   return (
-    <TouchableWithoutFeedback
-      onPress={loading ? () => console.debug('Is loading') : () => onPress()}>
+    <TouchableWithoutFeedback onPress={() => !loading && !disable && onPress()}>
       {preset === EPreset.simple ? (
         <Link {...{...args, loading, disable}}>{children}</Link>
       ) : (

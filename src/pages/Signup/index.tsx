@@ -56,7 +56,6 @@ const SignUpScreen: React.FC<PropsAuth> = ({navigation}) => {
     setStep(step - 1);
   };
   const signUp = ({phone, username}: SignupFormData) => {
-    console.log('signUp: phone', phone, 'username: ', username);
     requestSignUp({
       variables: {
         email: user,

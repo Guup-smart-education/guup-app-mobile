@@ -361,7 +361,7 @@ export type Query = {
   getCoursesByPath?: Maybe<UGetCourses>;
   getCourseByID?: Maybe<UGetCourseDetail>;
   getAllPaths?: Maybe<UGetAllPaths>;
-  getPathsByOwner?: Maybe<UGetAllPaths>;
+  getPathsByOwner?: Maybe<UGetPathsOwner>;
   getPathById?: Maybe<UGetPath>;
   getAllPosts?: Maybe<UGetAllPost>;
   getPostsByOwner?: Maybe<UGetAllPost>;
@@ -401,6 +401,7 @@ export type QueryGetCoursesByUserArgs = {
 
 export type QueryGetCoursesByPathArgs = {
   path?: Maybe<Scalars['String']>;
+  lastPath?: Maybe<Scalars['String']>;
 };
 
 
@@ -415,6 +416,7 @@ export type QueryGetAllPathsArgs = {
 
 
 export type QueryGetPathsByOwnerArgs = {
+  lastPath?: Maybe<Scalars['String']>;
   owner?: Maybe<Scalars['String']>;
 };
 
@@ -682,11 +684,17 @@ export enum PathAccess {
 export type InputPath = {
   title: Scalars['String'];
   description: Scalars['String'];
-  photoURL: Scalars['String'];
+  photoURL?: Maybe<Scalars['String']>;
 };
 
 export type GetPaths = {
   __typename?: 'GetPaths';
+  allPaths?: Maybe<Array<Maybe<Path>>>;
+  success?: Maybe<Success>;
+};
+
+export type GetPathsOwner = {
+  __typename?: 'GetPathsOwner';
   allPaths?: Maybe<Array<Maybe<Path>>>;
   success?: Maybe<Success>;
 };
@@ -704,6 +712,8 @@ export type CreatePath = {
 };
 
 export type UGetAllPaths = GetPaths | ErrorResponse;
+
+export type UGetPathsOwner = GetPathsOwner | ErrorResponse;
 
 export type UGetPath = GetPath | ErrorResponse;
 
@@ -1202,6 +1212,36 @@ export type GetCoursesByPathQuery = (
     & { error: (
       { __typename?: 'Error' }
       & Pick<Error, 'message'>
+    ) }
+  )> }
+);
+
+export type GetPathsByOwnerQueryVariables = Exact<{
+  lastPath?: Maybe<Scalars['String']>;
+  owner?: Maybe<Scalars['String']>;
+}>;
+
+
+export type GetPathsByOwnerQuery = (
+  { __typename?: 'Query' }
+  & { getPathsByOwner?: Maybe<(
+    { __typename?: 'GetPathsOwner' }
+    & { allPaths?: Maybe<Array<Maybe<(
+      { __typename?: 'Path' }
+      & Pick<Path, 'id' | 'owner' | 'title' | 'description'>
+      & { ownerProfile?: Maybe<(
+        { __typename?: 'UserProfile' }
+        & Pick<UserProfile, 'displayName' | 'profission' | 'photoURL' | 'thumbnailURL'>
+      )> }
+    )>>>, success?: Maybe<(
+      { __typename?: 'Success' }
+      & Pick<Success, 'message'>
+    )> }
+  ) | (
+    { __typename?: 'ErrorResponse' }
+    & { error: (
+      { __typename?: 'Error' }
+      & Pick<Error, 'type' | 'message'>
     ) }
   )> }
 );
@@ -1924,3 +1964,59 @@ export function useGetCoursesByPathLazyQuery(baseOptions?: Apollo.LazyQueryHookO
 export type GetCoursesByPathQueryHookResult = ReturnType<typeof useGetCoursesByPathQuery>;
 export type GetCoursesByPathLazyQueryHookResult = ReturnType<typeof useGetCoursesByPathLazyQuery>;
 export type GetCoursesByPathQueryResult = Apollo.QueryResult<GetCoursesByPathQuery, GetCoursesByPathQueryVariables>;
+export const GetPathsByOwnerDocument = gql`
+    query getPathsByOwner($lastPath: String, $owner: String) {
+  getPathsByOwner(lastPath: $lastPath, owner: $owner) {
+    ... on GetPathsOwner {
+      allPaths {
+        id
+        owner
+        title
+        description
+        ownerProfile {
+          displayName
+          profission
+          photoURL
+          thumbnailURL
+        }
+      }
+      success {
+        message
+      }
+    }
+    ... on ErrorResponse {
+      error {
+        type
+        message
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetPathsByOwnerQuery__
+ *
+ * To run a query within a React component, call `useGetPathsByOwnerQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPathsByOwnerQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPathsByOwnerQuery({
+ *   variables: {
+ *      lastPath: // value for 'lastPath'
+ *      owner: // value for 'owner'
+ *   },
+ * });
+ */
+export function useGetPathsByOwnerQuery(baseOptions?: Apollo.QueryHookOptions<GetPathsByOwnerQuery, GetPathsByOwnerQueryVariables>) {
+        return Apollo.useQuery<GetPathsByOwnerQuery, GetPathsByOwnerQueryVariables>(GetPathsByOwnerDocument, baseOptions);
+      }
+export function useGetPathsByOwnerLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPathsByOwnerQuery, GetPathsByOwnerQueryVariables>) {
+          return Apollo.useLazyQuery<GetPathsByOwnerQuery, GetPathsByOwnerQueryVariables>(GetPathsByOwnerDocument, baseOptions);
+        }
+export type GetPathsByOwnerQueryHookResult = ReturnType<typeof useGetPathsByOwnerQuery>;
+export type GetPathsByOwnerLazyQueryHookResult = ReturnType<typeof useGetPathsByOwnerLazyQuery>;
+export type GetPathsByOwnerQueryResult = Apollo.QueryResult<GetPathsByOwnerQuery, GetPathsByOwnerQueryVariables>;

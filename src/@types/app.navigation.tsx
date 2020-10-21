@@ -1,6 +1,7 @@
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {EProfileType} from './../@enum/profile.type';
+import {EViewMode} from './../@enum/view.mode';
 import {Post} from './../graphql/types.d';
 
 export enum EApp {
@@ -19,11 +20,22 @@ export enum EApp {
 export type RootApp = {
   GuupExplorer: undefined;
   GuupCourse: undefined;
-  GuupCourseDetail: undefined;
+  GuupCourseDetail: {
+    mode?: keyof typeof EViewMode;
+  };
+  GuupContentCreate: undefined;
   GuupNews: undefined;
+  GuupAccount: undefined;
+  GuupNotifications: undefined;
+  GuupSettings: undefined;
   GuupUserProfile: {
     type?: keyof typeof EProfileType;
   };
+  GuupCollections: undefined;
+  GuupEditCollection: {
+    id?: string;
+  };
+  GuupPosts: undefined;
   GuupComments: {
     post?: Post;
   };
@@ -45,14 +57,23 @@ export type RootApp = {
 export type AppScreenRouteProp = RouteProp<RootApp, 'GuupExplorer'>;
 // Tree route app
 export type CourseScreenRouteProp = RouteProp<RootApp, 'GuupCourse'>;
+export type ContentCreateScreenRouteProp = RouteProp<
+  RootApp,
+  'GuupContentCreate'
+>;
 export type CourseDetailScreenRouteProp = RouteProp<
   RootApp,
   'GuupCourseDetail'
 >;
 export type NewsScreenRouteProp = RouteProp<RootApp, 'GuupNews'>;
 export type ProfileScreenRouteProp = RouteProp<RootApp, 'GuupUserProfile'>;
+export type AccountScreenRouteProp = RouteProp<RootApp, 'GuupAccount'>;
 export type CommentScreenRouteProp = RouteProp<RootApp, 'GuupComments'>;
 export type ClassRoomScreenRouteProp = RouteProp<RootApp, 'GuupClassRoom'>;
+export type EditCollectionScreenRouteProp = RouteProp<
+  RootApp,
+  'GuupEditCollection'
+>;
 
 // Navigation base app
 export type AppScreenNavigationProp = StackNavigationProp<
@@ -68,7 +89,15 @@ export type CourseDetailScreenNavigationProp = StackNavigationProp<
   RootApp,
   'GuupCourseDetail'
 >;
+export type ContentCreateScreenNavigationProp = StackNavigationProp<
+  RootApp,
+  'GuupContentCreate'
+>;
 export type NewsScreenNavigationProp = StackNavigationProp<RootApp, 'GuupNews'>;
+export type AccountScreenNavigationProp = StackNavigationProp<
+  RootApp,
+  'GuupAccount'
+>;
 export type ProfileScreenNavigationProp = StackNavigationProp<
   RootApp,
   'GuupUserProfile'
@@ -80,6 +109,10 @@ export type CommentScreenNavigationProp = StackNavigationProp<
 export type ClassRoomScreenNavigationProp = StackNavigationProp<
   RootApp,
   'GuupClassRoom'
+>;
+export type EditCollectionScreenNavigationProp = StackNavigationProp<
+  RootApp,
+  'GuupEditCollection'
 >;
 
 // Props base app
@@ -96,6 +129,10 @@ export type CourseDetailPropsApp = {
   route: CourseDetailScreenRouteProp;
   navigation: CourseDetailScreenNavigationProp;
 };
+export type ContentCreatePropsApp = {
+  route: ContentCreateScreenRouteProp;
+  navigation: ContentCreateScreenNavigationProp;
+};
 export type NewsPropsApp = {
   route: NewsScreenRouteProp;
   navigation: NewsScreenNavigationProp;
@@ -111,4 +148,8 @@ export type CommentPropsApp = {
 export type ClassRoomPropsApp = {
   route: ClassRoomScreenRouteProp;
   navigation: ClassRoomScreenNavigationProp;
+};
+export type EditCollectionPropsApp = {
+  route: EditCollectionScreenRouteProp;
+  navigation: EditCollectionScreenNavigationProp;
 };

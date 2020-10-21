@@ -7,12 +7,19 @@ import {
   GuupNews,
   GuupCourses,
   GuupCourseDetail,
+  GuupContentCreate,
   GuupUserProfile,
   GuupComments,
   GuupClassRoom,
   GuupClassModule,
   GuupClassArticle,
   GuupClassVideo,
+  GuupAccount,
+  GuupCollections,
+  GuupPosts,
+  GuupNotifications,
+  GuupSettings,
+  GuupEditCollections,
 } from './../pages';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -49,7 +56,7 @@ const HomeRouter: React.FC = () => {
       })}>
       <AppTabStack.Screen name="GuupNews" component={GuupNews} />
       <AppTabStack.Screen name="GuupExplorer" component={GuupExplorer} />
-      <AppTabStack.Screen name="GuupCourse" component={GuupCourses} />
+      <AppTabStack.Screen name="GuupAccount" component={GuupAccount} />
     </AppTabStack.Navigator>
   );
 };
@@ -66,6 +73,14 @@ const AppRouter: React.FC = () => {
         options={StackBackOption}
         name="GuupCourseDetail"
         component={GuupCourseDetail}
+        initialParams={{
+          mode: 'ONLY_VIEW',
+        }}
+      />
+      <AppStack.Screen
+        options={{header: () => null}}
+        name="GuupContentCreate"
+        component={GuupContentCreate}
       />
       <AppStack.Screen
         options={StackBackOptionTransparent}
@@ -73,12 +88,39 @@ const AppRouter: React.FC = () => {
         component={GuupUserProfile}
       />
       <AppStack.Screen
+        options={{header: () => null}}
+        name="GuupAccount"
+        component={GuupAccount}
+      />
+      <AppStack.Screen
+        options={{header: () => null}}
+        name="GuupCollections"
+        component={GuupCollections}
+      />
+      <AppStack.Screen
+        options={{header: () => null}}
+        name="GuupEditCollection"
+        component={GuupEditCollections}
+      />
+      <AppStack.Screen
+        options={{header: () => null}}
+        name="GuupPosts"
+        component={GuupPosts}
+      />
+      <AppStack.Screen
+        options={{header: () => null}}
+        name="GuupNotifications"
+        component={GuupNotifications}
+      />
+      <AppStack.Screen
+        options={{header: () => null}}
+        name="GuupSettings"
+        component={GuupSettings}
+      />
+      <AppStack.Screen
         options={StackBackOption}
         name="GuupComments"
         component={GuupComments}
-        initialParams={{
-          id: '',
-        }}
       />
       <AppStack.Screen
         options={StackBackOption}

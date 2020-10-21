@@ -1,7 +1,7 @@
 import R from 'ramda';
 import React, {useState, useContext, useEffect} from 'react';
 import AuthContext from './../../contexts/auth';
-import {Separator, FormContainer, RowFullWidth, Input} from './../../ui';
+import {Separator, FormContainer, RowFullWidth} from './../../ui';
 import {
   KeyboardBlock,
   GuupBot,
@@ -81,7 +81,16 @@ const SigninScreen: React.FC<PropsAuth> = ({navigation}) => {
       setAttempts(attempts + 1);
       setSigninError(true);
     }
-  }, [signinData, signinError, getValues, setBotMessage, navigation]);
+  }, [
+    signinData,
+    signinError,
+    getValues,
+    setBotMessage,
+    navigation,
+    // Verify thoses information
+    setSigninDisable,
+    attempts,
+  ]);
 
   return (
     <KeyboardBlock hasKeyboardDismiss={false}>

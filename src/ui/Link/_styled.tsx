@@ -6,6 +6,7 @@ type IProps = {
   readonly color?: keyof typeof EColors;
   readonly disable?: boolean;
   readonly loading?: boolean;
+  readonly center?: boolean;
   readonly preset?: keyof typeof EPreset;
 };
 
@@ -18,11 +19,11 @@ export const LinkWrapper = styled.View<IProps>`
   border-radius: ${({theme}) => theme.borderRadius[4]};
   align-items: center;
   justify-content: center;
-  background-color: ${({disable, preset, theme}) => {
+  background-color: ${({disable, preset, theme, color}) => {
     return disable
       ? theme.colors.smoothGrey
       : preset === EPreset.solid
-      ? theme.colors.primary
+      ? theme.colors[color || 'primary']
       : theme.colors.secondary;
   }};
   border-style: solid;
@@ -36,7 +37,9 @@ export const Link = styled.Text.attrs({
   allowFontScaling: false,
 })<IProps>`
   color: ${({theme, color, preset}) =>
-    preset === EPreset.solid
+    preset === EPreset.solid && color === EColors.contrast
+      ? theme.colors.dark
+      : preset === EPreset.solid
       ? theme.colors.ligth
       : theme.colors[color || 'dark']};
   font-family: ${({theme}) =>
@@ -47,10 +50,13 @@ export const Link = styled.Text.attrs({
   font-size: ${({theme}) => theme.fontSize.regular};
   text-decoration: underline
     ${({theme, color, preset}) =>
-      preset === EPreset.solid
+      preset === EPreset.solid && color === EColors.contrast
+        ? theme.colors.dark
+        : preset === EPreset.solid
         ? theme.colors.ligth
         : theme.colors[color || 'dark']};
   letter-spacing: -0.45px;
+  text-align: ${({center}) => (center ? 'center' : 'left')}
   /* opacity: ${({loading, disable}) => (loading || disable ? 0.5 : 1)}; */
   ${({loading}) =>
     loading &&

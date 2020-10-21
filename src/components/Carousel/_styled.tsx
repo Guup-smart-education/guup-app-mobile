@@ -15,7 +15,6 @@ interface IDotProps {
 
 export const CarouselContainer = styled.ScrollView<IContainer>`
   width: 100%;
-  margin-bottom: 12px;
   ${({horizontalPadding, theme}) =>
     horizontalPadding &&
     `

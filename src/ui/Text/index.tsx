@@ -34,6 +34,7 @@ export interface IProps {
   color?: keyof typeof EColors;
   lineHeight?: number;
   underline?: boolean;
+  hightline?: keyof typeof EColors;
 }
 
 export default ({children, ...args}: IProps) => (

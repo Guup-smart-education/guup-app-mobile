@@ -160,4 +160,6 @@ export const Text = styled.Text<IProps>`
     ${Platform.OS !== 'ios' && `font-family: ${theme.fontFamilyAndroid.light}`};
     font-weight: ${theme.fontWeight.ligth};
   `};
+  ${({hightline, theme}) =>
+    hightline ? `background-color: ${theme.colors[hightline]}` : ''}
 `;

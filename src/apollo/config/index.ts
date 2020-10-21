@@ -3,6 +3,7 @@ import {
   InMemoryCache,
   createHttpLink,
   from,
+  defaultDataIdFromObject,
 } from '@apollo/client';
 import {setContext} from '@apollo/client/link/context';
 import {onError} from '@apollo/client/link/error';
@@ -41,6 +42,7 @@ const error = onError(({graphQLErrors, networkError}) => {
 const paginationPolicy = () => ({
   merge(existing: any[], incoming: any[]) {
     const merged = [...(incoming || [])];
+    console.log('paginationPolicy merged: ', merged);
     return merged;
   },
   read(existing: any[]) {
@@ -51,20 +53,46 @@ const paginationPolicy = () => ({
 export const client = new ApolloClient({
   link: from([error, authMiddleware, httpLink]),
   cache: new InMemoryCache({
-    resultCaching: true,
+    // resultCaching: true,
+    addTypename: true,
+    // dataIdFromObject: (responseObject) => {
+    //   switch (responseObject.__typename) {
+    //     case 'GetPaths':
+    //     case 'GetPosts':
+    //       return 'PageContent';
+    //     default:
+    //       return defaultDataIdFromObject(responseObject);
+    //   }
+    // },
     typePolicies: {
-      GetPosts: {
+      Query: {
         queryType: true,
-        keyFields: ['allPost'],
+        keyFields: ['allPaths', 'allPost'],
         fields: {
           allPost: paginationPolicy(),
+          allPaths: paginationPolicy(),
         },
       },
+      // GetPosts: {
+      //   // queryType: true,
+      //   keyFields: ['allPost'],
+      //   fields: {
+      //     allPost: paginationPolicy(),
+      //   },
+      // },
       // GetPaths: {
       //   queryType: true,
       //   keyFields: ['allPaths'],
       //   fields: {
+      //     allPaths: paginationPolicy(),
+      //   },
+      // },
+      // PageContent: {
+      //   queryType: true,
+      //   keyFields: ['allPaths', 'allPost'],
+      //   fields: {
       //     allPost: paginationPolicy(),
+      //     allPaths: paginationPolicy(),
       //   },
       // },
     },

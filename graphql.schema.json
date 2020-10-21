@@ -2781,6 +2781,16 @@
                   "ofType": null
                 },
                 "defaultValue": null
+              },
+              {
+                "name": "lastPath",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null
               }
             ],
             "type": {
@@ -2842,6 +2852,16 @@
             "description": null,
             "args": [
               {
+                "name": "lastPath",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
                 "name": "owner",
                 "description": null,
                 "type": {
@@ -2854,7 +2874,7 @@
             ],
             "type": {
               "kind": "UNION",
-              "name": "UGetAllPaths",
+              "name": "UGetPathsOwner",
               "ofType": null
             },
             "isDeprecated": false,
@@ -4534,13 +4554,9 @@
             "name": "photoURL",
             "description": null,
             "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
             },
             "defaultValue": null
           }
@@ -4552,6 +4568,45 @@
       {
         "kind": "OBJECT",
         "name": "GetPaths",
+        "description": null,
+        "fields": [
+          {
+            "name": "allPaths",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "Path",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "success",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "Success",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "GetPathsOwner",
         "description": null,
         "fields": [
           {
@@ -4670,6 +4725,27 @@
           {
             "kind": "OBJECT",
             "name": "GetPaths",
+            "ofType": null
+          },
+          {
+            "kind": "OBJECT",
+            "name": "ErrorResponse",
+            "ofType": null
+          }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "UGetPathsOwner",
+        "description": null,
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": [
+          {
+            "kind": "OBJECT",
+            "name": "GetPathsOwner",
             "ofType": null
           },
           {

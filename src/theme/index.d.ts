@@ -43,12 +43,22 @@ declare module 'styled-components' {
       clock: Blob;
       project: Blob;
       chevron: Blob;
+      chevronMenu: Blob;
       video: Blob;
       article: Blob;
       claps: Blob;
       clapsActive: Blob;
       bell: Blob;
       save: Blob;
+      gallery: Blob;
+      lock: Blob;
+      unlock: Blob;
+      plus: Blob;
+    };
+    iconsSizes: {
+      small: string;
+      normal: string;
+      large: string;
     };
     colors: {
       ligth: string;

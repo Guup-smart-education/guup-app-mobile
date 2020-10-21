@@ -7,6 +7,7 @@ export enum EColors {
   'contrast' = 'contrast',
   'yellow' = 'yellow',
   'ligthGrey' = 'ligthGrey',
+  'veryLigthGrey' = 'veryLigthGrey',
   'darkGrey' = 'darkGrey',
-  'greyBrown' = 'darkGrey',
+  'greyBrown' = 'greyBrown',
 }

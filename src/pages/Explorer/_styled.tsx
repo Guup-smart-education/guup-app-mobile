@@ -29,6 +29,11 @@ export const ExplorerAction = styled.View`
   width: 100%;
 `;
 
+export const ExplorerEmpty = styled.View`
+  padding-bottom: ${({theme}) => theme.spacing.padding[25]};
+  padding-top: ${({theme}) => theme.spacing.padding[25]};
+`;
+
 export const ExplorerTitle = styled.View`
   width: 70%;
 `;

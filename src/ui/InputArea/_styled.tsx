@@ -6,9 +6,8 @@ export const InputWrapper = styled.View`
 
 export const InputComponent = styled.TextInput.attrs(({theme}) => ({
   placeholderTextColor: theme.colors.ligthGrey,
-  multiline: true,
 }))`
-  height: 100%;
+  /* height: 100%; */
   border-radius: ${({theme}) => theme.borderRadius[12]};
   color: ${({theme}) => theme.colors.dark};
   font-family: ${({theme}) => theme.fontFamily};
@@ -17,7 +16,7 @@ export const InputComponent = styled.TextInput.attrs(({theme}) => ({
   padding-left: ${({theme}) => theme.spacing.padding[25]};
   padding-right: ${({theme}) => theme.spacing.padding[25]};
   padding-bottom: ${({theme}) => theme.spacing.padding[25]};
-  padding-top: ${({theme}) => theme.spacing.padding[25]};
+  /* padding-top: ${({theme}) => theme.spacing.padding[25]}; */
   line-height: ${({theme}) => theme.spacing.lineHeigth.l24};
   width: 100%;
 `;

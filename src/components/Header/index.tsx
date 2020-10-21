@@ -1,5 +1,10 @@
 import React, {ReactChild} from 'react';
-import {HeaderContainer, HeaderLeftItem, HeaderRightItem} from './_styled';
+import {
+  HeaderContainer,
+  HeaderLeftItem,
+  HeaderCenterRenderItem,
+  HeaderRightItem,
+} from './_styled';
 
 export enum EHeaderType {
   'back' = 'back',
@@ -11,16 +16,20 @@ export enum EHeaderType {
 interface IGuupHeader {
   readonly leftRenderIntem?: ReactChild;
   readonly rightRenderIntem?: ReactChild;
+  readonly centerRenderItem?: ReactChild;
   readonly type?: keyof typeof EHeaderType;
 }
 
-export default ({leftRenderIntem, rightRenderIntem}: IGuupHeader) => {
+export default ({
+  leftRenderIntem,
+  rightRenderIntem,
+  centerRenderItem,
+}: IGuupHeader) => {
   return (
     <HeaderContainer>
-      {leftRenderIntem && <HeaderLeftItem>{leftRenderIntem}</HeaderLeftItem>}
-      {rightRenderIntem && (
-        <HeaderRightItem>{rightRenderIntem}</HeaderRightItem>
-      )}
+      <HeaderLeftItem>{leftRenderIntem}</HeaderLeftItem>
+      <HeaderCenterRenderItem>{centerRenderItem}</HeaderCenterRenderItem>
+      <HeaderRightItem>{rightRenderIntem}</HeaderRightItem>
     </HeaderContainer>
   );
 };

@@ -40,15 +40,6 @@ export const CommentListItem = styled.View`
   padding-right: ${({theme}) => theme.spacing.padding[25]};
 `;
 
-export const FooterContainer = styled.View`
-  width: 100%;
-  background-color: ${({theme}) => theme.colors.dark};
-  min-height: ${Dimensions.get('screen').width / 5 + 'px'};
-  padding-top: ${({theme}) => theme.spacing.padding[15]};
-  padding-left: ${({theme}) => theme.spacing.padding[25]};
-  padding-right: ${({theme}) => theme.spacing.padding[25]};
-`;
-
 export const CommentsActions = styled.View`
   width: 100%;
   align-items: center;
@@ -59,4 +50,6 @@ export const CommentNav = styled.View`
   padding-left: ${({theme}) => theme.spacing.padding[20]};
   padding-right: ${({theme}) => theme.spacing.padding[20]};
   background-color: ${({theme}) => theme.colors.ligth};
+  border-bottom-width: 1px;
+  border-bottom-color: ${({theme}) => theme.colors.ligthGrey};
 `;

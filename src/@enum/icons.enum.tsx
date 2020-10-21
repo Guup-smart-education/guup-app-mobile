@@ -15,16 +15,22 @@ export enum EIcons {
   'clock',
   'module',
   'chevron',
+  'chevronMenu',
   'video',
   'article',
   'claps',
   'clapsActive',
   'bell',
   'save',
+  'gallery',
+  'lock',
+  'unlock',
+  'plus',
 }
 
 export enum ETabIcon {
   'GuupExplorer' = 'explorer',
   'GuupNews' = 'news',
   'GuupCourse' = 'box',
+  'GuupAccount' = 'profile',
 }

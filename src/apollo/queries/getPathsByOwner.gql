@@ -1,0 +1,27 @@
+query getPathsByOwner($lastPath: String, $owner: String) {
+  getPathsByOwner(lastPath: $lastPath, owner: $owner) {
+    ... on GetPathsOwner {
+      allPaths {
+        id
+        owner
+        title
+        description
+        ownerProfile {
+          displayName
+          profission
+          photoURL
+          thumbnailURL
+        }
+      }
+      success {
+        message
+      }
+    }
+    ... on ErrorResponse {
+      error {
+        type
+        message
+      }
+    }
+  }
+}

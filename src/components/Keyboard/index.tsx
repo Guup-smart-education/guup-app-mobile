@@ -1,4 +1,5 @@
 import React, {ReactNode, useState, useEffect, useContext} from 'react';
+import {Alert} from 'react-native';
 import {Platform, Keyboard} from 'react-native';
 import {KeyboardContainer, KeyboardDismiss, KeyboardBlock} from './_styled';
 import {hasNotch} from 'react-native-device-info';

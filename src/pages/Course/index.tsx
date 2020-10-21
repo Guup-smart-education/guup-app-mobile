@@ -5,6 +5,7 @@ import {
   View,
   Alert,
   FlatList,
+  ActivityIndicator,
 } from 'react-native';
 import {
   Container,
@@ -13,7 +14,6 @@ import {
   Separator,
   Link,
   HeaderPatch,
-  FooterPatch,
   Action,
   GroupAvatar,
 } from './../../ui';
@@ -21,18 +21,15 @@ import {Avatar, GuupCourseCard, GuupHeader} from './../../components';
 import {
   CourseDetailContainer,
   CourseDetailHeader,
-  CourseDetailHeaderRight,
-  CourseDetailHeaderLeft,
   CourseDetailContent,
-  CourseDetailHeaderTop,
-  CourseDetailHeaderBody,
-  CourseDetailHeaderBottom,
-  FooterContainer,
-  FooterLabels,
+  CourseDetailDataBody,
+  CourseDetailDataBottom,
+  CourseDetailDataRight,
+  CourseDetailDataLeft,
+  CourseDetailDataContent,
 } from './_styled';
-import {useNavigation} from '@react-navigation/native';
-import {CourseDetailScreenNavigationProp} from './../../@types/app.navigation';
-import {usePathContext, PathTypes} from './../../contexts/path';
+import {CourseDetailPropsApp} from './../../@types/app.navigation';
+import {usePathContext} from './../../contexts/path';
 import {useGetCoursesByPathLazyQuery, Course} from './../../graphql/types.d';
 import {GetUniqueId} from './../../helper';
 
@@ -41,19 +38,23 @@ const ListEmpty = () => {
   return (
     <View>
       <Separator size="large" />
-      <Text center>Não há publicações disponiveis</Text>
+      <Text center>Não há conteudos disponiveis</Text>
     </View>
   );
 };
 
-const CourseScreen: React.FC = () => {
+const CourseScreen: React.FC<CourseDetailPropsApp> = ({
+  navigation: {navigate, goBack},
+  route: {
+    params: {mode},
+  },
+}) => {
+  console.log('params: mode -> ', mode);
   const [allCourses, setAllCourses] = useState<Array<Course>>();
   const [loadMore, setLoadMore] = useState<boolean>(false);
   const {
     state: {currentPath},
-    dispatch,
   } = usePathContext();
-  const navigation = useNavigation<CourseDetailScreenNavigationProp>();
   const [getCourses, {data, error, loading}] = useGetCoursesByPathLazyQuery();
 
   // Effects
@@ -94,47 +95,34 @@ const CourseScreen: React.FC = () => {
     [],
   );
 
-  const CourseItem = useCallback(
-    ({item}: {item: Course}) => {
-      return (
-        <View>
-          <Separator size="large" />
-          <GuupCourseCard
-            type="COURSE"
-            imageUri={item.photoURL || ''}
-            title={item.title || 'Guup course'}
-            owner={item.ownerProfile || {}}
-            onPress={() =>
-              Alert.alert('Show the course', 'Show all video course')
-            }
-          />
-        </View>
-      );
-    },
-    [navigation],
-  );
+  const CourseItem = useCallback(({item}: {item: Course}) => {
+    return (
+      <View>
+        <Separator size="large" />
+        <GuupCourseCard
+          type="COURSE"
+          imageUri={item.photoURL || ''}
+          title={item.title || 'Guup course'}
+          owner={item.ownerProfile || {}}
+          contentType="Video"
+          createdAt={item.createdAt || ''}
+          onPress={() =>
+            Alert.alert('Show the course', 'Show all video course')
+          }
+        />
+      </View>
+    );
+  }, []);
 
   const ListHeader = useCallback(() => {
     return (
-      <CourseDetailHeader>
-        <CourseDetailHeaderTop>
-          <GuupHeader
-            leftRenderIntem={
-              <Action onPress={() => navigation.goBack()}>
-                <Icon source="arrow" />
-              </Action>
-            }
-          />
-          <Separator size="tiny" />
-        </CourseDetailHeaderTop>
-        <CourseDetailHeaderBody>
-          <CourseDetailHeaderRight>
+      <CourseDetailDataContent>
+        <CourseDetailDataBody>
+          <CourseDetailDataRight>
             <Text preset="largePrice">{currentPath.title}</Text>
             <Separator size="small" />
             <TouchArea
-              onPress={() =>
-                navigation.navigate('GuupUserProfile', {type: 'teacher'})
-              }>
+              onPress={() => navigate('GuupUserProfile', {type: 'teacher'})}>
               {!currentPath.owners || currentPath.owners.length === 1 ? (
                 <Avatar
                   firstText={currentPath.ownerProfile?.displayName}
@@ -149,20 +137,31 @@ const CourseScreen: React.FC = () => {
                 />
               )}
             </TouchArea>
-          </CourseDetailHeaderRight>
-          <CourseDetailHeaderLeft>
-            <Icon source="bell" />
-          </CourseDetailHeaderLeft>
-        </CourseDetailHeaderBody>
-        <CourseDetailHeaderBottom>
+          </CourseDetailDataRight>
+          <CourseDetailDataLeft>
+            {mode === 'EDIT' ? (
+              <Action onPress={() => Alert.alert('Edit', 'Edit some thing')}>
+                <Icon source="dots" backColor="veryLigthGrey" />
+              </Action>
+            ) : (
+              <Action
+                onPress={() =>
+                  Alert.alert('Alert', 'Alert me with new information')
+                }>
+                <Icon source="bell" />
+              </Action>
+            )}
+          </CourseDetailDataLeft>
+        </CourseDetailDataBody>
+        <CourseDetailDataBottom>
           <Separator size="small" />
           <Text lineHeight={28} color="ultraDark">
             {currentPath.description}
           </Text>
-        </CourseDetailHeaderBottom>
-      </CourseDetailHeader>
+        </CourseDetailDataBottom>
+      </CourseDetailDataContent>
     );
-  }, [currentPath, navigation]);
+  }, [currentPath, navigate, mode]);
 
   const ListLoadMore = useCallback(() => {
     if (loadMore) {
@@ -184,10 +183,30 @@ const CourseScreen: React.FC = () => {
     <Container safe>
       <CourseDetailContainer>
         <HeaderPatch />
+        <CourseDetailHeader>
+          <GuupHeader
+            leftRenderIntem={
+              <Action onPress={() => goBack()}>
+                <Icon source="arrow" />
+              </Action>
+            }
+            rightRenderIntem={
+              <Link
+                color="primary"
+                onPress={() =>
+                  mode === 'EDIT'
+                    ? Alert.alert('Adicionar', 'Adicionar conteudo')
+                    : Alert.alert('Contribuir', 'Contribuir')
+                }>
+                {mode === 'EDIT' ? 'Adicionar +' : 'Contribuir +'}
+              </Link>
+            }
+          />
+        </CourseDetailHeader>
         <CourseDetailContent>
           <FlatList
             showsVerticalScrollIndicator={false}
-            scrollEnabled={!R.isEmpty(allCourses)}
+            // scrollEnabled={!R.isEmpty(allCourses)}
             data={allCourses}
             keyExtractor={keyExtractor}
             maxToRenderPerBatch={20}
@@ -203,16 +222,6 @@ const CourseScreen: React.FC = () => {
           />
         </CourseDetailContent>
       </CourseDetailContainer>
-      <FooterContainer>
-        <FooterLabels>
-          <Link
-            color="contrast"
-            onPress={() => Alert.alert('Contribuir', 'Contribuir')}>
-            contribuir +
-          </Link>
-        </FooterLabels>
-      </FooterContainer>
-      <FooterPatch />
     </Container>
   );
 };

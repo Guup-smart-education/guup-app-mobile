@@ -41,7 +41,6 @@ const ListLoadMore = ({loading}) => {
   if (loading) {
     return (
       <NewsEmpty>
-        <Text center>Carregando mais coisas</Text>
         <Separator size="lili" />
         <ActivityIndicator />
         <Separator size="extraLarge" />
@@ -207,6 +206,7 @@ const NewsScreen: React.FC<PropsApp> = () => {
 
   // Handlers
   const handlefetchMoreData = () => {
+    console.log('handlefetchMoreData');
     if (
       !loadMore &&
       !snapshot &&
