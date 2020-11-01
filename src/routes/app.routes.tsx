@@ -7,6 +7,7 @@ import {
   GuupNews,
   GuupCourses,
   GuupCourseDetail,
+  GuupCollectionCreate,
   GuupContentCreate,
   GuupUserProfile,
   GuupComments,
@@ -20,6 +21,7 @@ import {
   GuupNotifications,
   GuupSettings,
   GuupEditCollections,
+  GuupPostCreate,
 } from './../pages';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -65,12 +67,12 @@ const AppRouter: React.FC = () => {
   return (
     <AppStack.Navigator>
       <AppStack.Screen
-        options={StackOption}
+        options={{header: () => null}}
         name="GuupExplorer"
         component={HomeRouter}
       />
       <AppStack.Screen
-        options={StackBackOption}
+        options={{header: () => null}}
         name="GuupCourseDetail"
         component={GuupCourseDetail}
         initialParams={{
@@ -79,13 +81,24 @@ const AppRouter: React.FC = () => {
       />
       <AppStack.Screen
         options={{header: () => null}}
-        name="GuupContentCreate"
-        component={GuupContentCreate}
+        name="GuupCollectionCreate"
+        component={GuupCollectionCreate}
       />
       <AppStack.Screen
-        options={StackBackOptionTransparent}
+        options={{header: () => null}}
+        name="GuupContentCreate"
+        component={GuupContentCreate}
+        initialParams={{
+          path: null,
+        }}
+      />
+      <AppStack.Screen
+        options={{header: () => null}}
         name="GuupUserProfile"
         component={GuupUserProfile}
+        initialParams={{
+          type: 'PUBLIC',
+        }}
       />
       <AppStack.Screen
         options={{header: () => null}}
@@ -109,6 +122,11 @@ const AppRouter: React.FC = () => {
       />
       <AppStack.Screen
         options={{header: () => null}}
+        name="GuupPostCreate"
+        component={GuupPostCreate}
+      />
+      <AppStack.Screen
+        options={{header: () => null}}
         name="GuupNotifications"
         component={GuupNotifications}
       />
@@ -118,12 +136,12 @@ const AppRouter: React.FC = () => {
         component={GuupSettings}
       />
       <AppStack.Screen
-        options={StackBackOption}
+        options={{header: () => null}}
         name="GuupComments"
         component={GuupComments}
       />
       <AppStack.Screen
-        options={StackBackOption}
+        options={{header: () => null}}
         name="GuupClassRoom"
         component={GuupClassRoom}
         initialParams={{

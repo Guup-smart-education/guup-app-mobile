@@ -2,29 +2,24 @@
 import R from 'ramda';
 import React, {useState, useEffect, useCallback} from 'react';
 import {FlatList, View, Alert, ActivityIndicator} from 'react-native';
-import {
-  Container,
-  Text,
-  Icon,
-  Action,
-  Separator,
-  Link,
-  RowFullWidth,
-} from './../../ui';
+import {Container, Text, Icon, Action, Separator, Link} from './../../ui';
 import {GuupHeader, GuupCourseCard} from './../../components';
 import {PropsApp} from './../../@types/app.navigation';
 import {
   CollectionsContainer,
   CollectionsHeader,
   CollectionsBody,
+  CollectionItem,
 } from './_styled';
+import {useIsFocused} from '@react-navigation/native';
 import {useGetPathsByOwnerLazyQuery, Path} from './../../graphql/types.d';
-import {GetUniqueId} from './../../helper';
+import {GetUniqueId, shadowStyle} from './../../helper';
 import {LIMIT_PER_PAGE} from './../../constants';
 import {usePathContext, PathTypes} from './../../contexts/path';
 
 // Component
 const Collections: React.FC<PropsApp> = ({navigation: {goBack, navigate}}) => {
+  const isFocused = useIsFocused();
   const {state, dispatch} = usePathContext();
   const [
     getPaths,
@@ -36,6 +31,12 @@ const Collections: React.FC<PropsApp> = ({navigation: {goBack, navigate}}) => {
   const [isNoMorePaths, setIsNoMorePaths] = useState<boolean>(false);
   const [snapshot, setSnapshot] = useState<string | null>(null);
   // Effects
+  useEffect(() => {
+    if (refetch && isFocused) {
+      setIsRefetch(true);
+      refetch();
+    }
+  }, [refetch, isFocused]);
   useEffect(() => {
     R.isEmpty(allPaths) && getPaths();
   }, [allPaths, getPaths]);
@@ -50,8 +51,9 @@ const Collections: React.FC<PropsApp> = ({navigation: {goBack, navigate}}) => {
 
   useEffect(() => {
     if (data?.getPathsByOwner?.__typename === 'GetPathsOwner') {
-      const pathsData: Array<any> = [...(data.getPathsByOwner.allPaths || [])];
-      console.log('data?.getPathsByOwner', pathsData);
+      const pathsData: Array<any> = [
+        ...(data.getPathsByOwner.allPathsOwner || []),
+      ];
       setIsNoMorePaths(R.isEmpty(allPaths));
       setLoadMore(false);
       setSnapshot(null);
@@ -61,6 +63,7 @@ const Collections: React.FC<PropsApp> = ({navigation: {goBack, navigate}}) => {
       Alert.alert('Aconteceu um erro', `${data.getPathsByOwner.error.message}`);
     }
   }, [data]);
+
   // End effects
   // Calbacks
   const keyExtractor = useCallback(
@@ -71,7 +74,7 @@ const Collections: React.FC<PropsApp> = ({navigation: {goBack, navigate}}) => {
   const CourseItem = useCallback(
     ({item}: {item: Path}) => {
       return (
-        <View>
+        <CollectionItem style={shadowStyle.newPost}>
           <Separator size="large" />
           <GuupCourseCard
             model="OWNER"
@@ -86,7 +89,7 @@ const Collections: React.FC<PropsApp> = ({navigation: {goBack, navigate}}) => {
               navigate('GuupCourseDetail', {mode: 'EDIT'});
             }}
           />
-        </View>
+        </CollectionItem>
       );
     },
     [navigate],
@@ -95,7 +98,10 @@ const Collections: React.FC<PropsApp> = ({navigation: {goBack, navigate}}) => {
     () => (
       <View>
         <Text center>Não colleções disponiveis</Text>
-        <Link onPress={() => navigate('GuupContentCreate')}>Criar coleção</Link>
+        <Link
+          onPress={() => navigate('GuupContentCreate', {type: 'COLLECTION'})}>
+          Criar coleção
+        </Link>
       </View>
     ),
     [navigate],
@@ -137,7 +143,6 @@ const Collections: React.FC<PropsApp> = ({navigation: {goBack, navigate}}) => {
       !isNoMorePaths &&
       allPaths.length === LIMIT_PER_PAGE
     ) {
-      console.log(`handlefetchMoreData > ${LIMIT_PER_PAGE}`);
       const lastPath = R.last(allPaths)?.id;
       setLoadMore(true);
       setSnapshot(lastPath || null);
@@ -163,12 +168,15 @@ const Collections: React.FC<PropsApp> = ({navigation: {goBack, navigate}}) => {
               </Action>
             }
             centerRenderItem={
-              <Text preset="comment" bold>
-                Colleções
+              <Text preset="comment" bold color="primary">
+                Coleções
               </Text>
             }
             rightRenderIntem={
-              <Action onPress={() => navigate('GuupContentCreate')}>
+              <Action
+                onPress={() =>
+                  navigate('GuupContentCreate', {type: 'COLLECTION'})
+                }>
                 <Icon source="plus" />
               </Action>
             }

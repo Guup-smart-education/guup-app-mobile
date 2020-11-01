@@ -9,6 +9,7 @@ query getAllPosts($lastPost: String) {
           thumbnailURL
           profission
         }
+        photoURL
         title
         description
         claps

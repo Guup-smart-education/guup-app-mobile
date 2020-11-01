@@ -1,6 +1,6 @@
-import React, {useState, forwardRef, ReactElement} from 'react';
+import React, {useState, forwardRef, ReactElement, useEffect} from 'react';
 import {Alert, TextInputProps} from 'react-native';
-import {Action, Separator, Icon, Text} from './../../ui';
+import {Action, Icon, Text} from './../../ui';
 import ImagePicker, {ImagePickerOptions} from 'react-native-image-picker';
 import {
   UploadContainer,
@@ -10,31 +10,39 @@ import {
   TextInputNone,
 } from './_styled';
 
-interface IUpload extends TextInputProps {
+interface IUpload {
   readonly title?: string;
+  readonly onResponse?: any;
 }
 
 const OPTIONS: ImagePickerOptions = {
   title: 'Seleciona o video',
   cancelButtonTitle: 'Ok',
+  storageOptions: {
+    path: 'photos',
+    skipBackup: true,
+  },
 };
 
 const GuupUpload = forwardRef<any, IUpload>(
   (props, ref): ReactElement => {
-    const {title, ...args} = props;
-    const [source, setSource] = useState<string>();
+    const {title, onResponse} = props;
+    const [source, setSource] = useState<any>();
     const [loading, setLoading] = useState<boolean>(false);
     // handlers
     const pickSourceLibrary = () => {
       setLoading(true);
       ImagePicker.launchImageLibrary(OPTIONS, (response) => {
-        const {error, data} = response;
-        if (error) {
-          Alert.alert('oops!!', 'Tenten novamente por favor 🙏');
-          return;
-        }
-        if (data) {
-          setSource(data);
+        if (response.didCancel) {
+          console.log('User cancelled image picker');
+        } else if (response.error) {
+          console.log('ImagePicker Error: ', response.error);
+        } else if (response.customButton) {
+          console.log('User tapped custom button: ', response.customButton);
+        } else {
+          const imageSource = {uri: response.uri};
+          console.log('imageSource: ', imageSource);
+          setSource(imageSource);
         }
         setLoading(false);
       });
@@ -47,19 +55,15 @@ const GuupUpload = forwardRef<any, IUpload>(
       setLoading(false);
     };
     // End handlers
+    // Effects
+    useEffect(() => {
+      onResponse(source);
+    }, [source, onResponse]);
+    // End effects
     return (
       <UploadContainer>
-        <TextInputNone
-          {...args}
-          ref={ref}
-          value={source}
-          autoCorrect={false}
-          blurOnSubmit={false}
-          multiline
-        />
         <MediaContainer
-          source={{uri: `data:image/jpeg;base64,${source}`}}
-          blurRadius={6}
+          source={source}
           onLoadStart={onLoadStart}
           onLoadEnd={onLoadEnd}
           resizeMode="cover">
@@ -69,9 +73,11 @@ const GuupUpload = forwardRef<any, IUpload>(
             <Action onPress={() => pickSourceLibrary()}>
               <MediaTextContent>
                 <Icon source="gallery" size="large" />
-                <Text preset="label" color="dark" center underline bold>
-                  {title || 'Faz upload de uma imagem ou video'}
-                </Text>
+                {title && (
+                  <Text preset="label" color="dark" center underline bold>
+                    {title}
+                  </Text>
+                )}
               </MediaTextContent>
             </Action>
           )}

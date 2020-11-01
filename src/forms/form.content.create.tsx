@@ -2,17 +2,17 @@ import {SmartInputProps} from './../@types/smart.input';
 
 export default [
   {
-    name: 'collection',
-    placeholder: 'Qual é o nome do tópico?',
+    name: 'title',
+    placeholder: 'Escreva um título para o conteúdo',
     keyboardType: 'default',
-    title: 'Diga para a gente o nome da colleção',
+    title: 'Qual seria o título do seu conteúdo?',
     type: 'inputArea',
   },
   {
     name: 'description',
     placeholder: 'Uma breve descrição',
     keyboardType: 'default',
-    title: 'Digite uma breve descrição da colleção',
+    title: 'Digite uma breve descrição do seu conteúdo',
     type: 'inputArea',
   },
 ] as Array<SmartInputProps>;

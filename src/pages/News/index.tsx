@@ -1,9 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import R from 'ramda';
 import React, {useEffect, useState, useCallback, useContext} from 'react';
-import {Alert, FlatList, ActivityIndicator} from 'react-native';
+import {FlatList, ActivityIndicator} from 'react-native';
 import {Separator, Text, Icon, Link, Container} from './../../ui';
-import {PostComment, GuupHeader, CreateComment} from './../../components';
+import {PostComment, GuupHeader} from './../../components';
 import {
   NewsContainer,
   NewsHeader,
@@ -14,14 +14,11 @@ import {
   NewsEmpty,
   NewsPost,
 } from './_styled';
+import {useIsFocused} from '@react-navigation/native';
 import {PropsApp} from './../../@types/app.navigation';
-import {GetUniqueId} from './../../helper';
+import {GetUniqueId, shadowStyle} from './../../helper';
 import {LIMIT_PER_PAGE} from './../../constants';
-import {
-  Post,
-  useCreatePostMutation,
-  useGetAllPostsLazyQuery,
-} from './../../graphql/types.d';
+import {Post, useGetAllPostsLazyQuery} from './../../graphql/types.d';
 import NewsLoading from './_loading';
 import Authcontext from './../../contexts/auth';
 
@@ -37,20 +34,21 @@ const ListEmpty = () => {
   );
 };
 // List loading more
-const ListLoadMore = ({loading}) => {
+const ListLoadMore = ({loading}: {loading: boolean}) => {
   if (loading) {
     return (
       <NewsEmpty>
-        <Separator size="lili" />
+        {/* <Separator size="lili" /> */}
         <ActivityIndicator />
-        <Separator size="extraLarge" />
+        {/* <Separator size="extraLarge" /> */}
       </NewsEmpty>
     );
   }
   return <NewsEmpty />;
 };
 // Principal component
-const NewsScreen: React.FC<PropsApp> = () => {
+const NewsScreen: React.FC<PropsApp> = ({navigation: {navigate}}) => {
+  const isFocused = useIsFocused();
   const authContext = useContext(Authcontext);
   const [allPostsData, setAllPostsData] = useState<Array<Post>>([]);
   const [loadMore, setLoadMore] = useState<boolean>(false);
@@ -60,14 +58,7 @@ const NewsScreen: React.FC<PropsApp> = () => {
   const [
     getAllPosts,
     {data, error, loading, fetchMore, refetch},
-  ] = useGetAllPostsLazyQuery({
-    // notifyOnNetworkStatusChange: true,
-  });
-  const [toggleComment, setToggleComment] = useState(false);
-  const [
-    creaPostMutation,
-    {data: dataCreatePost, loading: loadCreatePost, error: errorCreatePost},
-  ] = useCreatePostMutation({notifyOnNetworkStatusChange: true});
+  ] = useGetAllPostsLazyQuery();
 
   // Effects
   useEffect(() => {
@@ -75,8 +66,11 @@ const NewsScreen: React.FC<PropsApp> = () => {
   }, [getAllPosts]);
 
   useEffect(() => {
-    refetch && refetch();
-  }, [refetch, isRefetch]);
+    if (refetch && isFocused) {
+      setIsRefetch(true);
+      refetch();
+    }
+  }, [refetch, isFocused]);
 
   useEffect(() => {
     if (fetchMore && loadMore && snapshot) {
@@ -90,27 +84,17 @@ const NewsScreen: React.FC<PropsApp> = () => {
     if (data?.getAllPosts?.__typename === 'GetPosts') {
       const allPosts: Array<Post> =
         data.getAllPosts.allPost || Array(0).fill({});
-      setIsNoMorePosts(R.isEmpty(allPosts));
+      const unionPosts = R.union(
+        [...(!isRefetch ? allPostsData : [])],
+        [...allPosts],
+      );
+      setIsNoMorePosts(allPosts.length < LIMIT_PER_PAGE);
       setLoadMore(false);
       setSnapshot(null);
-      // setAllPostsData(allPosts);
-      setAllPostsData([...(!isRefetch ? allPostsData : []), ...allPosts]);
+      setAllPostsData(unionPosts);
       setIsRefetch(false);
     }
   }, [data]);
-
-  useEffect(() => {
-    if (dataCreatePost?.createPost?.__typename === 'ErrorResponse') {
-      Alert.alert(
-        'Aconteceu um error',
-        dataCreatePost.createPost.error.message || 'Ops!! Aconteceu um erro',
-      );
-    } else if (dataCreatePost?.createPost?.__typename === 'CreatePost') {
-      const {createPost} = dataCreatePost.createPost;
-      createPost && setAllPostsData([createPost, ...allPostsData]);
-      setToggleComment(false);
-    }
-  }, [dataCreatePost, errorCreatePost]);
 
   // End effects
 
@@ -135,7 +119,7 @@ const NewsScreen: React.FC<PropsApp> = () => {
     const authUser = authContext.user || {};
     const clapped = claps && R.includes(`${authUser.uid}`, claps);
     return (
-      <NewsPost>
+      <NewsPost style={shadowStyle.newPost}>
         <PostComment
           owner={{
             id: owner || ownerProfile?.uid,
@@ -151,7 +135,8 @@ const NewsScreen: React.FC<PropsApp> = () => {
           claps={claps || []}
           clapsCount={clapsCount}
           createdAt={createdAt}
-          clapped={clapped}
+          clapped={!!clapped}
+          menu
         />
         <Separator size="large" />
       </NewsPost>
@@ -162,12 +147,10 @@ const NewsScreen: React.FC<PropsApp> = () => {
       <NewsHeader>
         <NewsActions>
           <GuupHeader
-            leftRenderIntem={<Icon source="guup" />}
+            leftRenderIntem={<Icon source="guup" size="small" />}
             rightRenderIntem={
-              <Link
-                preset="simple"
-                onPress={() => setToggleComment(!toggleComment)}>
-                Criar post +
+              <Link preset="simple" onPress={() => navigate('GuupPostCreate')}>
+                <Icon source="plus" />
               </Link>
             }
           />
@@ -206,26 +189,16 @@ const NewsScreen: React.FC<PropsApp> = () => {
 
   // Handlers
   const handlefetchMoreData = () => {
-    console.log('handlefetchMoreData');
     if (
       !loadMore &&
       !snapshot &&
       !isNoMorePosts &&
-      allPostsData.length === LIMIT_PER_PAGE
+      allPostsData.length >= LIMIT_PER_PAGE
     ) {
-      console.log('handlefetchMoreData news');
       const lastPost = R.last(allPostsData)?.id;
       setLoadMore(true);
       setSnapshot(lastPost || null);
     }
-  };
-
-  const handleCreateNewPost = (postComment: string) => {
-    creaPostMutation({
-      variables: {
-        description: postComment,
-      },
-    });
   };
 
   const handleRefresh = () => {
@@ -238,7 +211,7 @@ const NewsScreen: React.FC<PropsApp> = () => {
   // End Handlers
 
   return (
-    <Container safe center={false}>
+    <Container safe>
       <NewsContainer>
         <NewsBody>
           <NewsContent>
@@ -253,7 +226,9 @@ const NewsScreen: React.FC<PropsApp> = () => {
                 renderItem={PostItem}
                 ListEmptyComponent={ListEmpty}
                 ListHeaderComponent={ListHeader}
-                ListFooterComponent={<ListLoadMore loading={loadMore} />}
+                ListFooterComponent={
+                  <ListLoadMore loading={loadMore && !isNoMorePosts} />
+                }
                 onEndReachedThreshold={0}
                 onEndReached={handlefetchMoreData}
                 refreshing={loading}
@@ -263,13 +238,6 @@ const NewsScreen: React.FC<PropsApp> = () => {
           </NewsContent>
         </NewsBody>
       </NewsContainer>
-      {/* Show post creator */}
-      <CreateComment
-        show={toggleComment}
-        loading={loadCreatePost}
-        toggleModal={() => setToggleComment(!toggleComment)}
-        onSendMessage={(comment: string) => handleCreateNewPost(comment)}
-      />
     </Container>
   );
 };

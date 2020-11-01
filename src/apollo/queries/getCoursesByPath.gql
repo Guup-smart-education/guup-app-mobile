@@ -1,20 +1,24 @@
-query getCoursesByPath($path: String!) {
-  getCoursesByPath(path: $path) {
-    ... on GetCourses {
-      courses {
+query getCoursesByPath($path: String!, $lastCourse: String) {
+  getCoursesByPath(path: $path, lastCourse: $lastCourse) {
+    ... on GetCoursesByPath {
+      coursesByPath {
         id
+        path
         title
         description
         area
-        typeContent
         difficult
+        photoURL
+        typeContent
         viewsCount
+        clapsCount
         commentsCount
         comments {
           id
           owner
           description
         }
+        owner
         ownerProfile {
           displayName
           photoURL

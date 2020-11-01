@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import R from 'ramda';
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState, useEffect, useCallback, useContext} from 'react';
 import {
   TouchableWithoutFeedback as TouchArea,
   View,
@@ -16,8 +17,15 @@ import {
   HeaderPatch,
   Action,
   GroupAvatar,
+  Button,
 } from './../../ui';
-import {Avatar, GuupCourseCard, GuupHeader} from './../../components';
+import {
+  Avatar,
+  GuupCourseCard,
+  GuupHeader,
+  Popover,
+  GuupMenuList,
+} from './../../components';
 import {
   CourseDetailContainer,
   CourseDetailHeader,
@@ -27,11 +35,21 @@ import {
   CourseDetailDataRight,
   CourseDetailDataLeft,
   CourseDetailDataContent,
+  CourseDetailItem,
+  CourseListFooter,
 } from './_styled';
+import {useIsFocused} from '@react-navigation/native';
 import {CourseDetailPropsApp} from './../../@types/app.navigation';
 import {usePathContext} from './../../contexts/path';
-import {useGetCoursesByPathLazyQuery, Course} from './../../graphql/types.d';
-import {GetUniqueId} from './../../helper';
+import AuthContext from './../../contexts/auth';
+import {
+  useGetCoursesByPathLazyQuery,
+  Course,
+  PathAccess,
+} from './../../graphql/types.d';
+import {GetUniqueId, shadowStyle} from './../../helper';
+import {LIMIT_LIST} from './../../constants';
+import {IMenuItemProps} from './../../@types/menu.item';
 
 // List empty data
 const ListEmpty = () => {
@@ -49,13 +67,58 @@ const CourseScreen: React.FC<CourseDetailPropsApp> = ({
     params: {mode},
   },
 }) => {
-  console.log('params: mode -> ', mode);
-  const [allCourses, setAllCourses] = useState<Array<Course>>();
+  const OPTIONS_ITEMS: Array<IMenuItemProps> =
+    mode === 'EDIT'
+      ? [
+          {
+            text: 'Remover conteudo',
+            onPress: () => Alert.alert('Remover!!', 'Ver mais tarde'),
+            icon: 'trash',
+          },
+          {
+            text: 'Deixar público ao mundo',
+            onPress: () => Alert.alert('Publicar!!', 'Publicar'),
+            icon: 'explorer',
+          },
+          {
+            text: 'Editar conteudo',
+            onPress: () => Alert.alert('Editar!!', 'Ver mais tarde'),
+            icon: 'settings',
+          },
+        ]
+      : [
+          {
+            text: 'Ver mais tarde',
+            onPress: () => Alert.alert('Ver!!', 'Ver mais tarde'),
+            icon: 'save',
+          },
+          {
+            text: 'Me avise de novo conteudo',
+            onPress: () => Alert.alert('Ver!!', 'Ver mais tarde'),
+            icon: 'bell',
+          },
+          {
+            text: 'Reportar conteudo',
+            onPress: () => Alert.alert('Report!!', 'Reportar'),
+            icon: 'alert',
+          },
+        ];
+  const isFocused = useIsFocused();
+  const [allCourses, setAllCourses] = useState<Array<Course>>([]);
+  const [showOptions, setShowOptions] = useState<boolean>(false);
+  const [showPermission, setShowPermission] = useState<boolean>(false);
+  const [isRefetch, setIsRefetch] = useState<boolean>(false);
+  const [isNoMoreData, setIsNoMoreData] = useState<boolean>(false);
+  const [snapshot, setSnapshot] = useState<string | null>(null);
   const [loadMore, setLoadMore] = useState<boolean>(false);
   const {
     state: {currentPath},
   } = usePathContext();
-  const [getCourses, {data, error, loading}] = useGetCoursesByPathLazyQuery();
+  const {user} = useContext(AuthContext);
+  const [
+    getCourses,
+    {data, error, loading, refetch, fetchMore},
+  ] = useGetCoursesByPathLazyQuery();
 
   // Effects
   useEffect(() => {
@@ -68,12 +131,38 @@ const CourseScreen: React.FC<CourseDetailPropsApp> = ({
       });
   }, [getCourses, currentPath]);
   useEffect(() => {
-    if (data?.getCoursesByPath?.__typename === 'GetCourses') {
+    if (refetch && isFocused) {
+      setIsRefetch(true);
+      refetch();
+    }
+  }, [refetch, isFocused]);
+  useEffect(() => {
+    if (fetchMore && loadMore && snapshot && !isNoMoreData) {
+      fetchMore({
+        variables: {
+          path: currentPath.id || '',
+          lastCourse: snapshot,
+        },
+      });
+    }
+  }, [snapshot, loadMore]);
+  useEffect(() => {
+    setAllCourses([]);
+    if (data?.getCoursesByPath?.__typename === 'GetCoursesByPath') {
       const coursesData: Array<any> = [
-        ...(data.getCoursesByPath.courses || []),
+        ...(data.getCoursesByPath.coursesByPath?.filter(
+          (item) => item?.path === currentPath.id,
+        ) || []),
       ];
-      console.log('data?.getCoursesByPath', coursesData);
-      coursesData && setAllCourses([...coursesData]);
+      const unionData = R.union(
+        [...(!isRefetch ? allCourses : [])],
+        [...coursesData],
+      );
+      setAllCourses(unionData);
+      setIsNoMoreData(coursesData.length < LIMIT_LIST.tiny);
+      setIsRefetch(false);
+      setLoadMore(false);
+      setSnapshot(null);
     } else if (data?.getCoursesByPath?.__typename === 'ErrorResponse') {
       Alert.alert(
         'Aconteceu um problema',
@@ -81,6 +170,9 @@ const CourseScreen: React.FC<CourseDetailPropsApp> = ({
           'Ops!! Aconteceu um problema com a chamda, tente novamente',
       );
     }
+    return () => {
+      setAllCourses([]);
+    };
   }, [data]);
   useEffect(() => {
     if (error) {
@@ -88,7 +180,27 @@ const CourseScreen: React.FC<CourseDetailPropsApp> = ({
     }
   }, [error]);
   // End effects
-
+  // Handlers
+  const handleRefresh = () => {
+    // setAllPostsData([]);
+    setIsNoMoreData(false);
+    setLoadMore(false);
+    setIsRefetch(true);
+    refetch && refetch();
+  };
+  const handlefetchMoreData = () => {
+    if (
+      !loadMore &&
+      !snapshot &&
+      !isNoMoreData &&
+      allCourses.length >= LIMIT_LIST.tiny
+    ) {
+      const lastPath = R.last(allCourses)?.id;
+      setLoadMore(true);
+      setSnapshot(lastPath || null);
+    }
+  };
+  // End handlers
   // Callbacks
   const keyExtractor = useCallback(
     ({id}: Course) => `course-detail-item-${id || GetUniqueId()}`,
@@ -96,11 +208,14 @@ const CourseScreen: React.FC<CourseDetailPropsApp> = ({
   );
 
   const CourseItem = useCallback(({item}: {item: Course}) => {
+    const isOwner = user?.uid === item.owner;
     return (
-      <View>
+      <CourseDetailItem style={shadowStyle.newPost}>
         <Separator size="large" />
         <GuupCourseCard
+          id={`${item.id}`}
           type="COURSE"
+          model={isOwner ? 'OWNER' : 'PUBLIC'}
           imageUri={item.photoURL || ''}
           title={item.title || 'Guup course'}
           owner={item.ownerProfile || {}}
@@ -110,19 +225,19 @@ const CourseScreen: React.FC<CourseDetailPropsApp> = ({
             Alert.alert('Show the course', 'Show all video course')
           }
         />
-      </View>
+      </CourseDetailItem>
     );
   }, []);
 
   const ListHeader = useCallback(() => {
     return (
-      <CourseDetailDataContent>
+      <CourseDetailDataContent style={shadowStyle.newPost}>
         <CourseDetailDataBody>
           <CourseDetailDataRight>
             <Text preset="largePrice">{currentPath.title}</Text>
             <Separator size="small" />
             <TouchArea
-              onPress={() => navigate('GuupUserProfile', {type: 'teacher'})}>
+              onPress={() => navigate('GuupUserProfile', {type: 'PUBLIC'})}>
               {!currentPath.owners || currentPath.owners.length === 1 ? (
                 <Avatar
                   firstText={currentPath.ownerProfile?.displayName}
@@ -139,18 +254,9 @@ const CourseScreen: React.FC<CourseDetailPropsApp> = ({
             </TouchArea>
           </CourseDetailDataRight>
           <CourseDetailDataLeft>
-            {mode === 'EDIT' ? (
-              <Action onPress={() => Alert.alert('Edit', 'Edit some thing')}>
-                <Icon source="dots" backColor="veryLigthGrey" />
-              </Action>
-            ) : (
-              <Action
-                onPress={() =>
-                  Alert.alert('Alert', 'Alert me with new information')
-                }>
-                <Icon source="bell" />
-              </Action>
-            )}
+            <Action onPress={() => setShowOptions(true)}>
+              <Icon source="dots" backColor="veryLigthGrey" />
+            </Action>
           </CourseDetailDataLeft>
         </CourseDetailDataBody>
         <CourseDetailDataBottom>
@@ -164,21 +270,22 @@ const CourseScreen: React.FC<CourseDetailPropsApp> = ({
   }, [currentPath, navigate, mode]);
 
   const ListLoadMore = useCallback(() => {
-    if (loadMore) {
+    if (allCourses && allCourses?.length >= LIMIT_LIST.tiny) {
       return (
-        <View>
-          <Text center>Carregando mais coisas</Text>
-          <Separator size="lili" />
-          <ActivityIndicator />
-          <Separator size="extraLarge" />
-        </View>
+        <CourseListFooter>
+          <Button
+            loading={loading || loadMore}
+            disable={loading || loadMore || isNoMoreData}
+            onPress={() => handlefetchMoreData()}
+            text={isNoMoreData ? 'Não há mais conteudo' : 'trazer mais'}
+          />
+        </CourseListFooter>
       );
     }
     return <Separator size="large" />;
-  }, [loadMore]);
+  }, [loadMore, allCourses]);
 
   // End callbacks
-
   return (
     <Container safe>
       <CourseDetailContainer>
@@ -193,11 +300,19 @@ const CourseScreen: React.FC<CourseDetailPropsApp> = ({
             rightRenderIntem={
               <Link
                 color="primary"
-                onPress={() =>
-                  mode === 'EDIT'
-                    ? Alert.alert('Adicionar', 'Adicionar conteudo')
-                    : Alert.alert('Contribuir', 'Contribuir')
-                }>
+                onPress={() => {
+                  if (
+                    mode === 'EDIT' ||
+                    currentPath.access === PathAccess.ForEveryone
+                  ) {
+                    navigate('GuupContentCreate', {
+                      type: 'CONTENT',
+                      ...(currentPath.id && {path: currentPath.id}),
+                    });
+                  } else if (currentPath.access === PathAccess.LimitAccess) {
+                    setShowPermission(true);
+                  }
+                }}>
                 {mode === 'EDIT' ? 'Adicionar +' : 'Contribuir +'}
               </Link>
             }
@@ -205,8 +320,8 @@ const CourseScreen: React.FC<CourseDetailPropsApp> = ({
         </CourseDetailHeader>
         <CourseDetailContent>
           <FlatList
+            style={{width: '100%', height: '100%'}}
             showsVerticalScrollIndicator={false}
-            // scrollEnabled={!R.isEmpty(allCourses)}
             data={allCourses}
             keyExtractor={keyExtractor}
             maxToRenderPerBatch={20}
@@ -216,12 +331,38 @@ const CourseScreen: React.FC<CourseDetailPropsApp> = ({
             ListHeaderComponent={ListHeader}
             ListFooterComponent={ListLoadMore}
             onEndReachedThreshold={0.9}
-            // onEndReached={handlefetchMoreData}
             refreshing={loading}
-            // onRefresh={handleRefresh}
+            onRefresh={handleRefresh}
           />
         </CourseDetailContent>
       </CourseDetailContainer>
+      <Popover
+        visible={showOptions}
+        height={50 + OPTIONS_ITEMS.length * 44}
+        toggle={() => setShowOptions(false)}>
+        <GuupMenuList menuItems={OPTIONS_ITEMS} hideChevron compress noBorder />
+      </Popover>
+      <Popover
+        visible={showPermission}
+        height={50 + 4 * 48}
+        toggle={() => setShowPermission(false)}
+        closeBottom={false}>
+        <>
+          <Text preset="comment" bold underline>
+            Coleção privada
+          </Text>
+          <Separator size="tiny" />
+          <Text>
+            Solicite permissão ao dono da coleção para poder contribuir com
+            conteudos novos
+          </Text>
+          <Separator size="medium" />
+          <Button
+            text="solicitar acesso"
+            onPress={() => Alert.alert('Solicitar', 'Soliciar acesso')}
+          />
+        </>
+      </Popover>
     </Container>
   );
 };

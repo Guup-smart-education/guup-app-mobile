@@ -8,14 +8,18 @@ interface IDate {
 }
 
 export default ({date}: IDate) => {
-  const parseDate = parseISO(date);
-  const dateFormated = `${formatDistanceToNow(parseDate, {
-    addSuffix: true,
-    locale: ptBrLocal,
-  })}`;
-  return (
-    <Text preset="date" color="darkGrey">
-      {dateFormated || ''}
-    </Text>
-  );
+  try {
+    const parseDate = parseISO(date);
+    const dateFormated = `${formatDistanceToNow(parseDate, {
+      addSuffix: true,
+      locale: ptBrLocal,
+    })}`;
+    return (
+      <Text preset="date" color="darkGrey">
+        {dateFormated || ''}
+      </Text>
+    );
+  } catch (error) {
+    return <Text>Em algum momento</Text>;
+  }
 };

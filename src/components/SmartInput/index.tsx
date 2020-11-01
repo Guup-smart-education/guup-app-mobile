@@ -14,11 +14,13 @@ const SmartInput = forwardRef<any, SmartInputProps>(
             autoCapitalize="none"
             blurOnSubmit={false}
           />
-          <FlagError>
-            <Text color="primary" preset="label" center bold>
-              {error?.message}
-            </Text>
-          </FlagError>
+          {error && (
+            <FlagError>
+              <Text color="primary" preset="label" center bold>
+                {error.message}
+              </Text>
+            </FlagError>
+          )}
         </InputWrapper>
       </RowFullWidth>
     );

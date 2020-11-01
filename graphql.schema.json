@@ -613,6 +613,18 @@
             "deprecationReason": null
           },
           {
+            "name": "contentCount",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "createdAt",
             "description": null,
             "args": [],
@@ -2688,6 +2700,16 @@
                   }
                 },
                 "defaultValue": null
+              },
+              {
+                "name": "lastComment",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null
               }
             ],
             "type": {
@@ -2776,14 +2798,18 @@
                 "name": "path",
                 "description": null,
                 "type": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
                 },
                 "defaultValue": null
               },
               {
-                "name": "lastPath",
+                "name": "lastCourse",
                 "description": null,
                 "type": {
                   "kind": "SCALAR",
@@ -2795,7 +2821,7 @@
             ],
             "type": {
               "kind": "UNION",
-              "name": "UGetCourses",
+              "name": "UGetCoursesByPath",
               "ofType": null
             },
             "isDeprecated": false,
@@ -2935,6 +2961,16 @@
             "description": null,
             "args": [
               {
+                "name": "lastPost",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
                 "name": "owner",
                 "description": null,
                 "type": {
@@ -2947,7 +2983,7 @@
             ],
             "type": {
               "kind": "UNION",
-              "name": "UGetAllPost",
+              "name": "UGetPostsByOwner",
               "ofType": null
             },
             "isDeprecated": false,
@@ -3350,11 +3386,66 @@
                   }
                 },
                 "defaultValue": null
+              },
+              {
+                "name": "status",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "PathStatus",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
               }
             ],
             "type": {
               "kind": "UNION",
               "name": "UCreatePath",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "updateStatusPath",
+            "description": null,
+            "args": [
+              {
+                "name": "path",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "status",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "PathStatus",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "kind": "UNION",
+              "name": "UUpdatedStatusPath",
               "ofType": null
             },
             "isDeprecated": false,
@@ -4283,6 +4374,45 @@
       },
       {
         "kind": "OBJECT",
+        "name": "GetCoursesByPath",
+        "description": null,
+        "fields": [
+          {
+            "name": "coursesByPath",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "Course",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "success",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "Success",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
         "name": "UpdateCourse",
         "description": null,
         "fields": [
@@ -4451,6 +4581,27 @@
       },
       {
         "kind": "UNION",
+        "name": "UGetCoursesByPath",
+        "description": null,
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": [
+          {
+            "kind": "OBJECT",
+            "name": "GetCoursesByPath",
+            "ofType": null
+          },
+          {
+            "kind": "OBJECT",
+            "name": "ErrorResponse",
+            "ofType": null
+          }
+        ]
+      },
+      {
+        "kind": "UNION",
         "name": "UGetCourseDetail",
         "description": null,
         "fields": null,
@@ -4509,6 +4660,41 @@
           },
           {
             "name": "FOR_EVERYONE",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "PathStatus",
+        "description": null,
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": [
+          {
+            "name": "WAITING",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "PUBLISHED",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "DELETED",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "PAUSED",
             "description": null,
             "isDeprecated": false,
             "deprecationReason": null
@@ -4610,7 +4796,7 @@
         "description": null,
         "fields": [
           {
-            "name": "allPaths",
+            "name": "allPathsOwner",
             "description": null,
             "args": [],
             "type": {
@@ -4685,6 +4871,41 @@
         "fields": [
           {
             "name": "createPath",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "success",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "Success",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "UpdateStatusPath",
+        "description": null,
+        "fields": [
+          {
+            "name": "updateStatus",
             "description": null,
             "args": [],
             "type": {
@@ -4798,6 +5019,27 @@
         ]
       },
       {
+        "kind": "UNION",
+        "name": "UUpdatedStatusPath",
+        "description": null,
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": [
+          {
+            "kind": "OBJECT",
+            "name": "UpdateStatusPath",
+            "ofType": null
+          },
+          {
+            "kind": "OBJECT",
+            "name": "ErrorResponse",
+            "ofType": null
+          }
+        ]
+      },
+      {
         "kind": "ENUM",
         "name": "ClapFor",
         "description": null,
@@ -4882,6 +5124,45 @@
         "fields": [
           {
             "name": "allPost",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "Post",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "success",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "Success",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "GetPostsOwner",
+        "description": null,
+        "fields": [
+          {
+            "name": "allPostOwner",
             "description": null,
             "args": [],
             "type": {
@@ -5031,6 +5312,27 @@
           {
             "kind": "OBJECT",
             "name": "GetPosts",
+            "ofType": null
+          },
+          {
+            "kind": "OBJECT",
+            "name": "ErrorResponse",
+            "ofType": null
+          }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "UGetPostsByOwner",
+        "description": null,
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": [
+          {
+            "kind": "OBJECT",
+            "name": "GetPostsOwner",
             "ofType": null
           },
           {

@@ -1,6 +1,6 @@
 import R from 'ramda';
-import React from 'react';
-import {Alert, View} from 'react-native';
+import React, {useState} from 'react';
+import {Alert, View, ActivityIndicator} from 'react-native';
 import {Maybe} from 'graphql/jsutils/Maybe';
 import {
   CardContainer,
@@ -8,6 +8,7 @@ import {
   CardSectionTop,
   CardContent,
   CardActions,
+  CardSectionHeader,
   CardBottomActions,
 } from './_styled';
 import {
@@ -20,22 +21,22 @@ import {
   Dot,
 } from './../../ui';
 import Avatar from './../Avatar';
+import Popover from './../Popover';
 import GuupDate from './../Date';
-import {UserProfile, EnumContentType} from './../../graphql/types.d';
+import MenuList from './../MenuList';
+import {IMenuItemProps} from './../../@types/menu.item';
+import {EModel, ECourse} from './../../@enum/course.model';
+import {
+  UserProfile,
+  EnumContentType,
+  Course,
+  Path,
+} from './../../graphql/types.d';
 // import {EditCollectionScreenNavigationProp} from './../../@types/app.navigation';
 // import {useNavigation} from '@react-navigation/native';
 
-enum ECourse {
-  'PATH' = 'PATH',
-  'COURSE' = 'COURSE',
-}
-
-enum EModel {
-  'OWNER' = 'ONWER',
-  'PUBLIC' = 'PUBLIC',
-}
-
 export interface Props {
+  readonly id: string;
   readonly type: keyof typeof ECourse;
   readonly model?: keyof typeof EModel;
   readonly contentType?: keyof typeof EnumContentType;
@@ -58,116 +59,106 @@ const CourseCard: React.FC<Props> = ({
   owner,
   owners,
   createdAt,
+  id,
 }) => {
   // const {navigate} = useNavigation<EditCollectionScreenNavigationProp>();
+  const OPTIONS_ITEMS: Array<IMenuItemProps> =
+    model === 'OWNER'
+      ? [
+          {
+            text: 'Remover conteudo',
+            onPress: () => Alert.alert('Ver!!', 'Ver mais tarde'),
+            icon: 'trash',
+          },
+          {
+            text: 'Editar conteudo',
+            onPress: () => Alert.alert('Ver!!', 'Ver mais tarde'),
+            icon: 'settings',
+          },
+        ]
+      : [
+          {
+            text: 'Ver mais tarde',
+            onPress: () => Alert.alert('Ver!!', 'Ver mais tarde'),
+            icon: 'save',
+          },
+          {
+            text: 'Me avise de novo conteudo',
+            onPress: () => Alert.alert('Ver!!', 'Ver mais tarde'),
+            icon: 'bell',
+          },
+          {
+            text: 'Reportar conteudo',
+            onPress: () => Alert.alert('Report!!', 'Reportar'),
+            icon: 'alert',
+          },
+        ];
+  const [imgLoading, setImgLoading] = useState(false);
+  const [showOptions, setShowOptions] = useState(false);
   return (
     <CardContainer>
       <Action onPress={() => onPress && onPress()}>
-        <CardSectionBody>
-          {/* {!R.isNil(imageUri) && !R.isEmpty(imageUri) && (
-            <CardSectionTop source={{uri: imageUri}} />
-          )} */}
-          <CardContent>
-            <View>
-              {createdAt && <GuupDate date={createdAt} />}
-              <Separator size="lili" />
-              <Text preset="comment" bold lineHeight={21}>
-                {title}
-              </Text>
-            </View>
-            {content && (
-              <>
+        <View>
+          {!R.isNil(imageUri) && !R.isEmpty(imageUri) && (
+            <CardSectionHeader>
+              <CardSectionTop
+                source={{uri: imageUri}}
+                onLoadStart={() => setImgLoading(true)}
+                onLoadEnd={() => setImgLoading(false)}>
+                {imgLoading && <ActivityIndicator />}
+              </CardSectionTop>
+            </CardSectionHeader>
+          )}
+          <CardSectionBody>
+            <CardContent>
+              <View>
+                {createdAt && <GuupDate date={createdAt} />}
                 <Separator size="lili" />
-                <Text preset="label" color="greyBrown">
-                  {content}
+                <Text preset="comment" bold lineHeight={21}>
+                  {title}
                 </Text>
-              </>
-            )}
-            <Separator size="small" />
-            {type === 'COURSE' || !owners || owners.length === 1 ? (
-              <Avatar
-                size="comment"
-                firstText={owner?.displayName}
-                secondText={owner?.profission}
-                image={owner?.thumbnailURL}
-              />
-            ) : (
-              <GroupAvatar avatars={owners.map((item) => item?.thumbnailURL)} />
-            )}
-            {/* {model === 'OWNER' && (
-              <>
-                <Separator size="small" />
-                <CardBottomActions>
-                  <Link
-                    color="primary"
-                    onPress={() =>
-                      Alert.alert('Comments', 'navigate to comments')
-                    }>
-                    0 comentarios
-                  </Link>
-                  <Dot />
-                  <Link
-                    color="dark"
-                    onPress={() => Alert.alert('Claps', 'Show all claps')}>
-                    0 claps
-                  </Link>
-                </CardBottomActions>
-              </>
-            )} */}
-          </CardContent>
-          <CardActions>
-            {R.cond([
-              [
-                R.equals('OWNER'),
-                () => {
-                  return (
-                    <Action
-                      onPress={() =>
-                        Alert.alert('Options', 'Show options for collection')
-                      }>
-                      <Icon
-                        source="dots"
-                        tintColor="ultraDark"
-                        backColor="veryLigthGrey"
-                        size="small"
-                      />
-                    </Action>
-                  );
-                },
-              ],
-              [
-                R.T,
-                () => {
-                  if (type === 'COURSE') {
-                    return (
-                      <Action
-                        onPress={() =>
-                          Alert.alert(
-                            'Attach course',
-                            'Save this content for later',
-                          )
-                        }>
-                        <Icon source="save" tintColor="ultraDark" />
-                      </Action>
-                    );
-                  }
-                  return (
-                    <Action
-                      onPress={() =>
-                        Alert.alert(
-                          'Notify me',
-                          'Give me notifications about this content',
-                        )
-                      }>
-                      <Icon source="bell" />
-                    </Action>
-                  );
-                },
-              ],
-            ])(model)}
-          </CardActions>
-        </CardSectionBody>
+              </View>
+              {content && (
+                <>
+                  <Separator size="lili" />
+                  <Text preset="label" color="greyBrown">
+                    {content}
+                  </Text>
+                </>
+              )}
+              <Separator size="small" />
+              {type === 'COURSE' || !owners || owners.length === 1 ? (
+                <Avatar
+                  size="comment"
+                  firstText={owner?.displayName}
+                  secondText={owner?.profission}
+                  image={owner?.thumbnailURL}
+                />
+              ) : (
+                <GroupAvatar
+                  avatars={owners.map((item) => item?.thumbnailURL)}
+                />
+              )}
+            </CardContent>
+            <CardActions>
+              <Action onPress={() => setShowOptions(true)}>
+                <Icon
+                  source="dots"
+                  tintColor="ultraDark"
+                  backColor="veryLigthGrey"
+                  size="small"
+                />
+              </Action>
+            </CardActions>
+          </CardSectionBody>
+        </View>
       </Action>
+      <Popover
+        visible={showOptions}
+        height={50 + OPTIONS_ITEMS.length * 44}
+        toggle={() => setShowOptions(false)}>
+        <MenuList menuItems={OPTIONS_ITEMS} hideChevron compress noBorder />
+      </Popover>
     </CardContainer>
   );
 };

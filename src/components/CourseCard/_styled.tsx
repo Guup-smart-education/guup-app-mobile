@@ -4,14 +4,21 @@ import styled from 'styled-components/native';
 export const CardContainer = styled.View`
   background-color: ${({theme}) => theme.colors.ligth};
   border-radius: ${({theme}) => theme.borderRadius[8]};
-  margin-left: ${({theme}) => theme.spacing.margin[25]};
-  margin-right: ${({theme}) => theme.spacing.margin[25]};
+  /* margin-left: ${({theme}) => theme.spacing.margin[25]};
+  margin-right: ${({theme}) => theme.spacing.margin[25]}; */
   overflow: hidden;
+  width: 100%;
 `;
 
 export const CardSectionTop = styled.ImageBackground`
   height: ${Dimensions.get('screen').width - 120}px;
-  background-color: ${({theme}) => theme.colors.ligth};
+  background-color: ${({theme}) => theme.colors.ligthGrey};
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const CardSectionHeader = styled.View`
   width: 100%;
 `;
 

@@ -8,7 +8,8 @@ const SmartForm = ({
   setValue,
   currentInput = 0,
   autoFocus = false,
-}: SmartFormProps) => {
+}: // register
+SmartFormProps) => {
   const Inputs = useRef<Array<TextInput>>([]);
   useEffect(() => {
     (autoFocus || currentInput) && Inputs.current[currentInput].focus();
@@ -26,6 +27,7 @@ const SmartForm = ({
                     setValue(child.props.name, v, true),
                   key: child.props.name,
                   error: errors[child.props.name],
+                  // register,
                 },
               })
             : child;

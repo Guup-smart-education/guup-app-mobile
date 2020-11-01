@@ -10,6 +10,7 @@ import {
   Container,
   HeaderPatch,
   FooterPatch,
+  Button,
 } from './../../ui';
 import {GetUniqueId} from './../../helper';
 import {
@@ -30,6 +31,7 @@ import {
   CommentsList,
   CommentListItem,
   CommentNav,
+  CommentListFooter,
 } from './_styled';
 import {
   Comments,
@@ -41,6 +43,7 @@ import {
 import {FlatList, ActivityIndicator, Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {CommentScreenNavigationProp} from './../../@types/app.navigation';
+import {LIMIT_LIST} from './../../constants';
 
 // List component
 const CommentListSection: React.FC<{
@@ -49,10 +52,14 @@ const CommentListSection: React.FC<{
   myCommentsCount: number;
 }> = ({post, newComment, myCommentsCount}) => {
   const navigation = useNavigation<CommentScreenNavigationProp>();
+  const [loadMore, setLoadMore] = useState<boolean>(false);
+  const [isRefetch, setIsRefetch] = useState<boolean>(false);
+  const [snapshot, setSnapshot] = useState<string | null>(null);
+  const [isNoMoreData, setIsNoMoreData] = useState<boolean>(false);
   const [comments, setComments] = useState<Array<Comments>>([]);
   const [
     getAllComments,
-    {data, loading, error, refetch},
+    {data, loading, error, refetch, fetchMore},
   ] = useGetCommentByPostLazyQuery({
     variables: {post: post.id || ''},
   });
@@ -65,9 +72,20 @@ const CommentListSection: React.FC<{
     };
   }, [getAllComments]);
 
-  // useEffect(() => {
-  //   refetch && refetch();
-  // }, [refetch]);
+  useEffect(() => {
+    refetch && refetch();
+  }, [refetch]);
+
+  useEffect(() => {
+    if (fetchMore && loadMore && snapshot && !isNoMoreData) {
+      fetchMore({
+        variables: {
+          post: post.id,
+          lastComment: snapshot,
+        },
+      });
+    }
+  }, [snapshot, loadMore]);
 
   useEffect(() => {
     if (data?.getCommentByPost?.__typename === 'ErrorResponse') {
@@ -89,7 +107,16 @@ const CommentListSection: React.FC<{
           createdAt: item?.createdAt,
         }),
       );
-      setComments(formatComments);
+
+      const unionData = R.union(
+        [...(!isRefetch ? comments : [])],
+        [...formatComments],
+      );
+      setComments(unionData);
+      setIsNoMoreData(formatComments.length < LIMIT_LIST.tiny);
+      setIsRefetch(false);
+      setLoadMore(false);
+      setSnapshot(null);
     }
   }, [data]);
 
@@ -99,7 +126,20 @@ const CommentListSection: React.FC<{
     }
   }, [newComment]);
   // End effects
-
+  // Handlers
+  const handlefetchMoreData = () => {
+    if (
+      !loadMore &&
+      !snapshot &&
+      !isNoMoreData &&
+      comments.length >= LIMIT_LIST.tiny
+    ) {
+      const lastComment = R.last(comments)?.id;
+      setLoadMore(true);
+      setSnapshot(lastComment || null);
+    }
+  };
+  // End handlers
   // Callbacks
   const keyExtractor = useCallback(
     ({id}: Comments) => `post-comment-${id || GetUniqueId()}`,
@@ -155,6 +195,21 @@ const CommentListSection: React.FC<{
     ),
     [],
   );
+  const ListLoadMore = useCallback(() => {
+    if (comments.length >= LIMIT_LIST.tiny) {
+      return (
+        <CommentListFooter>
+          <Button
+            loading={loading || loadMore}
+            disable={loading || loadMore || isNoMoreData}
+            onPress={() => handlefetchMoreData()}
+            text={isNoMoreData ? 'Não há mais conteudo' : 'trazer mais'}
+          />
+        </CommentListFooter>
+      );
+    }
+    return <Separator size="large" />;
+  }, [loadMore, comments]);
   // End callbacks
 
   // Branchs
@@ -184,7 +239,7 @@ const CommentListSection: React.FC<{
             </Action>
           }
           centerRenderItem={
-            <Text preset="comment" bold>
+            <Text preset="comment" bold color="primary">
               Comentarios
             </Text>
           }
@@ -204,7 +259,7 @@ const CommentListSection: React.FC<{
         keyExtractor={keyExtractor}
         renderItem={CommentItem}
         ListHeaderComponent={CommentDetail}
-        ListFooterComponent={<Separator size="large" />}
+        ListFooterComponent={ListLoadMore}
         ListEmptyComponent={ListEmpty}
       />
     </CommentsList>

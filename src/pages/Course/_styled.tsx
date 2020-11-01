@@ -23,10 +23,12 @@ export const CourseDetailDataContent = styled.View`
   padding-left: ${({theme}) => theme.spacing.padding[25]};
   padding-right: ${({theme}) => theme.spacing.padding[25]};
   padding-bottom: ${({theme}) => theme.spacing.padding[25]};
+  /* border-bottom-width: 1px;
+  border-bottom-color: ${({theme}) => theme.colors.ligthGrey}; */
 `;
 
 export const CourseDetailDataBody = styled.View`
-  padding-top: ${({theme}) => theme.spacing.padding[25]};
+  padding-top: ${({theme}) => theme.spacing.padding[20]};
   flex-direction: row;
   justify-content: space-between;
 `;
@@ -52,4 +54,16 @@ export const CourseTabContent = styled.View`
 export const FooterLabels = styled.View`
   align-items: center;
   justify-content: center;
+`;
+
+export const CourseDetailItem = styled.View`
+  padding-left: ${({theme}) => theme.spacing.padding[25]};
+  padding-right: ${({theme}) => theme.spacing.padding[25]};
+`;
+
+export const CourseListFooter = styled.View`
+  padding-left: ${({theme}) => theme.spacing.padding[25]};
+  padding-right: ${({theme}) => theme.spacing.padding[25]};
+  margin-top: ${({theme}) => theme.spacing.margin[25]};
+  margin-bottom: ${({theme}) => theme.spacing.margin[25]};
 `;

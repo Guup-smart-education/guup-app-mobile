@@ -9,12 +9,7 @@ export type EProps = {
   readonly onPress: (link: ETabLinks) => void;
 };
 
-const LINKS = [
-  {label: 'Link 1'},
-  {label: 'Link 2'},
-  {label: 'Link 3'},
-  {label: 'Link 4'},
-] as Array<ETabLinks>;
+const LINKS = [{label: 'Nada para mostrar'}] as Array<ETabLinks>;
 
 export default ({links = LINKS, onPress, active}: EProps) => {
   return (

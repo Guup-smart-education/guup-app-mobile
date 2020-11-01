@@ -26,6 +26,9 @@ export enum EIcons {
   'lock',
   'unlock',
   'plus',
+  'settings',
+  'trash',
+  'alert',
 }
 
 export enum ETabIcon {

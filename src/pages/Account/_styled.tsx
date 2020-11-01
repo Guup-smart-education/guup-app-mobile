@@ -12,6 +12,7 @@ export const AccountHeader = styled.View`
 
 export const AccountInformation = styled.View`
   flex-direction: row;
+  align-items: center;
 `;
 
 export const AccountUserName = styled.View`
@@ -20,9 +21,9 @@ export const AccountUserName = styled.View`
 `;
 
 export const AccountUserAvatar = styled.ImageBackground`
-  height: 52px;
-  width: 52px;
-  border-radius: 32px;
+  height: 44px;
+  width: 44px;
+  border-radius: 22px;
   overflow: hidden;
 `;
 

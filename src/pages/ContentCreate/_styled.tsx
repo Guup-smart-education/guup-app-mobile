@@ -1,8 +1,9 @@
 import styled from 'styled-components/native';
+import {Dimensions} from 'react-native';
 
 export const CreateContainer = styled.View`
   flex: 1;
-  flex-direction: column;
+  justify-content: space-between;
 `;
 
 export const CreateHeader = styled.View`
@@ -10,12 +11,15 @@ export const CreateHeader = styled.View`
   padding-left: ${({theme}) => theme.spacing[20]};
   padding-right: ${({theme}) => theme.spacing[20]};
   width: 100%;
+  border-bottom-width: 1px;
+  border-bottom-color: ${({theme}) => theme.colors.ligthGrey};
 `;
 
 export const CreateBody = styled.View`
   flex: 1;
   width: 100%;
   background-color: ${({theme}) => theme.colors.ligth};
+  /* justify-content: space-between; */
 `;
 
 export const CreateFooter = styled.View`
@@ -25,21 +29,20 @@ export const CreateFooter = styled.View`
   width: 100%;
 `;
 
-export const CreateLockAction = styled.View`
-  flex-direction: row;
+export const CreateMedia = styled.View`
+  width: 100%;
+  flex: 1;
+  background-color: ${({theme}) => theme.colors.veryLigthGrey};
+  /* min-height: ${Dimensions.get('screen').width - 50}px; */
   justify-content: center;
   align-items: center;
 `;
 
-export const CreatePosterContent = styled.View`
+export const FormContainer = styled.View`
   width: 100%;
-  height: 260px;
-`;
-
-export const CreateFormContent = styled.View`
-  width: 100%;
-  padding-top: ${({theme}) => theme.spacing[20]};
-  padding-bottom: ${({theme}) => theme.spacing[20]};
+  /* flex: 1; */
+  /* padding-left: ${({theme}) => theme.spacing[25]};
+  padding-right: ${({theme}) => theme.spacing[25]}; */
 `;
 
 export const FooterLabels = styled.View`

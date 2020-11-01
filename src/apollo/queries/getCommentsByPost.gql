@@ -1,5 +1,5 @@
-query getCommentByPost($post: String!) {
-  getCommentByPost(post: $post) {
+query getCommentByPost($post: String!, $lastComment: String) {
+  getCommentByPost(post: $post, lastComment: $lastComment) {
     ... on GetComment {
       comments {
         id

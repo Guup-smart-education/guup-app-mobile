@@ -1,5 +1,9 @@
-mutation createPath($path: InputPath!, $access: PathAccess!) {
-  createPath(path: $path, access: $access) {
+mutation createPath(
+  $path: InputPath!
+  $access: PathAccess!
+  $status: PathStatus!
+) {
+  createPath(path: $path, access: $access, status: $status) {
     ... on CreatePath {
       createPath
       success {

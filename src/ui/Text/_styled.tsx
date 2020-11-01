@@ -1,6 +1,6 @@
 import {Platform} from 'react-native';
 import styled from 'styled-components/native';
-import {EPreset, IProps} from './index';
+import {EPreset, IProps} from './';
 
 export const Text = styled.Text<IProps>`
   ${({theme}) => Platform.OS === 'ios' && `font-family: ${theme.fontFamily}`};
@@ -125,7 +125,7 @@ export const Text = styled.Text<IProps>`
             Platform.OS !== 'ios' &&
             `font-family: ${theme.fontFamilyAndroid.semiBold}`
           };
-          font-size: ${theme.fontSize.medium};
+          font-size: ${theme.fontSize.regular};
           font-weight: ${theme.fontWeight.semiBold};
         `;
       default:

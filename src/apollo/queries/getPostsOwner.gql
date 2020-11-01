@@ -1,0 +1,30 @@
+query getPostsByOwner($lastPost: String, $owner: String) {
+  getPostsByOwner(lastPost: $lastPost, owner: $owner) {
+    ... on GetPostsOwner {
+      allPostOwner {
+        id
+        owner
+        ownerProfile {
+          displayName
+          thumbnailURL
+          profission
+        }
+        title
+        description
+        claps
+        clapsCount
+        commentsCount
+        createdAt
+      }
+      success {
+        message
+      }
+    }
+    ... on ErrorResponse {
+      error {
+        type
+        message
+      }
+    }
+  }
+}

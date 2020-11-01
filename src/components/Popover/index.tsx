@@ -1,106 +1,75 @@
-import React, {ReactNode} from 'react';
-import {Animated, Dimensions, PanResponder, StyleSheet} from 'react-native';
-import {
-  PopoverContainer,
-  PopoverOverlay,
-  PopoverContent,
-  PopoverModal,
-  PopoverBody,
-  PopoverHeader,
-  PopoverFooter,
-  PopoverBarClose,
-} from './_styled';
-import {Text, Button} from './../../ui';
+import React, {
+  ReactChildren,
+  ReactChild,
+  useRef,
+  useEffect,
+  useContext,
+} from 'react';
+import RBSheet from 'react-native-raw-bottom-sheet';
+import {ThemeContext} from 'styled-components';
+import {Dimensions} from 'react-native';
+import {PopoverContent, PopoverBody, PopoverFooter} from './_styled';
+import {Button} from './../../ui';
 
 interface IPopover {
   readonly visible: boolean;
   readonly toggle: () => void;
-  readonly title?: string;
   readonly closeBottom?: boolean;
-  readonly children?: ReactNode;
+  readonly children?: ReactChildren | ReactChild;
+  readonly height?: number;
 }
 
 const Popover = ({
   visible,
   toggle,
   children,
-  title,
   closeBottom = true,
+  height = 0,
 }: IPopover) => {
-  // const dragY = useRef(new Animated.Value(0)).current;
-  // const dragY = useRef(new Animated.Value(Dimensions.get('screen').height))
-  //   .current;
-
-  // const resetPosition = Animated.timing(dragY, {
-  //   toValue: 0,
-  //   duration: 300,
-  //   useNativeDriver: true,
-  // });
-
-  // const closeAnimation = Animated.timing(dragY, {
-  //   toValue: Dimensions.get('screen').height,
-  //   duration: 500,
-  //   useNativeDriver: true,
-  // });
-
-  // const top = dragY.interpolate({
-  //   inputRange: [-1, 0, 1],
-  //   outputRange: [0, 0, 1],
-  // });
-
-  // const onDismiss = () => {
-  //   closeAnimation.start(() => toggle());
-  // };
-
-  // const panResponder = useRef(
-  //   PanResponder.create({
-  //     onStartShouldSetPanResponder: () => true,
-  //     onMoveShouldSetPanResponder: () => false,
-  //     onPanResponderMove: () => {
-  //       console.log('onPanResponderMove');
-  //       Animated.event([null, {dy: dragY}], {
-  //         useNativeDriver: true,
-  //       });
-  //       return true;
-  //     },
-  //     onPanResponderRelease: (e, gs) => {
-  //       if (gs.dy > 0 && gs.vy > 2) {
-  //         return closeAnimation.start(() => toggle());
-  //       }
-  //       return resetPosition.start();
-  //     },
-  //   }),
-  // ).current;
-
+  const theme = useContext(ThemeContext);
+  const sheetRef = useRef<RBSheet>();
+  useEffect(() => {
+    if (sheetRef.current) {
+      if (visible) {
+        sheetRef.current.open();
+      } else {
+        sheetRef.current.close();
+      }
+      sheetRef.current.open();
+    }
+  }, [visible]);
   return (
-    <PopoverModal animationType="fade" transparent visible={visible}>
-      <PopoverContainer>
-        <PopoverOverlay />
-        {/* <PopoverContent
-          as={Animated.View}
-          style={[{top}]}
-          {...panResponder.panHandlers}>
-            <Text>Popover content</Text>
-          </PopoverContent>
-        */}
-        <PopoverContent>
-          <PopoverHeader>
-            <PopoverBarClose />
-          </PopoverHeader>
-          <PopoverBody>{children}</PopoverBody>
-          {closeBottom && (
-            <PopoverFooter>
-              <Button
-                preset="solid"
-                color="primary"
-                onPress={() => toggle()}
-                text="Fechar"
-              />
-            </PopoverFooter>
-          )}
-        </PopoverContent>
-      </PopoverContainer>
-    </PopoverModal>
+    <RBSheet
+      ref={sheetRef}
+      openDuration={250}
+      onClose={toggle}
+      height={
+        (height || Dimensions.get('screen').height / 1.8) +
+        (closeBottom ? 120 : 0)
+      }
+      closeOnDragDown
+      closeOnPressMask
+      customStyles={{
+        container: {
+          borderTopRightRadius: 12,
+          borderTopLeftRadius: 12,
+          backgroundColor: theme.colors.ligth,
+        },
+      }}>
+      <PopoverContent>
+        <PopoverBody>{children}</PopoverBody>
+        {closeBottom && (
+          <PopoverFooter>
+            <Button
+              preset="light"
+              color="primary"
+              onPress={() => sheetRef.current && sheetRef.current.close()}
+              text="cancelar"
+            />
+          </PopoverFooter>
+        )}
+      </PopoverContent>
+    </RBSheet>
   );
 };
 

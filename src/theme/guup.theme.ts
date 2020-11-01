@@ -55,6 +55,9 @@ export const guupTheme: DefaultTheme = {
     lock: require('./../../assets/icons/guupIconLock.png'),
     unlock: require('./../../assets/icons/guupIconUnlonk.png'),
     plus: require('./../../assets/icons/guupIconPlus.png'),
+    settings: require('./../../assets/icons/guupIconSettings.png'),
+    trash: require('./../../assets/icons/guupIconTrash.png'),
+    alert: require('./../../assets/icons/guupIconAlert.png'),
   },
   iconsSizes: {
     small: '28px',

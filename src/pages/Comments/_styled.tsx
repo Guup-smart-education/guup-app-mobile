@@ -53,3 +53,10 @@ export const CommentNav = styled.View`
   border-bottom-width: 1px;
   border-bottom-color: ${({theme}) => theme.colors.ligthGrey};
 `;
+
+export const CommentListFooter = styled.View`
+  padding-left: ${({theme}) => theme.spacing.padding[25]};
+  padding-right: ${({theme}) => theme.spacing.padding[25]};
+  margin-top: ${({theme}) => theme.spacing.margin[25]};
+  margin-bottom: ${({theme}) => theme.spacing.margin[25]};
+`;

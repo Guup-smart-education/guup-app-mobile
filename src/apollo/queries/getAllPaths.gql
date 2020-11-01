@@ -16,16 +16,14 @@ query getAllPaths($lastPath: String) {
         owners {
           uid
           displayName
-          thumbnailURL
-        }
-        owners {
-          displayName
           photoURL
           thumbnailURL
           profission
         }
+        contentCount
         area
         access
+        status
         createdAt
       }
       success {

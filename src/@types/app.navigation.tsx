@@ -23,7 +23,10 @@ export type RootApp = {
   GuupCourseDetail: {
     mode?: keyof typeof EViewMode;
   };
-  GuupContentCreate: undefined;
+  GuupCollectionCreate: undefined;
+  GuupContentCreate: {
+    path?: string;
+  };
   GuupNews: undefined;
   GuupAccount: undefined;
   GuupNotifications: undefined;
@@ -36,6 +39,7 @@ export type RootApp = {
     id?: string;
   };
   GuupPosts: undefined;
+  GuupPostCreate: undefined;
   GuupComments: {
     post?: Post;
   };
@@ -57,6 +61,10 @@ export type RootApp = {
 export type AppScreenRouteProp = RouteProp<RootApp, 'GuupExplorer'>;
 // Tree route app
 export type CourseScreenRouteProp = RouteProp<RootApp, 'GuupCourse'>;
+export type CollectionCreateScreenRouteProp = RouteProp<
+  RootApp,
+  'GuupCollectionCreate'
+>;
 export type ContentCreateScreenRouteProp = RouteProp<
   RootApp,
   'GuupContentCreate'
@@ -88,6 +96,10 @@ export type CourseScreenNavigationProp = StackNavigationProp<
 export type CourseDetailScreenNavigationProp = StackNavigationProp<
   RootApp,
   'GuupCourseDetail'
+>;
+export type CollectionCreateScreenNavigationProp = StackNavigationProp<
+  RootApp,
+  'GuupCollectionCreate'
 >;
 export type ContentCreateScreenNavigationProp = StackNavigationProp<
   RootApp,
@@ -128,6 +140,10 @@ export type CoursePropsApp = {
 export type CourseDetailPropsApp = {
   route: CourseDetailScreenRouteProp;
   navigation: CourseDetailScreenNavigationProp;
+};
+export type CollectionCreatePropsApp = {
+  route: CollectionCreateScreenRouteProp;
+  navigation: CollectionCreateScreenNavigationProp;
 };
 export type ContentCreatePropsApp = {
   route: ContentCreateScreenRouteProp;

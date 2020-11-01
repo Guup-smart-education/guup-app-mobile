@@ -6,7 +6,13 @@ export const ProfileContainer = styled.ScrollView`
   width: 100%;
 `;
 
-export const ProfileuserPicture = styled.View`
+export const ProfileHeader = styled.View`
+  width: 100%;
+  padding-left: ${({theme}) => theme.spacing.padding[25]};
+  padding-right: ${({theme}) => theme.spacing.padding[25]};
+`;
+
+export const ProfileuserPicture = styled.ImageBackground`
   width: 100%;
   height: ${Dimensions.get('screen').width + 'px'};
   background-color: ${({theme}) => theme.colors.secondary};
@@ -17,7 +23,7 @@ export const ProfileuserPicture = styled.View`
 `;
 
 export const ProfileuserData = styled.View`
-  width: 50%;
+  width: 70%;
 `;
 
 export const ProfileTabContent = styled.View`

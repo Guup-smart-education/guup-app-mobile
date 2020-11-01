@@ -15,4 +15,10 @@ export const CollectionsHeader = styled.View`
 export const CollectionsBody = styled.View`
   width: 100%;
   background-color: ${({theme}) => theme.colors.veryLigthGrey};
+  padding-bottom: ${({theme}) => theme.spacing[25]};
+`;
+
+export const CollectionItem = styled.View`
+  padding-left: ${({theme}) => theme.spacing[25]};
+  padding-right: ${({theme}) => theme.spacing[25]};
 `;

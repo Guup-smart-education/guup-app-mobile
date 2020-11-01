@@ -4,15 +4,32 @@ import {InputWrapper, InputComponent, FlagError} from './_styled';
 import Text from './../Text';
 import {FieldError} from 'react-hook-form';
 import {RowFullWidth} from './../../ui';
+import {EColors} from './../../@enum/color.enum';
 
-interface IProps extends TextInputProps {
+enum EPreset {
+  'title' = 'title',
+  'subtitle' = 'subtitle',
+  'paragraph' = 'paragraph',
+}
+
+export interface IProps extends TextInputProps {
+  readonly name?: string;
   readonly label?: string;
   readonly error?: FieldError | undefined;
+  readonly color?: keyof typeof EColors;
+  readonly preset?: keyof typeof EPreset;
 }
 
 const CustomInputArea = forwardRef<any, IProps>(
   (props, ref): ReactElement => {
-    const {autoCorrect = false, error, label, ...args} = props;
+    const {
+      autoCorrect = false,
+      error,
+      label,
+      color,
+      preset = EPreset.paragraph,
+      ...args
+    } = props;
     return (
       <RowFullWidth>
         <InputWrapper>
@@ -24,12 +41,11 @@ const CustomInputArea = forwardRef<any, IProps>(
             </RowFullWidth>
           )}
           <InputComponent
-            {...args}
-            ref={ref}
-            autoCorrect={autoCorrect}
+            {...{...args, ref, autoCorrect, preset, color}}
             autoCapitalize="none"
             blurOnSubmit={false}
             multiline
+            placeholderTextColor={color || 'ligthGrey'}
           />
           {error && (
             <FlagError>

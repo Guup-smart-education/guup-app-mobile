@@ -1,4 +1,4 @@
 export enum EProfileType {
-  'student' = 'student',
-  'teacher' = 'teacher',
+  'OWNER' = 'OWNER',
+  'PUBLIC' = 'PUBLIC',
 }

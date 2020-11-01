@@ -77,34 +77,33 @@ export default ({
         <Action
           onPress={() =>
             navigateProfile
-              ? navigation.navigate('GuupUserProfile', {type: 'student'})
+              ? navigation.navigate('GuupUserProfile', {type: 'PUBLIC'})
               : {}
           }>
           <View>
             <Avatar
-              size="normal"
               image={owner && owner.ownerPicture}
               firstText={owner && owner.ownerName}
               secondText={owner && owner.ownerProsiffion}
             />
           </View>
         </Action>
-        {ratingValue && (
-          <Action
-            onPress={() =>
-              Alert.alert('Rating', 'Show something from rating value')
-            }>
-            <Text bold>{ratingValue}</Text>
-          </Action>
-        )}
         {menu && (
           <Action
             onPress={() => Alert.alert('Show menu post', 'Add menu post her')}>
-            <Icon source="dots" />
+            <Icon source="dots" backColor="veryLigthGrey" size="small" />
           </Action>
         )}
       </PostHeader>
       <Separator size="tiny" />
+      {!!media && (
+        <>
+          <PostMedia>
+            <PostMediaImage source={{uri: media}} />
+          </PostMedia>
+          <Separator size="small" />
+        </>
+      )}
       <PostBody>
         <PostContent card={!!card}>
           <Text preset="comment">{postComment}</Text>
@@ -116,12 +115,6 @@ export default ({
           )}
         </PostContent>
         <Separator size="small" />
-        {media && (
-          <PostMedia>
-            <PostMediaImage source={{uri: media}} />
-            <Separator size="small" />
-          </PostMedia>
-        )}
         <Separator size="stroke" />
         {showComments && (
           <PostActions card={!!card}>

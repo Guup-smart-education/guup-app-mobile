@@ -41,8 +41,10 @@ const error = onError(({graphQLErrors, networkError}) => {
 
 const paginationPolicy = () => ({
   merge(existing: any[], incoming: any[]) {
+    console.log('existing', existing);
+    console.log('existing', incoming);
     const merged = [...(incoming || [])];
-    console.log('paginationPolicy merged: ', merged);
+    // const merged = [...(existing || []), ...(incoming || [])];
     return merged;
   },
   read(existing: any[]) {
@@ -55,22 +57,26 @@ export const client = new ApolloClient({
   cache: new InMemoryCache({
     // resultCaching: true,
     addTypename: true,
-    // dataIdFromObject: (responseObject) => {
-    //   switch (responseObject.__typename) {
-    //     case 'GetPaths':
-    //     case 'GetPosts':
-    //       return 'PageContent';
-    //     default:
-    //       return defaultDataIdFromObject(responseObject);
-    //   }
-    // },
+    dataIdFromObject: (responseObject) => {
+      switch (responseObject.__typename) {
+        case 'GetPaths':
+        case 'GetPosts':
+        case 'GetCoursesByPath':
+        case 'GetComment':
+          return 'Query';
+        default:
+          return defaultDataIdFromObject(responseObject);
+      }
+    },
     typePolicies: {
       Query: {
         queryType: true,
-        keyFields: ['allPaths', 'allPost'],
+        keyFields: ['allPaths', 'allPost', 'coursesByPath', 'comments'],
         fields: {
           allPost: paginationPolicy(),
           allPaths: paginationPolicy(),
+          coursesByPath: paginationPolicy(),
+          comments: paginationPolicy(),
         },
       },
       // GetPosts: {

@@ -30,3 +30,4 @@ export {default as GuupCourseCard} from './CourseCard';
 export {default as GuupCard} from './Card';
 export {default as GuupUpload} from './Upload';
 export {default as GuupMenuList} from './MenuList';
+export {default as GuupDataList} from './DataList';

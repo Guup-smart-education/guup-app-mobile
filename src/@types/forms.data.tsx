@@ -8,7 +8,7 @@ export interface SigninFormData {
 }
 
 export interface ContentCreateFormData {
-  collection?: string;
+  title?: string;
   description?: string;
 }
 

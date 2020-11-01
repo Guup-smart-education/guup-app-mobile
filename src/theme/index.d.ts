@@ -54,6 +54,9 @@ declare module 'styled-components' {
       lock: Blob;
       unlock: Blob;
       plus: Blob;
+      settings: Blob;
+      trash: Blob;
+      alert: Blob;
     };
     iconsSizes: {
       small: string;

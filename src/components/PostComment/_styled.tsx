@@ -1,4 +1,5 @@
 import styled from 'styled-components/native';
+import {Dimensions} from 'react-native';
 
 export const PostContainer = styled.View`
   width: 100%;
@@ -50,16 +51,13 @@ export const PostActionItem = styled.View`
 
 export const PostMedia = styled.View`
   width: 100%;
-  overflow: hidden;
+  height: ${Dimensions.get('window').width - 50}px;
+  background-color: aliceblue;
 `;
 
 export const PostMediaImage = styled.ImageBackground`
   background-color: ${({theme}) => theme.colors.ligthGrey};
-  border-top-left-radius: ${({theme}) => theme.borderRadius[8]};
-  border-top-right-radius: ${({theme}) => theme.borderRadius[8]};
-  border-bottom-left-radius: ${({theme}) => theme.borderRadius[8]};
-  border-bottom-right-radius: ${({theme}) => theme.borderRadius[8]};
-  min-height: 150px;
+  width: 100%;
   flex: 1;
 `;
 

@@ -1,20 +1,22 @@
-import React, {useState, ReactType, ReactNode} from 'react';
-import {Text, Separator} from './../../ui';
-import {TabLink} from './../../components';
-import {PropsApp} from './../../@types/app.navigation';
+import R from 'ramda';
+import React, {useState, useContext} from 'react';
+import {Text, Separator, Container, Icon, Link} from './../../ui';
+import {TabLink, GuupHeader} from './../../components';
+import {ProfilePropsApp} from './../../@types/app.navigation';
 import {
   ProfileContainer,
   ProfileuserPicture,
   ProfileuserData,
   ProfileTabContent,
   ProfileBody,
+  ProfileHeader,
 } from './_styled';
 import {ETabLinks} from './../../@types/tablink';
 import {GetUniqueId} from './../../helper';
 import ProfileBio from './Bio';
 import ProfilePosts from './Posts';
 import ProfileCourses from './Courses';
-import ProfileReviews from './Reviews';
+import AuthContext from './../../contexts/auth';
 
 const TAB_LINKS = [
   {
@@ -22,55 +24,76 @@ const TAB_LINKS = [
     name: 'bio',
     label: 'Bio',
     active: true,
-    component: ProfileBio,
   },
-  {id: GetUniqueId(), name: 'posts', label: 'Posts', component: ProfilePosts},
+  {id: GetUniqueId(), name: 'posts', label: 'Posts'},
   {
     id: GetUniqueId(),
     name: 'courses',
     label: 'Courses',
-    component: ProfileCourses,
-  },
-  {
-    id: GetUniqueId(),
-    name: 'reviews',
-    label: 'Reviews',
-    component: ProfileReviews,
   },
 ] as Array<ETabLinks>;
 
-export default ({navigation}: PropsApp) => {
+const Profile: React.FC<ProfilePropsApp> = ({
+  navigation: {goBack},
+  route: {
+    params: {type},
+  },
+}) => {
+  const {user} = useContext(AuthContext);
   const [currentTab, setCurrentTab] = useState<ETabLinks>(TAB_LINKS[0]);
   const onTabLinkPress = (link: ETabLinks) => {
     setCurrentTab(link);
   };
-  const transformComponent = (component: ReactNode, params = {}) => {
-    const Component: ReactType = component;
-    return <Component {...params} />;
-  };
+  console.log('ProfilePropsApp: ', user);
   return (
-    <ProfileContainer>
-      <ProfileuserPicture>
-        <ProfileuserData>
-          <Text preset="title" color="ligth">
-            Profile user name
-          </Text>
-          <Text preset="comment" color="ligth">
-            Rating her
-          </Text>
-        </ProfileuserData>
-      </ProfileuserPicture>
-      <Separator size="small" />
-      <ProfileBody>
-        <TabLink
-          onPress={onTabLinkPress}
-          links={TAB_LINKS}
-          active={currentTab}
+    <Container safe light>
+      <ProfileHeader>
+        <GuupHeader
+          leftRenderIntem={
+            <Link onPress={() => goBack()}>
+              <Icon source="arrow" />
+            </Link>
+          }
+          centerRenderItem={
+            <Text preset="comment" bold>
+              Perfil
+            </Text>
+          }
         />
-        <ProfileTabContent>
-          {transformComponent(currentTab.component, {})}
-        </ProfileTabContent>
-      </ProfileBody>
-    </ProfileContainer>
+      </ProfileHeader>
+      <ProfileContainer>
+        <ProfileuserPicture source={{uri: `${user?.photoURL}`}}>
+          <ProfileuserData>
+            <Text preset="title" color="ligth">
+              {user?.displayName}
+            </Text>
+            <Text preset="comment" color="ligth">
+              {user?.profission}
+            </Text>
+          </ProfileuserData>
+        </ProfileuserPicture>
+        <Separator size="small" />
+        <ProfileBody>
+          <TabLink
+            onPress={onTabLinkPress}
+            links={TAB_LINKS}
+            active={currentTab}
+          />
+          <ProfileTabContent>
+            {R.cond([
+              [
+                R.equals('bio'),
+                () => <ProfileBio bio={user?.presentation || ''} />,
+              ],
+              [R.equals('posts'), () => <ProfilePosts />],
+              [R.equals('bio'), () => <ProfileCourses />],
+              [R.T, () => <></>],
+            ])(currentTab.name)}
+          </ProfileTabContent>
+        </ProfileBody>
+      </ProfileContainer>
+    </Container>
   );
 };
+
+export default Profile;

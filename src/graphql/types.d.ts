@@ -106,6 +106,7 @@ export type Path = {
   area?: Maybe<Array<Maybe<Scalars['String']>>>;
   access?: Maybe<Scalars['String']>;
   status?: Maybe<Scalars['String']>;
+  contentCount?: Maybe<Scalars['Int']>;
   createdAt?: Maybe<Scalars['Date']>;
 };
 
@@ -358,13 +359,13 @@ export type Query = {
   getAllCompanyByID?: Maybe<UGetCompany>;
   getCourses?: Maybe<UGetCourses>;
   getCoursesByUser?: Maybe<UGetCourses>;
-  getCoursesByPath?: Maybe<UGetCourses>;
+  getCoursesByPath?: Maybe<UGetCoursesByPath>;
   getCourseByID?: Maybe<UGetCourseDetail>;
   getAllPaths?: Maybe<UGetAllPaths>;
   getPathsByOwner?: Maybe<UGetPathsOwner>;
   getPathById?: Maybe<UGetPath>;
   getAllPosts?: Maybe<UGetAllPost>;
-  getPostsByOwner?: Maybe<UGetAllPost>;
+  getPostsByOwner?: Maybe<UGetPostsByOwner>;
   getPostsById?: Maybe<UGetPost>;
   getReviewByCourse?: Maybe<UGetReview>;
   getReviewByOwner?: Maybe<UGetReview>;
@@ -386,6 +387,7 @@ export type QueryGetCommentByCourseArgs = {
 
 export type QueryGetCommentByPostArgs = {
   post: Scalars['String'];
+  lastComment?: Maybe<Scalars['String']>;
 };
 
 
@@ -400,8 +402,8 @@ export type QueryGetCoursesByUserArgs = {
 
 
 export type QueryGetCoursesByPathArgs = {
-  path?: Maybe<Scalars['String']>;
-  lastPath?: Maybe<Scalars['String']>;
+  path: Scalars['String'];
+  lastCourse?: Maybe<Scalars['String']>;
 };
 
 
@@ -432,6 +434,7 @@ export type QueryGetAllPostsArgs = {
 
 
 export type QueryGetPostsByOwnerArgs = {
+  lastPost?: Maybe<Scalars['String']>;
   owner?: Maybe<Scalars['String']>;
 };
 
@@ -466,6 +469,7 @@ export type Mutation = {
   updateCourse?: Maybe<UUpdateCourse>;
   createCourse?: Maybe<UCreateCourse>;
   createPath?: Maybe<UCreatePath>;
+  updateStatusPath?: Maybe<UUpdatedStatusPath>;
   createPost?: Maybe<UCreatePost>;
   clapPost?: Maybe<UClapPost>;
   createReview?: Maybe<UPostReview>;
@@ -514,6 +518,13 @@ export type MutationCreateCourseArgs = {
 export type MutationCreatePathArgs = {
   path: InputPath;
   access: PathAccess;
+  status: PathStatus;
+};
+
+
+export type MutationUpdateStatusPathArgs = {
+  path: Scalars['String'];
+  status: PathStatus;
 };
 
 
@@ -645,6 +656,12 @@ export type GetCourses = {
   success?: Maybe<Success>;
 };
 
+export type GetCoursesByPath = {
+  __typename?: 'GetCoursesByPath';
+  coursesByPath?: Maybe<Array<Maybe<Course>>>;
+  success?: Maybe<Success>;
+};
+
 export type UpdateCourse = {
   __typename?: 'UpdateCourse';
   course?: Maybe<Course>;
@@ -669,6 +686,8 @@ export type UCreateCourse = CreateCourse | ErrorResponse;
 
 export type UGetCourses = GetCourses | ErrorResponse;
 
+export type UGetCoursesByPath = GetCoursesByPath | ErrorResponse;
+
 export type UGetCourseDetail = GetCourseDetail | ErrorResponse;
 
 export enum PathType {
@@ -679,6 +698,13 @@ export enum PathType {
 export enum PathAccess {
   LimitAccess = 'LIMIT_ACCESS',
   ForEveryone = 'FOR_EVERYONE'
+}
+
+export enum PathStatus {
+  Waiting = 'WAITING',
+  Published = 'PUBLISHED',
+  Deleted = 'DELETED',
+  Paused = 'PAUSED'
 }
 
 export type InputPath = {
@@ -695,7 +721,7 @@ export type GetPaths = {
 
 export type GetPathsOwner = {
   __typename?: 'GetPathsOwner';
-  allPaths?: Maybe<Array<Maybe<Path>>>;
+  allPathsOwner?: Maybe<Array<Maybe<Path>>>;
   success?: Maybe<Success>;
 };
 
@@ -711,6 +737,12 @@ export type CreatePath = {
   success?: Maybe<Success>;
 };
 
+export type UpdateStatusPath = {
+  __typename?: 'UpdateStatusPath';
+  updateStatus?: Maybe<Scalars['String']>;
+  success?: Maybe<Success>;
+};
+
 export type UGetAllPaths = GetPaths | ErrorResponse;
 
 export type UGetPathsOwner = GetPathsOwner | ErrorResponse;
@@ -718,6 +750,8 @@ export type UGetPathsOwner = GetPathsOwner | ErrorResponse;
 export type UGetPath = GetPath | ErrorResponse;
 
 export type UCreatePath = CreatePath | ErrorResponse;
+
+export type UUpdatedStatusPath = UpdateStatusPath | ErrorResponse;
 
 export enum ClapFor {
   Course = 'COURSE',
@@ -734,6 +768,12 @@ export type InputPost = {
 export type GetPosts = {
   __typename?: 'GetPosts';
   allPost?: Maybe<Array<Maybe<Post>>>;
+  success?: Maybe<Success>;
+};
+
+export type GetPostsOwner = {
+  __typename?: 'GetPostsOwner';
+  allPostOwner?: Maybe<Array<Maybe<Post>>>;
   success?: Maybe<Success>;
 };
 
@@ -756,6 +796,8 @@ export type ClapPost = {
 };
 
 export type UGetAllPost = GetPosts | ErrorResponse;
+
+export type UGetPostsByOwner = GetPostsOwner | ErrorResponse;
 
 export type UGetPost = GetPost | ErrorResponse;
 
@@ -931,6 +973,7 @@ export type CreateCourseMutation = (
 export type CreatePathMutationVariables = Exact<{
   path: InputPath;
   access: PathAccess;
+  status: PathStatus;
 }>;
 
 
@@ -1108,13 +1151,13 @@ export type GetAllPathsQuery = (
     { __typename?: 'GetPaths' }
     & { allPaths?: Maybe<Array<Maybe<(
       { __typename?: 'Path' }
-      & Pick<Path, 'id' | 'owner' | 'title' | 'description' | 'photoURL' | 'area' | 'access' | 'createdAt'>
+      & Pick<Path, 'id' | 'owner' | 'title' | 'description' | 'photoURL' | 'contentCount' | 'area' | 'access' | 'status' | 'createdAt'>
       & { ownerProfile?: Maybe<(
         { __typename?: 'UserProfile' }
         & Pick<UserProfile, 'displayName' | 'profission' | 'photoURL' | 'thumbnailURL'>
       )>, owners?: Maybe<Array<Maybe<(
         { __typename?: 'UserProfile' }
-        & Pick<UserProfile, 'uid' | 'displayName' | 'thumbnailURL' | 'photoURL' | 'profission'>
+        & Pick<UserProfile, 'uid' | 'displayName' | 'photoURL' | 'thumbnailURL' | 'profission'>
       )>>> }
     )>>>, success?: Maybe<(
       { __typename?: 'Success' }
@@ -1140,7 +1183,7 @@ export type GetAllPostsQuery = (
     { __typename?: 'GetPosts' }
     & { allPost?: Maybe<Array<Maybe<(
       { __typename?: 'Post' }
-      & Pick<Post, 'id' | 'owner' | 'title' | 'description' | 'claps' | 'clapsCount' | 'commentsCount' | 'createdAt'>
+      & Pick<Post, 'id' | 'owner' | 'photoURL' | 'title' | 'description' | 'claps' | 'clapsCount' | 'commentsCount' | 'createdAt'>
       & { ownerProfile?: Maybe<(
         { __typename?: 'UserProfile' }
         & Pick<UserProfile, 'displayName' | 'thumbnailURL' | 'profission'>
@@ -1160,6 +1203,7 @@ export type GetAllPostsQuery = (
 
 export type GetCommentByPostQueryVariables = Exact<{
   post: Scalars['String'];
+  lastComment?: Maybe<Scalars['String']>;
 }>;
 
 
@@ -1186,16 +1230,17 @@ export type GetCommentByPostQuery = (
 
 export type GetCoursesByPathQueryVariables = Exact<{
   path: Scalars['String'];
+  lastCourse?: Maybe<Scalars['String']>;
 }>;
 
 
 export type GetCoursesByPathQuery = (
   { __typename?: 'Query' }
   & { getCoursesByPath?: Maybe<(
-    { __typename?: 'GetCourses' }
-    & { courses?: Maybe<Array<Maybe<(
+    { __typename?: 'GetCoursesByPath' }
+    & { coursesByPath?: Maybe<Array<Maybe<(
       { __typename?: 'Course' }
-      & Pick<Course, 'id' | 'title' | 'description' | 'area' | 'typeContent' | 'difficult' | 'viewsCount' | 'commentsCount' | 'createdAt'>
+      & Pick<Course, 'id' | 'path' | 'title' | 'description' | 'area' | 'difficult' | 'photoURL' | 'typeContent' | 'viewsCount' | 'clapsCount' | 'commentsCount' | 'owner' | 'createdAt'>
       & { comments?: Maybe<Array<Maybe<(
         { __typename?: 'Comments' }
         & Pick<Comments, 'id' | 'owner' | 'description'>
@@ -1226,12 +1271,45 @@ export type GetPathsByOwnerQuery = (
   { __typename?: 'Query' }
   & { getPathsByOwner?: Maybe<(
     { __typename?: 'GetPathsOwner' }
-    & { allPaths?: Maybe<Array<Maybe<(
+    & { allPathsOwner?: Maybe<Array<Maybe<(
       { __typename?: 'Path' }
-      & Pick<Path, 'id' | 'owner' | 'title' | 'description'>
+      & Pick<Path, 'id' | 'owner' | 'title' | 'description' | 'photoURL' | 'contentCount' | 'area' | 'access' | 'status' | 'createdAt'>
       & { ownerProfile?: Maybe<(
         { __typename?: 'UserProfile' }
         & Pick<UserProfile, 'displayName' | 'profission' | 'photoURL' | 'thumbnailURL'>
+      )>, owners?: Maybe<Array<Maybe<(
+        { __typename?: 'UserProfile' }
+        & Pick<UserProfile, 'uid' | 'displayName' | 'photoURL' | 'thumbnailURL' | 'profission'>
+      )>>> }
+    )>>>, success?: Maybe<(
+      { __typename?: 'Success' }
+      & Pick<Success, 'message'>
+    )> }
+  ) | (
+    { __typename?: 'ErrorResponse' }
+    & { error: (
+      { __typename?: 'Error' }
+      & Pick<Error, 'type' | 'message'>
+    ) }
+  )> }
+);
+
+export type GetPostsByOwnerQueryVariables = Exact<{
+  lastPost?: Maybe<Scalars['String']>;
+  owner?: Maybe<Scalars['String']>;
+}>;
+
+
+export type GetPostsByOwnerQuery = (
+  { __typename?: 'Query' }
+  & { getPostsByOwner?: Maybe<(
+    { __typename?: 'GetPostsOwner' }
+    & { allPostOwner?: Maybe<Array<Maybe<(
+      { __typename?: 'Post' }
+      & Pick<Post, 'id' | 'owner' | 'title' | 'description' | 'claps' | 'clapsCount' | 'commentsCount' | 'createdAt'>
+      & { ownerProfile?: Maybe<(
+        { __typename?: 'UserProfile' }
+        & Pick<UserProfile, 'displayName' | 'thumbnailURL' | 'profission'>
       )> }
     )>>>, success?: Maybe<(
       { __typename?: 'Success' }
@@ -1390,8 +1468,8 @@ export type CreateCourseMutationHookResult = ReturnType<typeof useCreateCourseMu
 export type CreateCourseMutationResult = Apollo.MutationResult<CreateCourseMutation>;
 export type CreateCourseMutationOptions = Apollo.BaseMutationOptions<CreateCourseMutation, CreateCourseMutationVariables>;
 export const CreatePathDocument = gql`
-    mutation createPath($path: InputPath!, $access: PathAccess!) {
-  createPath(path: $path, access: $access) {
+    mutation createPath($path: InputPath!, $access: PathAccess!, $status: PathStatus!) {
+  createPath(path: $path, access: $access, status: $status) {
     ... on CreatePath {
       createPath
       success {
@@ -1424,6 +1502,7 @@ export type CreatePathMutationFn = Apollo.MutationFunction<CreatePathMutation, C
  *   variables: {
  *      path: // value for 'path'
  *      access: // value for 'access'
+ *      status: // value for 'status'
  *   },
  * });
  */
@@ -1736,18 +1815,14 @@ export const GetAllPathsDocument = gql`
         owners {
           uid
           displayName
-          thumbnailURL
-          photoURL
-          profission
-        }
-        owners {
-          displayName
           photoURL
           thumbnailURL
           profission
         }
+        contentCount
         area
         access
+        status
         createdAt
       }
       success {
@@ -1801,6 +1876,7 @@ export const GetAllPostsDocument = gql`
           thumbnailURL
           profission
         }
+        photoURL
         title
         description
         claps
@@ -1849,8 +1925,8 @@ export type GetAllPostsQueryHookResult = ReturnType<typeof useGetAllPostsQuery>;
 export type GetAllPostsLazyQueryHookResult = ReturnType<typeof useGetAllPostsLazyQuery>;
 export type GetAllPostsQueryResult = Apollo.QueryResult<GetAllPostsQuery, GetAllPostsQueryVariables>;
 export const GetCommentByPostDocument = gql`
-    query getCommentByPost($post: String!) {
-  getCommentByPost(post: $post) {
+    query getCommentByPost($post: String!, $lastComment: String) {
+  getCommentByPost(post: $post, lastComment: $lastComment) {
     ... on GetComment {
       comments {
         id
@@ -1888,6 +1964,7 @@ export const GetCommentByPostDocument = gql`
  * const { data, loading, error } = useGetCommentByPostQuery({
  *   variables: {
  *      post: // value for 'post'
+ *      lastComment: // value for 'lastComment'
  *   },
  * });
  */
@@ -1901,23 +1978,27 @@ export type GetCommentByPostQueryHookResult = ReturnType<typeof useGetCommentByP
 export type GetCommentByPostLazyQueryHookResult = ReturnType<typeof useGetCommentByPostLazyQuery>;
 export type GetCommentByPostQueryResult = Apollo.QueryResult<GetCommentByPostQuery, GetCommentByPostQueryVariables>;
 export const GetCoursesByPathDocument = gql`
-    query getCoursesByPath($path: String!) {
-  getCoursesByPath(path: $path) {
-    ... on GetCourses {
-      courses {
+    query getCoursesByPath($path: String!, $lastCourse: String) {
+  getCoursesByPath(path: $path, lastCourse: $lastCourse) {
+    ... on GetCoursesByPath {
+      coursesByPath {
         id
+        path
         title
         description
         area
-        typeContent
         difficult
+        photoURL
+        typeContent
         viewsCount
+        clapsCount
         commentsCount
         comments {
           id
           owner
           description
         }
+        owner
         ownerProfile {
           displayName
           photoURL
@@ -1952,6 +2033,7 @@ export const GetCoursesByPathDocument = gql`
  * const { data, loading, error } = useGetCoursesByPathQuery({
  *   variables: {
  *      path: // value for 'path'
+ *      lastCourse: // value for 'lastCourse'
  *   },
  * });
  */
@@ -1968,17 +2050,30 @@ export const GetPathsByOwnerDocument = gql`
     query getPathsByOwner($lastPath: String, $owner: String) {
   getPathsByOwner(lastPath: $lastPath, owner: $owner) {
     ... on GetPathsOwner {
-      allPaths {
+      allPathsOwner {
         id
         owner
         title
         description
+        photoURL
         ownerProfile {
           displayName
           profission
           photoURL
           thumbnailURL
         }
+        owners {
+          uid
+          displayName
+          photoURL
+          thumbnailURL
+          profission
+        }
+        contentCount
+        area
+        access
+        status
+        createdAt
       }
       success {
         message
@@ -2020,3 +2115,62 @@ export function useGetPathsByOwnerLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type GetPathsByOwnerQueryHookResult = ReturnType<typeof useGetPathsByOwnerQuery>;
 export type GetPathsByOwnerLazyQueryHookResult = ReturnType<typeof useGetPathsByOwnerLazyQuery>;
 export type GetPathsByOwnerQueryResult = Apollo.QueryResult<GetPathsByOwnerQuery, GetPathsByOwnerQueryVariables>;
+export const GetPostsByOwnerDocument = gql`
+    query getPostsByOwner($lastPost: String, $owner: String) {
+  getPostsByOwner(lastPost: $lastPost, owner: $owner) {
+    ... on GetPostsOwner {
+      allPostOwner {
+        id
+        owner
+        ownerProfile {
+          displayName
+          thumbnailURL
+          profission
+        }
+        title
+        description
+        claps
+        clapsCount
+        commentsCount
+        createdAt
+      }
+      success {
+        message
+      }
+    }
+    ... on ErrorResponse {
+      error {
+        type
+        message
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetPostsByOwnerQuery__
+ *
+ * To run a query within a React component, call `useGetPostsByOwnerQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPostsByOwnerQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPostsByOwnerQuery({
+ *   variables: {
+ *      lastPost: // value for 'lastPost'
+ *      owner: // value for 'owner'
+ *   },
+ * });
+ */
+export function useGetPostsByOwnerQuery(baseOptions?: Apollo.QueryHookOptions<GetPostsByOwnerQuery, GetPostsByOwnerQueryVariables>) {
+        return Apollo.useQuery<GetPostsByOwnerQuery, GetPostsByOwnerQueryVariables>(GetPostsByOwnerDocument, baseOptions);
+      }
+export function useGetPostsByOwnerLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPostsByOwnerQuery, GetPostsByOwnerQueryVariables>) {
+          return Apollo.useLazyQuery<GetPostsByOwnerQuery, GetPostsByOwnerQueryVariables>(GetPostsByOwnerDocument, baseOptions);
+        }
+export type GetPostsByOwnerQueryHookResult = ReturnType<typeof useGetPostsByOwnerQuery>;
+export type GetPostsByOwnerLazyQueryHookResult = ReturnType<typeof useGetPostsByOwnerLazyQuery>;
+export type GetPostsByOwnerQueryResult = Apollo.QueryResult<GetPostsByOwnerQuery, GetPostsByOwnerQueryVariables>;
