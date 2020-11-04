@@ -10,4 +10,5 @@ export enum EColors {
   'veryLigthGrey' = 'veryLigthGrey',
   'darkGrey' = 'darkGrey',
   'greyBrown' = 'greyBrown',
+  'transparent' = 'transparent',
 }

@@ -1,5 +1,5 @@
-query getCourses {
-  getCourses {
+query getCourses($lastCourse: String) {
+  getCourses(lastCourse: $lastCourse) {
     ... on GetCourses {
       courses {
         id
@@ -18,9 +18,11 @@ query getCourses {
           owner
           description
         }
+        owner
         ownerProfile {
           uid
           displayName
+          thumbnailURL
           photoURL
           profission
         }

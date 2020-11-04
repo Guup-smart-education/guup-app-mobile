@@ -7,7 +7,7 @@ export {default as Waiting} from './Waiting';
 export {default as GuupExplorer} from './Explorer';
 export {default as GuupNews} from './News';
 export {default as GuupCourses} from './Courses';
-export {default as GuupCourseDetail} from './Course';
+export {default as GuupCollectionDetail} from './Collection';
 export {default as GuupCollectionCreate} from './CollectionsCreate';
 export {default as GuupContentCreate} from './ContentCreate';
 export {default as GuupUserProfile} from './Profile';

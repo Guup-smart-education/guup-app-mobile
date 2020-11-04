@@ -24,9 +24,15 @@ export const ExplorerHeaderPatch = styled.View`
 `;
 
 export const ExplorerAction = styled.View`
+  width: 100%;
   padding-left: ${({theme}) => theme.spacing.padding[25]};
   padding-right: ${({theme}) => theme.spacing.padding[25]};
+`;
+
+export const ExplorerTabs = styled.ScrollView`
   width: 100%;
+  padding-left: ${({theme}) => theme.spacing.padding[25]};
+  /* padding-right: ${({theme}) => theme.spacing.padding[25]}; */
 `;
 
 export const ExplorerEmpty = styled.View`
@@ -46,6 +52,6 @@ export const ExplorerFooter = styled.View``;
 
 export const ExplorerCourseItem = styled.View`
   width: 100%;
-  padding-left: ${({theme}) => theme.spacing[25]};
-  padding-right: ${({theme}) => theme.spacing[25]};
+  /* padding-left: ${({theme}) => theme.spacing[25]};
+  padding-right: ${({theme}) => theme.spacing[25]}; */
 `;

@@ -72,6 +72,11 @@ export enum EnumContentType {
   Project = 'PROJECT'
 }
 
+export enum CollectionType {
+  Path = 'PATH',
+  Course = 'COURSE'
+}
+
 export type Success = {
   __typename?: 'Success';
   type?: Maybe<Scalars['String']>;
@@ -87,6 +92,31 @@ export type Error = {
 export type ErrorResponse = {
   __typename?: 'ErrorResponse';
   error: Error;
+};
+
+export type Content = {
+  __typename?: 'Content';
+  id?: Maybe<Scalars['String']>;
+  collection?: Maybe<CollectionType>;
+  path?: Maybe<Scalars['String']>;
+  owner?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  photoURL?: Maybe<Scalars['String']>;
+  videoURL?: Maybe<Scalars['String']>;
+  area?: Maybe<Array<Maybe<Scalars['String']>>>;
+  typeContent?: Maybe<EnumContentType>;
+  viewsCount?: Maybe<Scalars['Float']>;
+  clapsCount?: Maybe<Scalars['Float']>;
+  claps?: Maybe<Array<Maybe<Scalars['String']>>>;
+  commentsCount?: Maybe<Scalars['Float']>;
+  comments?: Maybe<Array<Maybe<Comments>>>;
+  ownerProfile?: Maybe<UserProfile>;
+  owners?: Maybe<Array<Maybe<UserProfile>>>;
+  access?: Maybe<Scalars['String']>;
+  status?: Maybe<Scalars['String']>;
+  contentCount?: Maybe<Scalars['Int']>;
+  createdAt?: Maybe<Scalars['Date']>;
 };
 
 export type Path = {
@@ -357,6 +387,7 @@ export type Query = {
   getCommentByPost?: Maybe<UGetComment>;
   getAllCompanies?: Maybe<UGetCompanies>;
   getAllCompanyByID?: Maybe<UGetCompany>;
+  getAllContent?: Maybe<UGetAllContents>;
   getCourses?: Maybe<UGetCourses>;
   getCoursesByUser?: Maybe<UGetCourses>;
   getCoursesByPath?: Maybe<UGetCoursesByPath>;
@@ -393,6 +424,16 @@ export type QueryGetCommentByPostArgs = {
 
 export type QueryGetAllCompanyByIdArgs = {
   id?: Maybe<Scalars['String']>;
+};
+
+
+export type QueryGetAllContentArgs = {
+  lastContent?: Maybe<Scalars['String']>;
+};
+
+
+export type QueryGetCoursesArgs = {
+  lastCourse?: Maybe<Scalars['String']>;
 };
 
 
@@ -466,8 +507,10 @@ export type Mutation = {
   authSignUp: USignUp;
   createComment?: Maybe<UPostComment>;
   createCompany?: Maybe<UCreateCompany>;
+  createContent?: Maybe<UCreateContent>;
   updateCourse?: Maybe<UUpdateCourse>;
   createCourse?: Maybe<UCreateCourse>;
+  removeCourse?: Maybe<URemoveCourse>;
   createPath?: Maybe<UCreatePath>;
   updateStatusPath?: Maybe<UUpdatedStatusPath>;
   createPost?: Maybe<UCreatePost>;
@@ -505,6 +548,12 @@ export type MutationCreateCompanyArgs = {
 };
 
 
+export type MutationCreateContentArgs = {
+  collection: CollectionType;
+  content: IContent;
+};
+
+
 export type MutationUpdateCourseArgs = {
   course?: Maybe<ICourse>;
 };
@@ -512,6 +561,11 @@ export type MutationUpdateCourseArgs = {
 
 export type MutationCreateCourseArgs = {
   course?: Maybe<ICourse>;
+};
+
+
+export type MutationRemoveCourseArgs = {
+  course?: Maybe<Scalars['String']>;
 };
 
 
@@ -610,6 +664,31 @@ export type UGetCompany = GetCompany | ErrorResponse;
 
 export type UCreateCompany = PostCompany | ErrorResponse;
 
+export type GetContents = {
+  __typename?: 'GetContents';
+  allContents?: Maybe<Array<Maybe<Content>>>;
+  success?: Maybe<Success>;
+};
+
+export type CreateContent = {
+  __typename?: 'CreateContent';
+  contentCreated?: Maybe<Scalars['String']>;
+  success?: Maybe<Success>;
+};
+
+export type IContent = {
+  title: Scalars['String'];
+  description: Scalars['String'];
+  photoURL?: Maybe<Scalars['String']>;
+  videoURL?: Maybe<Scalars['String']>;
+  area?: Maybe<Array<Maybe<Scalars['String']>>>;
+  typeContent?: Maybe<EnumContentType>;
+};
+
+export type UGetAllContents = GetContents | ErrorResponse;
+
+export type UCreateContent = CreateContent | ErrorResponse;
+
 export type ICourseAchievements = {
   title?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
@@ -674,11 +753,19 @@ export type CreateCourse = {
   success?: Maybe<Success>;
 };
 
+export type RemoveCourse = {
+  __typename?: 'RemoveCourse';
+  removeCourse?: Maybe<Scalars['String']>;
+  success?: Maybe<Success>;
+};
+
 export type GetCourseDetail = {
   __typename?: 'GetCourseDetail';
   course?: Maybe<Course>;
   success?: Maybe<Success>;
 };
+
+export type URemoveCourse = RemoveCourse | ErrorResponse;
 
 export type UUpdateCourse = UpdateCourse | ErrorResponse;
 
@@ -1027,6 +1114,29 @@ export type CreatePostMutation = (
   )> }
 );
 
+export type RemoveCourseMutationVariables = Exact<{
+  course: Scalars['String'];
+}>;
+
+
+export type RemoveCourseMutation = (
+  { __typename?: 'Mutation' }
+  & { removeCourse?: Maybe<(
+    { __typename?: 'RemoveCourse' }
+    & Pick<RemoveCourse, 'removeCourse'>
+    & { success?: Maybe<(
+      { __typename?: 'Success' }
+      & Pick<Success, 'message'>
+    )> }
+  ) | (
+    { __typename?: 'ErrorResponse' }
+    & { error: (
+      { __typename?: 'Error' }
+      & Pick<Error, 'message'>
+    ) }
+  )> }
+);
+
 export type AuthRequestAccessMutationVariables = Exact<{
   email: Scalars['String'];
 }>;
@@ -1110,7 +1220,9 @@ export type AuthSignUpMutation = (
   ) }
 );
 
-export type GetCoursesQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetCoursesQueryVariables = Exact<{
+  lastCourse?: Maybe<Scalars['String']>;
+}>;
 
 
 export type GetCoursesQuery = (
@@ -1119,13 +1231,13 @@ export type GetCoursesQuery = (
     { __typename?: 'GetCourses' }
     & { courses?: Maybe<Array<Maybe<(
       { __typename?: 'Course' }
-      & Pick<Course, 'id' | 'path' | 'title' | 'description' | 'area' | 'difficult' | 'photoURL' | 'typeContent' | 'viewsCount' | 'clapsCount' | 'commentsCount' | 'createdAt'>
+      & Pick<Course, 'id' | 'path' | 'title' | 'description' | 'area' | 'difficult' | 'photoURL' | 'typeContent' | 'viewsCount' | 'clapsCount' | 'commentsCount' | 'owner' | 'createdAt'>
       & { comments?: Maybe<Array<Maybe<(
         { __typename?: 'Comments' }
         & Pick<Comments, 'id' | 'owner' | 'description'>
       )>>>, ownerProfile?: Maybe<(
         { __typename?: 'UserProfile' }
-        & Pick<UserProfile, 'uid' | 'displayName' | 'photoURL' | 'profission'>
+        & Pick<UserProfile, 'uid' | 'displayName' | 'thumbnailURL' | 'photoURL' | 'profission'>
       )> }
     )>>>, success?: Maybe<(
       { __typename?: 'Success' }
@@ -1574,6 +1686,48 @@ export function useCreatePostMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreatePostMutationHookResult = ReturnType<typeof useCreatePostMutation>;
 export type CreatePostMutationResult = Apollo.MutationResult<CreatePostMutation>;
 export type CreatePostMutationOptions = Apollo.BaseMutationOptions<CreatePostMutation, CreatePostMutationVariables>;
+export const RemoveCourseDocument = gql`
+    mutation removeCourse($course: String!) {
+  removeCourse(course: $course) {
+    ... on RemoveCourse {
+      removeCourse
+      success {
+        message
+      }
+    }
+    ... on ErrorResponse {
+      error {
+        message
+      }
+    }
+  }
+}
+    `;
+export type RemoveCourseMutationFn = Apollo.MutationFunction<RemoveCourseMutation, RemoveCourseMutationVariables>;
+
+/**
+ * __useRemoveCourseMutation__
+ *
+ * To run a mutation, you first call `useRemoveCourseMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveCourseMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeCourseMutation, { data, loading, error }] = useRemoveCourseMutation({
+ *   variables: {
+ *      course: // value for 'course'
+ *   },
+ * });
+ */
+export function useRemoveCourseMutation(baseOptions?: Apollo.MutationHookOptions<RemoveCourseMutation, RemoveCourseMutationVariables>) {
+        return Apollo.useMutation<RemoveCourseMutation, RemoveCourseMutationVariables>(RemoveCourseDocument, baseOptions);
+      }
+export type RemoveCourseMutationHookResult = ReturnType<typeof useRemoveCourseMutation>;
+export type RemoveCourseMutationResult = Apollo.MutationResult<RemoveCourseMutation>;
+export type RemoveCourseMutationOptions = Apollo.BaseMutationOptions<RemoveCourseMutation, RemoveCourseMutationVariables>;
 export const AuthRequestAccessDocument = gql`
     mutation authRequestAccess($email: String!) {
   authRequestAccess(email: $email) {
@@ -1730,8 +1884,8 @@ export type AuthSignUpMutationHookResult = ReturnType<typeof useAuthSignUpMutati
 export type AuthSignUpMutationResult = Apollo.MutationResult<AuthSignUpMutation>;
 export type AuthSignUpMutationOptions = Apollo.BaseMutationOptions<AuthSignUpMutation, AuthSignUpMutationVariables>;
 export const GetCoursesDocument = gql`
-    query getCourses {
-  getCourses {
+    query getCourses($lastCourse: String) {
+  getCourses(lastCourse: $lastCourse) {
     ... on GetCourses {
       courses {
         id
@@ -1750,9 +1904,11 @@ export const GetCoursesDocument = gql`
           owner
           description
         }
+        owner
         ownerProfile {
           uid
           displayName
+          thumbnailURL
           photoURL
           profission
         }
@@ -1784,6 +1940,7 @@ export const GetCoursesDocument = gql`
  * @example
  * const { data, loading, error } = useGetCoursesQuery({
  *   variables: {
+ *      lastCourse: // value for 'lastCourse'
  *   },
  * });
  */

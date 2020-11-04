@@ -76,7 +76,7 @@ export const guupTheme: DefaultTheme = {
     ligthGrey: '#DEDEDE',
     smoothGrey: '#E9E9E9',
     darkGrey: '#818493',
-    greyBrown: '#444444',
+    greyBrown: '#404247',
   },
   gradients: {
     dark: require('./../../assets/images/guupBlackGradient.png'),

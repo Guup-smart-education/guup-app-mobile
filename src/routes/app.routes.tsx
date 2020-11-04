@@ -6,7 +6,7 @@ import {
   GuupExplorer,
   GuupNews,
   GuupCourses,
-  GuupCourseDetail,
+  GuupCollectionDetail,
   GuupCollectionCreate,
   GuupContentCreate,
   GuupUserProfile,
@@ -73,8 +73,8 @@ const AppRouter: React.FC = () => {
       />
       <AppStack.Screen
         options={{header: () => null}}
-        name="GuupCourseDetail"
-        component={GuupCourseDetail}
+        name="GuupCollectionDetail"
+        component={GuupCollectionDetail}
         initialParams={{
           mode: 'ONLY_VIEW',
         }}
@@ -89,7 +89,7 @@ const AppRouter: React.FC = () => {
         name="GuupContentCreate"
         component={GuupContentCreate}
         initialParams={{
-          path: null,
+          path: undefined,
         }}
       />
       <AppStack.Screen

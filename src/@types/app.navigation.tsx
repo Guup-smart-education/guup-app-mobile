@@ -6,7 +6,7 @@ import {Post} from './../graphql/types.d';
 
 export enum EApp {
   'GuupExplorer' = 'GuupExplorer',
-  'GuupCourseDetail' = 'GuupCourseDetail',
+  'GuupCollectionDetail' = 'GuupCollectionDetail',
   'GuupCourse' = 'GuupCourse',
   'GuupNews' = 'GuupNews',
   'GuupUserProfile' = 'GuupUserProfile',
@@ -20,7 +20,7 @@ export enum EApp {
 export type RootApp = {
   GuupExplorer: undefined;
   GuupCourse: undefined;
-  GuupCourseDetail: {
+  GuupCollectionDetail: {
     mode?: keyof typeof EViewMode;
   };
   GuupCollectionCreate: undefined;
@@ -69,9 +69,9 @@ export type ContentCreateScreenRouteProp = RouteProp<
   RootApp,
   'GuupContentCreate'
 >;
-export type CourseDetailScreenRouteProp = RouteProp<
+export type CollectionDetailScreenRouteProp = RouteProp<
   RootApp,
-  'GuupCourseDetail'
+  'GuupCollectionDetail'
 >;
 export type NewsScreenRouteProp = RouteProp<RootApp, 'GuupNews'>;
 export type ProfileScreenRouteProp = RouteProp<RootApp, 'GuupUserProfile'>;
@@ -95,7 +95,7 @@ export type CourseScreenNavigationProp = StackNavigationProp<
 >;
 export type CourseDetailScreenNavigationProp = StackNavigationProp<
   RootApp,
-  'GuupCourseDetail'
+  'GuupCollectionDetail'
 >;
 export type CollectionCreateScreenNavigationProp = StackNavigationProp<
   RootApp,
@@ -137,8 +137,8 @@ export type CoursePropsApp = {
   route: CourseScreenRouteProp;
   navigation: CourseScreenNavigationProp;
 };
-export type CourseDetailPropsApp = {
-  route: CourseDetailScreenRouteProp;
+export type CollectionDetailPropsApp = {
+  route: CollectionDetailScreenRouteProp;
   navigation: CourseDetailScreenNavigationProp;
 };
 export type CollectionCreatePropsApp = {

@@ -86,7 +86,7 @@ const Collections: React.FC<PropsApp> = ({navigation: {goBack, navigate}}) => {
             owners={item.owners}
             onPress={() => {
               dispatch({type: PathTypes.SET_CURRENT_PATH, payload: item});
-              navigate('GuupCourseDetail', {mode: 'EDIT'});
+              navigate('GuupCollectionDetail', {mode: 'EDIT'});
             }}
           />
         </CollectionItem>

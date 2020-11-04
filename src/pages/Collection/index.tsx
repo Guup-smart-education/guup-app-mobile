@@ -6,7 +6,6 @@ import {
   View,
   Alert,
   FlatList,
-  ActivityIndicator,
 } from 'react-native';
 import {
   Container,
@@ -39,8 +38,8 @@ import {
   CourseListFooter,
 } from './_styled';
 import {useIsFocused} from '@react-navigation/native';
-import {CourseDetailPropsApp} from './../../@types/app.navigation';
-import {usePathContext} from './../../contexts/path';
+import {CollectionDetailPropsApp} from './../../@types/app.navigation';
+import {usePathContext, PathTypes} from './../../contexts/path';
 import AuthContext from './../../contexts/auth';
 import {
   useGetCoursesByPathLazyQuery,
@@ -61,7 +60,7 @@ const ListEmpty = () => {
   );
 };
 
-const CourseScreen: React.FC<CourseDetailPropsApp> = ({
+const CourseScreen: React.FC<CollectionDetailPropsApp> = ({
   navigation: {navigate, goBack},
   route: {
     params: {mode},
@@ -112,7 +111,8 @@ const CourseScreen: React.FC<CourseDetailPropsApp> = ({
   const [snapshot, setSnapshot] = useState<string | null>(null);
   const [loadMore, setLoadMore] = useState<boolean>(false);
   const {
-    state: {currentPath},
+    state: {currentPath = {}},
+    dispatch,
   } = usePathContext();
   const {user} = useContext(AuthContext);
   const [
@@ -140,7 +140,7 @@ const CourseScreen: React.FC<CourseDetailPropsApp> = ({
     if (fetchMore && loadMore && snapshot && !isNoMoreData) {
       fetchMore({
         variables: {
-          path: currentPath.id || '',
+          path: currentPath ? currentPath.id : '',
           lastCourse: snapshot,
         },
       });
@@ -221,9 +221,10 @@ const CourseScreen: React.FC<CourseDetailPropsApp> = ({
           owner={item.ownerProfile || {}}
           contentType="Video"
           createdAt={item.createdAt || ''}
-          onPress={() =>
-            Alert.alert('Show the course', 'Show all video course')
-          }
+          onPress={() => {
+            dispatch({type: PathTypes.SET_CURRENT_COURSE, payload: item});
+            navigate('GuupClassVideo', {id: `${item.id}`});
+          }}
         />
       </CourseDetailItem>
     );

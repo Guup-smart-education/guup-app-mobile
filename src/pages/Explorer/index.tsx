@@ -19,22 +19,35 @@ import {
   ExplorerHeaderPatch,
   ExplorerEmpty,
   ExplorerCourseItem,
+  ExplorerTabs,
 } from './_styled';
 import {ETabLinks} from './../../@types/tablink';
 import {AppScreenNavigationProp} from './../../@types/app.navigation';
 import {GetUniqueId, shadowStyle} from './../../helper';
 import {LIMIT_PER_PAGE} from './../../constants';
 import {useNavigation, useIsFocused} from '@react-navigation/native';
-import {Course, Path, useGetAllPathsLazyQuery} from './../../graphql/types.d';
+import {
+  Path,
+  useGetAllPathsLazyQuery,
+  Course,
+  useGetCoursesLazyQuery,
+} from './../../graphql/types.d';
 import {usePathContext, PathTypes} from './../../contexts/path';
 import AuthContext from './../../contexts/auth';
 
+enum TABS {
+  'collections' = 'collections',
+  'courses' = 'courses',
+}
+
 const TAB_LINKS = [
-  {id: GetUniqueId(), label: 'Todos', active: true},
-  {id: GetUniqueId(), label: 'Tecnologia'},
-  {id: GetUniqueId(), label: 'Soft skills'},
-  {id: GetUniqueId(), label: 'Marketing'},
-  {id: GetUniqueId(), label: 'Design'},
+  // {id: GetUniqueId(), name: TABS.collections, label: 'Coleções', active: true},
+  {id: GetUniqueId(), name: 'tech', label: 'Conteudos', active: true},
+  {id: GetUniqueId(), name: 'rrhh', label: 'Recursos humanos', active: true},
+  {id: GetUniqueId(), name: 'design', label: 'Desenho', active: true},
+  {id: GetUniqueId(), name: 'marketing', label: 'Marketing', active: true},
+  {id: GetUniqueId(), name: 'bussiness', label: 'Negocios', active: true},
+  {id: GetUniqueId(), name: 'people', label: 'Pessoas', active: true},
 ] as Array<ETabLinks>;
 
 // List empty data
@@ -51,86 +64,155 @@ const ExplorerScreen: React.FC = () => {
   const isFocused = useIsFocused();
   const {state, dispatch} = usePathContext();
   const {user} = useContext(AuthContext);
-  const [createOptionsSize, setCreateOptionsSize] = useState<{
-    height: number;
-    width: number;
-  }>({
-    height: 0,
-    width: 0,
-  });
   const navigation = useNavigation<AppScreenNavigationProp>();
   const [allPathsData, setAllPathsData] = useState<Array<Path>>([]);
+  const [allCourseData, setAllCoursesData] = useState<Array<Path>>([]);
   const [currentTab, setCurrentTab] = useState<ETabLinks>(TAB_LINKS[0]);
+  const [currentData, setCurrentData] = useState<string>(TABS.courses);
+  const [toggleData, setToggleData] = useState<boolean>(false);
   const [toggleModal, setToggleModal] = useState<boolean>(false);
   const [loadMore, setLoadMore] = useState<boolean>(false);
   const [isRefetch, setIsRefetch] = useState<boolean>(false);
-  const [isNoMorePaths, setIsNoMorePaths] = useState<boolean>(false);
+  const [isNoMoreData, setIsNoMoreData] = useState<boolean>(false);
   const [snapshot, setSnapshot] = useState<string | null>(null);
   const onTabLinkPress = (link: ETabLinks) => {
+    // setCurrentData(link.name);
+    // setToggleData(!toggleData);
     setCurrentTab(link);
   };
   const [
     getAllPaths,
-    {data, loading, error, refetch, fetchMore},
+    {
+      data: dataPaths,
+      loading: loadingPaths,
+      error: errorPaths,
+      refetch: refetchPaths,
+      fetchMore: fetchMorePaths,
+    },
   ] = useGetAllPathsLazyQuery();
+  const [
+    getAllCourses,
+    {
+      data: dataCourses,
+      loading: loadingCourses,
+      error: errorCourses,
+      refetch: refetchCourses,
+      fetchMore: fetchMoreCourses,
+    },
+  ] = useGetCoursesLazyQuery();
   // Effects
   useEffect(() => {
-    R.isEmpty(allPathsData) && getAllPaths();
-  }, [allPathsData, getAllPaths]);
-
-  useEffect(() => {
-    if (refetch && isFocused) {
-      setIsRefetch(true);
-      refetch();
+    if (currentData === TABS.collections && R.isEmpty(allPathsData)) {
+      getAllPaths();
+    } else if (currentData === TABS.courses && R.isEmpty(allCourseData)) {
+      getAllCourses();
     }
-  }, [refetch, isFocused]);
+  }, [getAllPaths, getAllCourses, currentData, allCourseData, allPathsData]);
 
   useEffect(() => {
-    if (fetchMore && loadMore && snapshot && !isNoMorePaths) {
-      fetchMore({
-        variables: {lastPath: snapshot},
-      });
+    if (isFocused) {
+      setIsRefetch(true);
+      if (currentData === TABS.collections) {
+        refetchPaths && refetchPaths();
+      } else if (currentData === TABS.courses) {
+        refetchCourses && refetchCourses();
+      }
+    }
+  }, [refetchPaths, refetchCourses, isFocused]);
+
+  useEffect(() => {
+    if (loadMore && snapshot && !isNoMoreData) {
+      if (currentData === TABS.collections) {
+        fetchMorePaths &&
+          fetchMorePaths({
+            variables: {lastPath: snapshot},
+          });
+      } else {
+        fetchMoreCourses &&
+          fetchMoreCourses({
+            variables: {
+              lastCourse: snapshot,
+            },
+          });
+      }
     }
   }, [snapshot, loadMore]);
 
   useEffect(() => {
-    if (data?.getAllPaths?.__typename === 'GetPaths') {
-      const allPaths: Array<any> = [...(data.getAllPaths.allPaths || [])];
+    if (dataPaths?.getAllPaths?.__typename === 'GetPaths') {
+      const allPaths: Array<any> = [...(dataPaths.getAllPaths.allPaths || [])];
       const unionPaths = R.union(
         [...(!isRefetch ? allPathsData : [])],
         [...allPaths],
       );
-      // setAllPathsData([...allPaths]);
+      // setAllData([...allPaths]);
       setAllPathsData(unionPaths);
-      setIsNoMorePaths(allPaths.length < LIMIT_PER_PAGE);
+      setIsNoMoreData(allPaths.length < LIMIT_PER_PAGE);
       setIsRefetch(false);
       setLoadMore(false);
       setSnapshot(null);
-    } else if (data?.getAllPaths?.__typename === 'ErrorResponse') {
-      Alert.alert('Aconteceu um erro', `${data.getAllPaths.error.message}`);
+    } else if (dataPaths?.getAllPaths?.__typename === 'ErrorResponse') {
+      Alert.alert(
+        'Aconteceu um erro',
+        `${dataPaths.getAllPaths.error.message}`,
+      );
     }
-  }, [data]);
+  }, [dataPaths]);
+
+  useEffect(() => {
+    if (dataCourses?.getCourses?.__typename === 'GetCourses') {
+      const allCourses: Array<any> = [
+        ...(dataCourses.getCourses.courses || []),
+      ];
+      const unionCourses = R.union(
+        [...(!isRefetch ? allCourseData : [])],
+        [...allCourses],
+      );
+      // setAllData([...allPaths]);
+      setAllCoursesData(unionCourses);
+      setIsNoMoreData(allCourses.length < LIMIT_PER_PAGE);
+      setIsRefetch(false);
+      setLoadMore(false);
+      setSnapshot(null);
+    } else if (dataCourses?.getCourses?.__typename === 'ErrorResponse') {
+      Alert.alert(
+        'Aconteceu um erro',
+        `${dataCourses.getCourses.error.message}`,
+      );
+    }
+  }, [dataCourses]);
   // End effects
 
   // Handlers
   const handlefetchMoreData = () => {
-    if (
-      !loadMore &&
-      !snapshot &&
-      !isNoMorePaths &&
-      allPathsData.length >= LIMIT_PER_PAGE
-    ) {
-      const lastPath = R.last(allPathsData)?.id;
+    console.log('handlefetchMoreData');
+    if (!loadMore && !snapshot && !isNoMoreData) {
+      if (
+        currentData === TABS.collections &&
+        allPathsData.length >= LIMIT_PER_PAGE
+      ) {
+        const lastPath = R.last(allPathsData)?.id;
+        setSnapshot(lastPath || null);
+      } else if (
+        currentData === TABS.courses &&
+        allCourseData.length >= LIMIT_PER_PAGE
+      ) {
+        const lastCourse = R.last(allCourseData)?.id;
+        setSnapshot(lastCourse || null);
+      }
       setLoadMore(true);
-      setSnapshot(lastPath || null);
     }
   };
 
   const handleRefresh = () => {
-    // setIsNoMorePaths(false);
+    // setIsNoMoreData(false);
     setLoadMore(false);
     setIsRefetch(true);
-    refetch && refetch();
+    if (currentData === TABS.collections) {
+      refetchPaths && refetchPaths();
+    } else {
+      refetchCourses && refetchCourses();
+    }
   };
   // End handlers
 
@@ -140,27 +222,39 @@ const ExplorerScreen: React.FC = () => {
     [],
   );
 
-  const CourseItem = useCallback(({item}: {item: Path}) => {
+  const CourseItem = useCallback(({item}: {item: Course}) => {
     const isOwner = user?.uid === item.owner;
     return (
-      <ExplorerCourseItem style={shadowStyle.newPost}>
-        <Separator size="large" />
+      <ExplorerCourseItem>
+        {/* <ExplorerCourseItem style={shadowStyle.newPost}> */}
+
         <GuupCourseCard
           id={`${item.id}`}
           type="PATH"
           model={isOwner ? 'OWNER' : 'PUBLIC'}
           imageUri={item.photoURL || ''}
           title={item.title || 'Guup course'}
-          content={`${item.contentCount || 0} conteudos`}
+          description={item.description || ''}
+          // content={`${item.contentCount || 0} conteudos`}
           owner={item.ownerProfile || {}}
-          owners={item.owners}
+          // owners={item.owners}
           onPress={() => {
-            dispatch({type: PathTypes.SET_CURRENT_PATH, payload: item});
-            navigation.navigate('GuupCourseDetail', {
-              mode: isOwner ? 'EDIT' : 'ONLY_VIEW',
-            });
+            dispatch({type: PathTypes.SET_CURRENT_COURSE, payload: item});
+            navigation.navigate('GuupClassVideo', {id: `${item.id}`});
           }}
+          // onPress={() => {
+          //   if (currentData === TABS.collections) {
+          //     dispatch({type: PathTypes.SET_CURRENT_PATH, payload: item});
+          //     navigation.navigate('GuupCollectionDetail', {
+          //       mode: isOwner ? 'EDIT' : 'ONLY_VIEW',
+          //     });
+          //   } else {
+          //     dispatch({type: PathTypes.SET_CURRENT_COURSE, payload: item});
+          //     navigation.navigate('GuupClassVideo', {id: `${item.id}`});
+          //   }
+          // }}
         />
+        <Separator size="tiny" />
       </ExplorerCourseItem>
     );
   }, []);
@@ -174,8 +268,10 @@ const ExplorerScreen: React.FC = () => {
             rightRenderIntem={
               <Link
                 preset="simple"
-                // onPress={() => navigation.navigate('GuupContentCreate')}>
-                onPress={() => setToggleModal(!toggleModal)}>
+                onPress={() =>
+                  navigation.navigate('GuupContentCreate', {path: undefined})
+                }>
+                {/* onPress={() => setToggleModal(!toggleModal)}> */}
                 <Icon source="plus" />
               </Link>
             }
@@ -184,20 +280,22 @@ const ExplorerScreen: React.FC = () => {
           <ExplorerTitle>
             <Text preset="largePrice">Confira os conteudos disponiveis</Text>
           </ExplorerTitle>
-          <Separator size="large" />
+        </ExplorerAction>
+        <Separator size="large" />
+        <ExplorerTabs horizontal showsHorizontalScrollIndicator={false}>
           <TabLink
             onPress={onTabLinkPress}
             links={TAB_LINKS}
             active={currentTab}
           />
-        </ExplorerAction>
+        </ExplorerTabs>
       </ExplorerHeader>
     ),
     [currentTab],
   );
 
   const ListLoadMore = useCallback(() => {
-    if (loadMore && !isNoMorePaths) {
+    if (loadMore && !isNoMoreData) {
       return (
         <ExplorerEmpty>
           <Separator size="lili" />
@@ -207,18 +305,18 @@ const ExplorerScreen: React.FC = () => {
       );
     }
     return <Separator size="large" />;
-  }, [loadMore, isNoMorePaths]);
+  }, [loadMore, isNoMoreData]);
   // End callbacks
 
   // Branchs
-  if (loading) {
+  if (loadingPaths || loadingCourses) {
     return (
       <View>
         <Text>Loading</Text>
       </View>
     );
   }
-  if (error) {
+  if (errorPaths || errorCourses) {
     return (
       <View>
         <Text>error</Text>
@@ -232,24 +330,24 @@ const ExplorerScreen: React.FC = () => {
       <Container safe>
         <ExplorerContainer>
           <ExplorerHeaderPatch />
-          {allPathsData && (
-            <FlatList
-              showsVerticalScrollIndicator={false}
-              scrollEnabled={!!allPathsData}
-              data={allPathsData}
-              keyExtractor={keyExtractor}
-              maxToRenderPerBatch={20}
-              nestedScrollEnabled
-              renderItem={CourseItem}
-              ListEmptyComponent={ListEmpty}
-              ListHeaderComponent={ListHeader}
-              ListFooterComponent={ListLoadMore}
-              onEndReachedThreshold={0.9}
-              onEndReached={handlefetchMoreData}
-              refreshing={loading}
-              onRefresh={handleRefresh}
-            />
-          )}
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            // scrollEnabled={!!allData}
+            data={
+              currentData === TABS.collections ? allPathsData : allCourseData
+            }
+            keyExtractor={keyExtractor}
+            maxToRenderPerBatch={20}
+            nestedScrollEnabled
+            renderItem={CourseItem}
+            ListEmptyComponent={ListEmpty}
+            ListHeaderComponent={ListHeader}
+            ListFooterComponent={ListLoadMore}
+            onEndReachedThreshold={0.9}
+            onEndReached={handlefetchMoreData}
+            refreshing={loadingPaths || loadingCourses}
+            onRefresh={handleRefresh}
+          />
         </ExplorerContainer>
       </Container>
       <Popover

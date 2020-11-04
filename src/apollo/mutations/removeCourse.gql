@@ -1,0 +1,15 @@
+mutation removeCourse($course: String!) {
+  removeCourse(course: $course) {
+    ... on RemoveCourse {
+      removeCourse
+      success {
+        message
+      }
+    }
+    ... on ErrorResponse {
+      error {
+        message
+      }
+    }
+  }
+}

@@ -31,3 +31,4 @@ export {default as GuupCard} from './Card';
 export {default as GuupUpload} from './Upload';
 export {default as GuupMenuList} from './MenuList';
 export {default as GuupDataList} from './DataList';
+export {default as GuupShowMore} from './ShowMore';

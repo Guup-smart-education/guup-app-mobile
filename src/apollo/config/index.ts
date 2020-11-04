@@ -41,8 +41,6 @@ const error = onError(({graphQLErrors, networkError}) => {
 
 const paginationPolicy = () => ({
   merge(existing: any[], incoming: any[]) {
-    console.log('existing', existing);
-    console.log('existing', incoming);
     const merged = [...(incoming || [])];
     // const merged = [...(existing || []), ...(incoming || [])];
     return merged;
@@ -60,6 +58,7 @@ export const client = new ApolloClient({
     dataIdFromObject: (responseObject) => {
       switch (responseObject.__typename) {
         case 'GetPaths':
+        case 'GetCourses':
         case 'GetPosts':
         case 'GetCoursesByPath':
         case 'GetComment':
@@ -75,6 +74,7 @@ export const client = new ApolloClient({
         fields: {
           allPost: paginationPolicy(),
           allPaths: paginationPolicy(),
+          courses: paginationPolicy(),
           coursesByPath: paginationPolicy(),
           comments: paginationPolicy(),
         },

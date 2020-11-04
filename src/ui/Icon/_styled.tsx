@@ -10,7 +10,9 @@ export const Icon = styled.Image.attrs(({source, theme}: IStyledProps) => ({
 }))<IStyledProps>`
   border-radius: ${({theme}) => theme.borderRadius[8]};
   background-color: ${({theme, backColor}) =>
-    backColor ? theme.colors[backColor] : 'transparent'};
+    backColor && backColor !== 'transparent'
+      ? theme.colors[backColor]
+      : 'transparent'};
   ${({theme, tintColor}) =>
     tintColor && `tint-color: ${(theme.colors as any)[tintColor]};`}
   ${({theme, size}) =>
