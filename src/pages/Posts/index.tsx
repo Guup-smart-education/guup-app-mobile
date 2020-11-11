@@ -17,13 +17,11 @@ import {useGetPostsByOwnerLazyQuery, Post} from './../../graphql/types.d';
 import {GetUniqueId} from './../../helper';
 import {LIMIT_PER_PAGE} from './../../constants';
 import AuthContext from './../../contexts/auth';
-// import {usePathContext, PathTypes} from './../../contexts/path';
 
 // Component
 const Posts: React.FC<PropsApp> = ({navigation: {goBack, navigate}}) => {
   const authContext = useContext(AuthContext);
   const isFocused = useIsFocused();
-  // const {state, dispatch} = usePathContext();
   const [
     getPosts,
     {loading, data, error, fetchMore, refetch},
@@ -57,9 +55,12 @@ const Posts: React.FC<PropsApp> = ({navigation: {goBack, navigate}}) => {
       const postsData: Array<any> = [
         ...(data.getPostsByOwner.allPostOwner || []),
       ];
-      setIsNoMorePosts(R.isEmpty(allPosts));
-      setAllPosts([...postsData]);
-      // setAllPosts([...(!isRefetch ? allPosts : []), ...postsData]);
+      const unionCourses = R.union(
+        [...(!isRefetch ? allPosts : [])],
+        [...postsData],
+      );
+      setAllPosts(unionCourses);
+      setIsNoMorePosts(postsData.length < LIMIT_PER_PAGE);
       setLoadMore(false);
       setSnapshot(null);
       setIsRefetch(false);
@@ -103,6 +104,7 @@ const Posts: React.FC<PropsApp> = ({navigation: {goBack, navigate}}) => {
               ownerPicture: ownerProfile?.thumbnailURL,
               ownerProsiffion: ownerProfile?.profission,
             }}
+            navigateProfile={false}
             id={id}
             postComment={description}
             showComments
@@ -151,9 +153,9 @@ const Posts: React.FC<PropsApp> = ({navigation: {goBack, navigate}}) => {
   }
   if (error) {
     return (
-      <View>
+      <Container>
         <Text>error</Text>
-      </View>
+      </Container>
     );
   }
   // End branchas
@@ -190,7 +192,7 @@ const Posts: React.FC<PropsApp> = ({navigation: {goBack, navigate}}) => {
               </Action>
             }
             centerRenderItem={
-              <Text preset="comment" bold color="primary">
+              <Text preset="comment" bold>
                 Publicações
               </Text>
             }

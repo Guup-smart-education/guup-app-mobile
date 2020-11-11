@@ -1,3 +1,4 @@
+import R from 'ramda';
 import React, {useContext} from 'react';
 import {Alert} from 'react-native';
 import {Container, Text, Button, Icon, Link, Separator} from './../../ui';
@@ -18,34 +19,72 @@ import {IMenuItemProps} from './../../@types/menu.item';
 import {AppScreenNavigationProp} from './../../@types/app.navigation';
 
 const GuupAccount: React.FC<AppScreenNavigationProp> = () => {
-  const {navigate} = useNavigation<AppScreenNavigationProp>();
+  const {navigate, goBack} = useNavigation<AppScreenNavigationProp>();
   const {user} = useContext(AuthContext);
   const MENU_ACCOUNT: Array<IMenuItemProps> = [
+    // {
+    //   text: 'Minhas coleções',
+    //   onPress: () => navigate('GuupCollections'),
+    // },
     {
-      text: 'Minhas coleções',
-      onPress: () => navigate('GuupCollections'),
+      icon: 'video',
+      text: 'Meus conteudos',
+      onPress: () => navigate('GuupCourses'),
     },
     {
+      icon: 'news',
       text: 'Minhas publicações',
       onPress: () => navigate('GuupPosts'),
     },
     // {
-    //   text: 'Notificações',
+    //   icon: 'save',
+    //   text: 'Conteudos salvos',
     //   onPress: () => navigate('GuupNotifications'),
     // },
     // {
+    //   icon: 'claps',
+    //   text: 'A minha atividade',
+    //   onPress: () => navigate('GuupNotifications'),
+    // },
+    // {
+    //   icon: 'heart',
     //   text: 'Logros',
     //   onPress: () => Alert.alert('Achievements', 'Show achievements'),
     // },
     // {
-    //   text: 'Configurações de privacidade',
-    //   onPress: () => navigate('GuupSettings'),
+    //   icon: 'bell',
+    //   text: 'Notificações',
+    //   onPress: () => navigate('GuupNotifications'),
     // },
-    // {
-    //   text: 'Sair do guup',
-    //   onPress: () => logout(),
-    // },
+    {
+      icon: 'alert',
+      text: 'Ajustes de privacidade',
+      onPress: () => navigate('GuupSettings'),
+    },
+    {
+      icon: 'box',
+      text: 'Sair do guup',
+      onPress: () =>
+        Alert.alert('Logout', 'Sair do guup', [
+          {
+            text: 'Sim',
+            style: 'destructive',
+            onPress: () => console.log('Logout'),
+          },
+          {
+            text: 'Não',
+          },
+        ]),
+    },
   ];
+  if (R.isEmpty(user)) {
+    return (
+      <Container safe center>
+        <Text>Aconteceu um problema</Text>
+        <Link onPress={() => goBack()}>Voltar</Link>
+      </Container>
+    );
+  }
   return (
     <Container safe light>
       <AccountContainer>
@@ -54,9 +93,8 @@ const GuupAccount: React.FC<AppScreenNavigationProp> = () => {
             leftRenderIntem={<Icon source="guup" size="small" />}
             rightRenderIntem={
               <Link
-                color="primary"
-                onPress={() => Alert.alert('Logout', 'sair do guup')}>
-                <Icon source="settings" />
+                onPress={() => navigate('GuupUserProfile', {type: 'OWNER'})}>
+                Editar perfil
               </Link>
             }
           />
@@ -65,13 +103,9 @@ const GuupAccount: React.FC<AppScreenNavigationProp> = () => {
             <AccountUserAvatar source={{uri: `${user?.photoURL}`}} />
             <AccountUserName>
               <Text preset="comment" bold>
-                {user?.displayName}
+                {user?.displayName || 'Adicione seu role'}
               </Text>
-              <Link
-                color="primary"
-                onPress={() => navigate('GuupUserProfile', {type: 'OWNER'})}>
-                Editar perfil
-              </Link>
+              <Text color="primary">{user?.profission}</Text>
             </AccountUserName>
           </AccountInformation>
           <Separator size="medium" />

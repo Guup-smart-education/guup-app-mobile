@@ -1,7 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import R from 'ramda';
 import React, {useState, useEffect, useCallback, useContext} from 'react';
-import {Alert, View, FlatList, ActivityIndicator} from 'react-native';
+import {
+  Alert,
+  View,
+  FlatList,
+  ActivityIndicator,
+  Dimensions,
+} from 'react-native';
 import {Container, Text, Link, Icon, Separator} from './../../ui';
 import {
   GuupHeader,
@@ -168,7 +174,6 @@ const ExplorerScreen: React.FC = () => {
         [...(!isRefetch ? allCourseData : [])],
         [...allCourses],
       );
-      // setAllData([...allPaths]);
       setAllCoursesData(unionCourses);
       setIsNoMoreData(allCourses.length < LIMIT_PER_PAGE);
       setIsRefetch(false);
@@ -226,8 +231,6 @@ const ExplorerScreen: React.FC = () => {
     const isOwner = user?.uid === item.owner;
     return (
       <ExplorerCourseItem>
-        {/* <ExplorerCourseItem style={shadowStyle.newPost}> */}
-
         <GuupCourseCard
           id={`${item.id}`}
           type="PATH"
@@ -235,24 +238,10 @@ const ExplorerScreen: React.FC = () => {
           imageUri={item.photoURL || ''}
           title={item.title || 'Guup course'}
           description={item.description || ''}
-          // content={`${item.contentCount || 0} conteudos`}
           owner={item.ownerProfile || {}}
-          // owners={item.owners}
           onPress={() => {
-            dispatch({type: PathTypes.SET_CURRENT_COURSE, payload: item});
-            navigation.navigate('GuupClassVideo', {id: `${item.id}`});
+            Alert.alert('Video', 'Stream video');
           }}
-          // onPress={() => {
-          //   if (currentData === TABS.collections) {
-          //     dispatch({type: PathTypes.SET_CURRENT_PATH, payload: item});
-          //     navigation.navigate('GuupCollectionDetail', {
-          //       mode: isOwner ? 'EDIT' : 'ONLY_VIEW',
-          //     });
-          //   } else {
-          //     dispatch({type: PathTypes.SET_CURRENT_COURSE, payload: item});
-          //     navigation.navigate('GuupClassVideo', {id: `${item.id}`});
-          //   }
-          // }}
         />
         <Separator size="tiny" />
       </ExplorerCourseItem>
@@ -311,26 +300,31 @@ const ExplorerScreen: React.FC = () => {
   // Branchs
   if (loadingPaths || loadingCourses) {
     return (
-      <View>
-        <Text>Loading</Text>
-      </View>
+      <Container dark>
+        <ActivityIndicator size="small" />
+      </Container>
     );
   }
   if (errorPaths || errorCourses) {
     return (
-      <View>
-        <Text>error</Text>
-      </View>
+      <Container dark>
+        <Text color="primary">error</Text>
+      </Container>
     );
   }
   // End branchs
 
   return (
     <>
-      <Container safe>
+      <Container dark>
         <ExplorerContainer>
-          <ExplorerHeaderPatch />
+          {/* <ExplorerHeaderPatch /> */}
           <FlatList
+            pagingEnabled
+            // style={{
+            //   height: Dimensions.get('screen').height,
+            //   backgroundColor: '#Fc2',
+            // }}
             showsVerticalScrollIndicator={false}
             // scrollEnabled={!!allData}
             data={
@@ -341,8 +335,8 @@ const ExplorerScreen: React.FC = () => {
             nestedScrollEnabled
             renderItem={CourseItem}
             ListEmptyComponent={ListEmpty}
-            ListHeaderComponent={ListHeader}
-            ListFooterComponent={ListLoadMore}
+            // ListHeaderComponent={ListHeader}
+            // ListFooterComponent={ListLoadMore}
             onEndReachedThreshold={0.9}
             onEndReached={handlefetchMoreData}
             refreshing={loadingPaths || loadingCourses}
@@ -350,6 +344,25 @@ const ExplorerScreen: React.FC = () => {
           />
         </ExplorerContainer>
       </Container>
+      <ExplorerHeader style={shadowStyle.newPost}>
+        <ExplorerAction>
+          <GuupHeader
+            leftRenderIntem={<Icon source="guup" size="small" />}
+            rightRenderIntem={
+              <Link
+                color="ligth"
+                preset="simple"
+                onPress={() =>
+                  navigation.navigate('GuupContentCreate', {path: undefined})
+                }>
+                {/* onPress={() => setToggleModal(!toggleModal)}> */}
+                {/* <Icon source="plus" blur tintColor="ligth" /> */}
+                Criar conteudo +
+              </Link>
+            }
+          />
+        </ExplorerAction>
+      </ExplorerHeader>
       <Popover
         visible={toggleModal}
         toggle={() => setToggleModal(false)}

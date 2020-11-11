@@ -92,7 +92,6 @@ const SigninScreen: React.FC<PropsAuth> = ({
   return (
     <KeyboardBlock hasKeyboardDismiss={false}>
       <FormContainer>
-        <Separator size="bigger" />
         <RowFullWidth padding={50}>
           <GuupBot message={bootMessage} />
         </RowFullWidth>

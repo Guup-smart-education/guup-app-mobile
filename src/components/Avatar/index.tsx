@@ -10,10 +10,11 @@ export enum ESizes {
 }
 
 export type IProps = {
-  size?: keyof typeof ESizes;
-  image?: string | undefined | null;
-  firstText?: string | undefined | null;
-  secondText?: string | undefined | null;
+  readonly size?: keyof typeof ESizes;
+  readonly image?: string | undefined | null;
+  readonly firstText?: string | undefined | null;
+  readonly secondText?: string | undefined | null;
+  readonly ligth?: boolean;
 };
 
 export default ({
@@ -21,6 +22,7 @@ export default ({
   firstText,
   secondText,
   size = ESizes.normal,
+  ligth = false,
 }: IProps) => {
   const theme = useContext(ThemeContext);
   return (
@@ -34,10 +36,13 @@ export default ({
         />
       </AvatarLeft>
       <AvatarRight>
-        <Text preset={size === 'comment' ? 'label' : 'comment'} bold>
+        <Text
+          preset={size === 'comment' ? 'label' : 'comment'}
+          bold
+          color={ligth ? 'ligth' : 'dark'}>
           {firstText}
         </Text>
-        <Text preset="label" color="darkGrey" light>
+        <Text preset="label" color={ligth ? 'ligth' : 'darkGrey'}>
           {secondText}
         </Text>
       </AvatarRight>

@@ -19,7 +19,7 @@ export type PostProps = {
   readonly comments?: number | undefined | null;
   readonly claps?: Array<any> | undefined | null;
   readonly clapsCount?: number | undefined | null;
-  readonly clapped?: boolean;
+  readonly clapped?: boolean | undefined | null;
   readonly media?: string | undefined | null;
   readonly card?: boolean | undefined | null;
   readonly createdAt?: string | undefined | null;

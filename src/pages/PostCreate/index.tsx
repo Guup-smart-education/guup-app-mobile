@@ -28,6 +28,7 @@ import {
 } from './_styled';
 import {useCreatePostMutation} from './../../graphql/types.d';
 import {Alert} from 'react-native';
+import {MAX_POST_DESCRIPTION_LENGTH} from './../../constants';
 
 const PostCreate: React.FC<PropsApp> = ({navigation: {goBack}}) => {
   const [createPost, {loading, data, error}] = useCreatePostMutation();
@@ -100,6 +101,7 @@ const PostCreate: React.FC<PropsApp> = ({navigation: {goBack}}) => {
             <Separator size="medium" />
             <CreateInput>
               <InputArea
+                maxLength={MAX_POST_DESCRIPTION_LENGTH}
                 onChangeText={(val: string) => setPost(val)}
                 placeholder="Digita aqui a sua publicação"
               />

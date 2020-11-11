@@ -1,5 +1,5 @@
 import React, {useRef} from 'react';
-import {Animated, Easing, Dimensions} from 'react-native';
+import {Animated} from 'react-native';
 import nextId from 'react-id-generator';
 import {DataOnboarding} from './../../data';
 import {
@@ -11,6 +11,7 @@ import {
 import {Container, Text, Link, Separator, CustomImage} from './../../ui';
 import {Carousel} from './../../components';
 import {PropsAuth} from './../../@types/auth.navigation';
+import {GetUniqueId} from './../../helper';
 
 interface IOnboardItem {
   title: string;
@@ -97,7 +98,10 @@ const OnboardScreen: React.FC<PropsAuth> = ({navigation}) => {
           </Link>
         )}>
         {DataOnboarding.slider.map(({title, description}, index) => (
-          <OnboardItem {...{title, description, scrollX, index}} />
+          <OnboardItem
+            key={GetUniqueId()}
+            {...{title, description, scrollX, index}}
+          />
         ))}
       </Carousel>
     </Container>

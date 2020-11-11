@@ -1,22 +1,20 @@
 import React, {useState, useEffect} from 'react';
-import {Alert, View, ActivityIndicator} from 'react-native';
+import {Alert, View} from 'react-native';
 import {Maybe} from 'graphql/jsutils/Maybe';
 import {
   CardContainer,
   CardSectionBody,
-  CardSectionTop,
-  CardContent,
   CardActions,
+  CardWrapper,
   CardSectionHeader,
   CardSectionTitle,
   CardTitle,
+  CardShowMoreContainer,
 } from './_styled';
-import {Text, Icon, Separator, Action} from './../../ui';
+import {Text, Icon, Separator, Action, Link} from './../../ui';
 import Avatar from './../Avatar';
 import Popover from './../Popover';
-import GuupDate from './../Date';
 import MenuList from './../MenuList';
-import ShowMore from './../ShowMore';
 import {IMenuItemProps} from './../../@types/menu.item';
 import {EModel, ECourse} from './../../@enum/course.model';
 import {
@@ -24,9 +22,6 @@ import {
   EnumContentType,
   useRemoveCourseMutation,
 } from './../../graphql/types.d';
-import {da} from 'date-fns/locale';
-// import {EditCollectionScreenNavigationProp} from './../../@types/app.navigation';
-// import {useNavigation} from '@react-navigation/native';
 
 export interface Props {
   readonly id: string;
@@ -44,16 +39,12 @@ export interface Props {
 }
 
 const CourseCard: React.FC<Props> = ({
-  type,
   model = 'PUBLIC',
   imageUri,
   title,
   description,
-  content,
   onPress,
   owner,
-  owners,
-  createdAt,
   id,
 }) => {
   // const {navigate} = useNavigation<EditCollectionScreenNavigationProp>();
@@ -90,6 +81,7 @@ const CourseCard: React.FC<Props> = ({
         ];
   const [imgLoading, setImgLoading] = useState(false);
   const [showOptions, setShowOptions] = useState(false);
+  const [showCourseDescription, toggleCourseDescription] = useState(false);
   const [removeCourse, {data, loading, error}] = useRemoveCourseMutation();
   // Effects
   useEffect(() => {
@@ -135,68 +127,65 @@ const CourseCard: React.FC<Props> = ({
   };
   // End handlers
   return (
-    <CardContainer>
+    <CardContainer
+      source={{
+        uri:
+          imageUri ||
+          'https://media4.giphy.com/media/L2xmR6N2cX94M8iBcX/giphy.gif?cid=ecf05e47e734662ee2e2c424f003c2426d4028038bc1c6ff&rid=giphy.gif',
+      }}
+      onLoadStart={() => setImgLoading(true)}
+      onLoadEnd={() => setImgLoading(false)}>
       <Action onPress={() => onPress && onPress()}>
-        <View>
+        <CardWrapper>
+          <CardActions>
+            <Action onPress={() => setShowOptions(true)}>
+              <Icon source="dots" tintColor="ligth" blur />
+            </Action>
+            <Separator size="lili" />
+            <Action onPress={() => setShowOptions(true)}>
+              <Icon source="claps" tintColor="ligth" blur />
+            </Action>
+            <Separator size="lili" />
+            <Action onPress={() => setShowOptions(true)}>
+              <Icon source="save" tintColor="ligth" blur />
+            </Action>
+          </CardActions>
           <CardSectionHeader>
-            <CardSectionTop
-              source={{
-                uri:
-                  imageUri ||
-                  'https://images.unsplash.com/photo-1604074131228-9d48b811bd80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60',
-              }}
-              onLoadStart={() => setImgLoading(true)}
-              onLoadEnd={() => setImgLoading(false)}>
-              {imgLoading && <ActivityIndicator />}
-              <CardSectionTitle>
-                <CardActions>
-                  <Action onPress={() => setShowOptions(true)}>
-                    <Icon source="dots" tintColor="ligth" size="small" blur />
-                  </Action>
-                </CardActions>
-                <CardTitle>
-                  {createdAt && <GuupDate date={createdAt} />}
-                  <Separator size="lili" />
-                  <Text preset="subtitle" color="ligth" bold>
-                    {title}
-                  </Text>
-                </CardTitle>
-              </CardSectionTitle>
-            </CardSectionTop>
+            <CardSectionTitle>
+              <CardTitle>
+                <Separator size="lili" />
+                <Text preset="subtitle" color="ligth" bold lineHeight={32}>
+                  {title}
+                </Text>
+              </CardTitle>
+            </CardSectionTitle>
           </CardSectionHeader>
           <CardSectionBody>
-            <CardContent>
-              {content && (
-                <Text preset="label" color="greyBrown">
-                  {content}
-                </Text>
-              )}
-              {description && (
-                <ShowMore text={description} preset="comment" color="dark" />
-              )}
-              <Separator size="small" />
-              <Avatar
-                size="comment"
-                firstText={owner?.displayName}
-                secondText={owner?.profission}
-                image={owner?.thumbnailURL}
-              />
-              {/* {type === 'COURSE' || !owners || owners.length === 1 ? (
-                <Avatar
-                  size="comment"
-                  firstText={owner?.displayName}
-                  secondText={owner?.profission}
-                  image={owner?.thumbnailURL}
-                />
-              ) : (
-                <GroupAvatar
-                  avatars={owners.map((item) => `${item?.thumbnailURL}`)}
-                />
-              )} */}
-              <Separator size="tiny" />
-            </CardContent>
+            {showCourseDescription && (
+              <CardShowMoreContainer>
+                <View>
+                  <Text preset="comment" bold color="ligth">
+                    {description}
+                  </Text>
+                  <Separator size="small" />
+                </View>
+              </CardShowMoreContainer>
+            )}
+            <Link
+              color="contrast"
+              onPress={() => toggleCourseDescription(!showCourseDescription)}>
+              Máis detalhes
+            </Link>
+            <Separator size="small" />
+            <Avatar
+              ligth
+              size="comment"
+              firstText={owner?.displayName}
+              secondText={owner?.profission}
+              image={owner?.thumbnailURL}
+            />
           </CardSectionBody>
-        </View>
+        </CardWrapper>
       </Action>
       <Popover
         visible={showOptions}

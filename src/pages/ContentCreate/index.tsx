@@ -1,12 +1,11 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState, useEffect} from 'react';
-import {useForm, Controller} from 'react-hook-form';
+import {useForm} from 'react-hook-form';
 import {
   Container,
   Text,
   InputArea,
   Separator,
-  RowFullWidth,
   Action,
   Icon,
   Link,
@@ -26,19 +25,20 @@ import {
   FormContainer,
   CreateContainer,
 } from './_styled';
-import nextId from 'react-id-generator';
+import {
+  MAX_COURSE_TITLE_LENGTH,
+  MAX_COURSE_DESCRIPTION_LENGTH,
+} from './../../constants';
 import {ContentCreateValidation} from './../../validations';
 import {ContentCreateFormData} from './../../@types/forms.data';
-import {FormContentCreate} from './../../forms';
 import {ContentCreatePropsApp} from './../../@types/app.navigation';
-import {SmartInputProps} from './../../@types/smart.input';
 import {
   useCreateCourseMutation,
   EnumContentType,
   EnumAreas,
   EnumLevels,
 } from './../../graphql/types.d';
-import {Alert, View, TextInput} from 'react-native';
+import {Alert} from 'react-native';
 
 const ContentCreate: React.FC<ContentCreatePropsApp> = ({
   navigation: {goBack, navigate},
@@ -48,15 +48,9 @@ const ContentCreate: React.FC<ContentCreatePropsApp> = ({
 }) => {
   const [contentSource, setContentSource] = useState<any>(null);
   const [createCourse, {loading, data, error}] = useCreateCourseMutation();
-  const {
-    register,
-    errors,
-    getValues,
-    setValue,
-    handleSubmit,
-    formState,
-    control,
-  } = useForm<ContentCreateFormData>({
+  const {register, errors, getValues, setValue, handleSubmit} = useForm<
+    ContentCreateFormData
+  >({
     validationSchema: ContentCreateValidation,
   });
 
@@ -162,6 +156,7 @@ const ContentCreate: React.FC<ContentCreatePropsApp> = ({
                   errors,
                 }}>
                 <InputArea
+                  maxLength={MAX_COURSE_TITLE_LENGTH}
                   name="title"
                   editable={!loading}
                   placeholder="Digite um bom titulo para o conteudo aqui…"
@@ -170,6 +165,7 @@ const ContentCreate: React.FC<ContentCreatePropsApp> = ({
                   style={{width: '75%'}}
                 />
                 <InputArea
+                  maxLength={MAX_COURSE_DESCRIPTION_LENGTH}
                   name="description"
                   editable={!loading}
                   placeholder="Digite uma breve descripção aquí…"

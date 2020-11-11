@@ -31,6 +31,7 @@ import {
   StackBackOptionTransparent,
   StackOption,
 } from './stack.options';
+import App from 'src/App';
 
 const AppTabStack = createBottomTabNavigator<RootApp>();
 const AppStack = createStackNavigator<RootApp>();
@@ -42,12 +43,12 @@ const HomeRouter: React.FC = () => {
       initialRouteName="GuupExplorer"
       tabBarOptions={{
         activeTintColor: theme.colors.contrast,
-        inactiveTintColor: theme.colors.darkGrey,
+        inactiveTintColor: theme.colors.ligth,
         showLabel: false,
         style: {
-          backgroundColor: `${theme.colors.dark}`,
-          borderTopColor: `${theme.colors.dark}`,
-          borderTopWidth: 1.5,
+          backgroundColor: `${theme.colors.ultraDark}`,
+          position: 'absolute',
+          borderTopColor: `${theme.colors.ultraDark}`,
           elevation: 0,
         },
       }}
@@ -114,6 +115,11 @@ const AppRouter: React.FC = () => {
         options={{header: () => null}}
         name="GuupEditCollection"
         component={GuupEditCollections}
+      />
+      <AppStack.Screen
+        options={{header: () => null}}
+        name="GuupCourses"
+        component={GuupCourses}
       />
       <AppStack.Screen
         options={{header: () => null}}

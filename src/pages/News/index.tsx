@@ -150,7 +150,7 @@ const NewsScreen: React.FC<PropsApp> = ({navigation: {navigate}}) => {
             leftRenderIntem={<Icon source="guup" size="small" />}
             rightRenderIntem={
               <Link preset="simple" onPress={() => navigate('GuupPostCreate')}>
-                <Icon source="plus" />
+                Criar um post +
               </Link>
             }
           />

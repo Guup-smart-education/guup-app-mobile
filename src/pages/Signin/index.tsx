@@ -1,4 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import R from 'ramda';
+import {Alert} from 'react-native';
 import React, {useState, useContext, useEffect} from 'react';
 import AuthContext from './../../contexts/auth';
 import {Separator, FormContainer, RowFullWidth} from './../../ui';
@@ -27,11 +29,11 @@ const SigninScreen: React.FC<PropsAuth> = ({navigation}) => {
   ] = useAuthRequestAccessMutation();
   // Context
   const {siginDisable, setSigninDisable} = useContext(AuthContext);
-  const [siginError, setSigninError] = useState<boolean>(false);
+  // const [siginError, setSigninError] = useState<boolean>(false);
   const [attempts, setAttempts] = useState<number>(0);
-  const [botMessage, setBotMessage] = useState<string>(
-    'Digita teu e-mail e em seguida te enviarei um ticket de acesso 😉',
-  );
+  // const [botMessage, setBotMessage] = useState<string>(
+  //   'Digita teu e-mail e em seguida te enviarei um ticket de acesso 😉',
+  // );
   const {countDown} = useCountDown(siginDisable, setSigninDisable);
   const {handleSubmit, register, setValue, errors, getValues} = useForm<
     SigninFormData
@@ -43,9 +45,13 @@ const SigninScreen: React.FC<PropsAuth> = ({navigation}) => {
     navigation.popToTop();
   };
 
-  const handleSignin: (data: SigninFormData) => void = (data) => {
-    setSigninError(false);
-    requestAccess({variables: {...data}});
+  const handleSignin: (data: SigninFormData) => void = ({email}) => {
+    // setSigninError(false);
+    requestAccess({
+      variables: {
+        email,
+      },
+    });
   };
 
   useEffect(() => {
@@ -53,51 +59,53 @@ const SigninScreen: React.FC<PropsAuth> = ({navigation}) => {
   }, [register]);
 
   useEffect(() => {
-    if (signinData) {
-      const {authRequestAccess} = signinData;
-      if (
-        authRequestAccess.__typename === 'ErrorResponse' &&
-        R.includes(attempts, [2, 5])
-      ) {
-        setBotMessage(
-          attempts === 2
-            ? 'Eu acho que você poderia tentar com outro e-mail'
-            : 'Porfavor, tente dentro de 2 minutos',
-        );
-        attempts === 5 && setSigninDisable(30);
-        setAttempts(attempts + 1);
-        setSigninError(true);
-      } else if (authRequestAccess.__typename === 'ErrorResponse') {
-        setBotMessage(authRequestAccess.error.message || 'Aconteceu um erro');
-        setAttempts(attempts + 1);
-        setSigninError(true);
-      } else if (authRequestAccess.__typename === 'RequestAccess') {
-        const email = getValues('email');
-        const {expireIn} = authRequestAccess;
-        navigation.navigate('AuthAccess', {email, expireIn});
-      }
-    } else if (signinError) {
-      setBotMessage(signinError.message || 'Aconteceu um erro');
+    if (
+      signinData?.authRequestAccess.__typename === 'ErrorResponse' &&
+      R.includes(attempts, [2, 5])
+    ) {
+      attempts === 2
+        ? Alert.alert(
+            'Oops!!',
+            'Eu acho que você poderia tentar com outro e-mail',
+          )
+        : Alert.alert('Oops!!', 'Porfavor, tente dentro de 2 minutos');
+      attempts === 5 && setSigninDisable(30);
       setAttempts(attempts + 1);
-      setSigninError(true);
+    } else if (signinData?.authRequestAccess.__typename === 'ErrorResponse') {
+      Alert.alert(
+        'Aconteceu um erro 😞',
+        signinData.authRequestAccess.error.message || 'Aconteceu um erro',
+      );
+      setAttempts(attempts + 1);
+    } else if (signinData?.authRequestAccess.__typename === 'RequestAccess') {
+      const email = getValues('email');
+      const {expireIn} = signinData.authRequestAccess;
+      navigation.navigate('AuthAccess', {email, expireIn});
     }
   }, [
     signinData,
-    signinError,
-    getValues,
-    setBotMessage,
-    navigation,
+    // signinError,
+    // getValues,
+    // setBotMessage,
+    // navigation,
     // Verify thoses information
-    setSigninDisable,
-    attempts,
+    // setSigninDisable,
+    // attempts,
   ]);
+
+  useEffect(() => {
+    if (signinError) {
+      Alert.alert('Erro inesperado 😱', signinError.message);
+      setAttempts(attempts + 1);
+      // setSigninError(true);
+    }
+  }, [signinError]);
 
   return (
     <KeyboardBlock hasKeyboardDismiss={false}>
       <FormContainer>
-        <Separator size="bigger" />
         <RowFullWidth padding={50}>
-          <GuupBot message={botMessage} />
+          <GuupBot message="Digita teu e-mail e em seguida te enviarei um ticket de acesso 😉" />
         </RowFullWidth>
         <Separator size="bigger" />
         <ContainerInputs>

@@ -98,8 +98,7 @@ const Collections: React.FC<PropsApp> = ({navigation: {goBack, navigate}}) => {
     () => (
       <View>
         <Text center>Não colleções disponiveis</Text>
-        <Link
-          onPress={() => navigate('GuupContentCreate', {type: 'COLLECTION'})}>
+        <Link onPress={() => Alert.alert('Colecao', 'Criar uma colecao')}>
           Criar coleção
         </Link>
       </View>
@@ -173,10 +172,7 @@ const Collections: React.FC<PropsApp> = ({navigation: {goBack, navigate}}) => {
               </Text>
             }
             rightRenderIntem={
-              <Action
-                onPress={() =>
-                  navigate('GuupContentCreate', {type: 'COLLECTION'})
-                }>
+              <Action onPress={() => Alert.alert('Criar uma colecao')}>
                 <Icon source="plus" />
               </Action>
             }

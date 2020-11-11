@@ -25,6 +25,7 @@ export const AccountUserAvatar = styled.ImageBackground`
   width: 44px;
   border-radius: 22px;
   overflow: hidden;
+  background-color: ${({theme}) => theme.colors.ligthGrey};
 `;
 
 export const AccountUserDescription = styled.View`

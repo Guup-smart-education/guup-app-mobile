@@ -1,74 +1,203 @@
-import React, {useContext} from 'react';
-import {GetUniqueId} from './../../helper';
-import AuthContext from './../../contexts/auth';
-import {Link} from './../../ui';
-import {CommentBot, CourseCover} from './../../components';
+/* eslint-disable react-hooks/exhaustive-deps */
+import R from 'ramda';
+import React, {useState, useEffect, useCallback} from 'react';
+import {FlatList, View, Alert, ActivityIndicator} from 'react-native';
+import {Container, Text, Icon, Action, Separator, Link} from './../../ui';
+import {GuupHeader, Course} from './../../components';
+import {PropsApp} from './../../@types/app.navigation';
+import {IMenuItemProps} from './../../@types/menu.item';
 import {
   CoursesContainer,
   CoursesHeader,
-  CoursesContent,
-  CourseEmpty,
   CourseBody,
+  CourseItem as CourseItemContainer,
 } from './_styled';
-import {ICourseCover} from './../../@types/course.cover';
-import {PropsApp} from './../../@types/app.navigation';
+import {useIsFocused} from '@react-navigation/native';
+import {
+  useGetCoursesByUserLazyQuery,
+  Path,
+  Course as CourseType,
+} from './../../graphql/types.d';
+import {GetUniqueId, shadowStyle} from './../../helper';
+import {LIMIT_PER_PAGE} from './../../constants';
+// import {usePathContext} from './../../contexts/path';
 
-const COURSES: Array<ICourseCover> = [
-  {
-    courseId: GetUniqueId(),
-    courseArea: 'Development & TI',
-    courseName: 'Intro to development',
-    projectsCompleted: 2,
-    totalModules: 5,
-    modulesCompleted: 4,
-    courseNotification: 13,
-    hoursSpended: 23,
-    percentCompleted: 80,
-  },
-];
+// Component
+const Collections: React.FC<PropsApp> = ({navigation: {goBack, navigate}}) => {
+  const isFocused = useIsFocused();
+  // const {state, dispatch} = usePathContext();
+  const [
+    getCourses,
+    {loading, data, error, fetchMore, refetch},
+  ] = useGetCoursesByUserLazyQuery();
+  const [allCourses, setAllCourses] = useState<Array<Path>>([]);
+  const [loadMore, setLoadMore] = useState<boolean>(false);
+  const [isRefetch, setIsRefetch] = useState<boolean>(false);
+  const [isNoMoreCourses, setIsNoMoreCourses] = useState<boolean>(false);
+  const [snapshot, setSnapshot] = useState<string | null>(null);
+  // Effects
+  useEffect(() => {
+    if (refetch && isFocused) {
+      setIsRefetch(true);
+      refetch();
+    }
+  }, [refetch, isFocused]);
+  useEffect(() => {
+    R.isEmpty(allCourses) && getCourses();
+  }, [allCourses, getCourses]);
 
-const HAS_COURSES = true;
-const TEXT = {
-  addCourses: 'Adicionar cursos',
-  addMoreCourses: 'Adicionar mais cursos',
-};
+  useEffect(() => {
+    if (fetchMore && loadMore && snapshot && !isNoMoreCourses) {
+      console.log('Fect more');
+      fetchMore({
+        variables: {lastCourse: snapshot},
+      });
+    }
+  }, [snapshot, loadMore]);
 
-const CoursesScreen: React.FC<PropsApp> = ({navigation}) => {
-  const {signOut} = useContext(AuthContext);
+  useEffect(() => {
+    if (data?.getCoursesByUser?.__typename === 'GetCoursesByOwner') {
+      const courseData: Array<any> = [
+        ...(data.getCoursesByUser.coursesByOwner || []),
+      ];
+      const unionCourses = R.union(
+        [...(!isRefetch ? allCourses : [])],
+        [...courseData],
+      );
+      // setAllData([...allPaths]);
+      setAllCourses(unionCourses);
+      console.log('data?.getCoursesByUser: ', courseData);
+      setIsNoMoreCourses(courseData.length < LIMIT_PER_PAGE);
+      setLoadMore(false);
+      setSnapshot(null);
+      setIsRefetch(false);
+    } else if (data?.getCoursesByUser?.__typename === 'ErrorResponse') {
+      Alert.alert(
+        'Aconteceu um erro',
+        `${data.getCoursesByUser.error.message}`,
+      );
+    }
+  }, [data]);
+
+  // End effects
+  // Calbacks
+  const keyExtractor = useCallback(
+    ({id}: Path) => `collection-path-${id || GetUniqueId()}`,
+    [],
+  );
+
+  const CourseItem = useCallback(
+    ({item}: {item: CourseType}) => {
+      return (
+        <CourseItemContainer style={shadowStyle.newPost}>
+          <Separator size="large" />
+          <Course {...{...item}} model="OWNER" />
+        </CourseItemContainer>
+      );
+    },
+    [navigate],
+  );
+  const ListEmpty = useCallback(
+    () => (
+      <View>
+        <Text center>Não conteudos disponiveis</Text>
+        <Link onPress={() => navigate('GuupContentCreate', {path: ''})}>
+          Comparte um conteudo
+        </Link>
+      </View>
+    ),
+    [navigate],
+  );
+  const ListLoadMore = useCallback(() => {
+    if (loadMore) {
+      return (
+        <View>
+          <Separator size="lili" />
+          <ActivityIndicator />
+          <Separator size="extraLarge" />
+        </View>
+      );
+    }
+    return <Separator size="large" />;
+  }, [loadMore]);
+  // End callbacks
+  // Branchs
+  if (loading) {
+    return (
+      <Container>
+        <ActivityIndicator size="small" />
+      </Container>
+    );
+  }
+  if (error) {
+    return (
+      <Container>
+        <Text>error</Text>
+      </Container>
+    );
+  }
+  // End branchas
+  // Handlers
+  const handlefetchMoreData = () => {
+    if (!loadMore && !snapshot && !isNoMoreCourses) {
+      const lastCourse = R.last(allCourses)?.id;
+      setLoadMore(true);
+      setSnapshot(lastCourse || null);
+    }
+  };
+
+  const handleRefresh = () => {
+    setIsNoMoreCourses(false);
+    setLoadMore(false);
+    setIsRefetch(true);
+    refetch && refetch();
+  };
+  // End handlers
   return (
-    <CoursesContainer>
-      <CoursesHeader>
-        <CommentBot text="Aparentemente você ainda não tem nehum curso" />
-      </CoursesHeader>
-      {!HAS_COURSES ? (
-        <CourseEmpty>
-          <Link onPress={() => navigation.navigate('GuupExplorer')}>
-            {TEXT.addCourses}
-          </Link>
-        </CourseEmpty>
-      ) : (
-        <CourseBody showsVerticalScrollIndicator={false} bounces>
-          <CoursesContent>
-            {COURSES.map((course) => (
-              <CourseCover
-                key={course.courseId}
-                {...course}
-                onPress={() => signOut()}
-                // onPress={() =>
-                //   navigation.navigate('GuupClassRoom', {id: course.courseId})
-                // }
-              />
-            ))}
-          </CoursesContent>
-          <CourseEmpty>
-            <Link onPress={() => navigation.navigate('GuupExplorer')}>
-              {TEXT.addMoreCourses}
-            </Link>
-          </CourseEmpty>
+    <Container safe light>
+      <CoursesContainer>
+        <CoursesHeader>
+          <GuupHeader
+            leftRenderIntem={
+              <Action onPress={() => goBack()}>
+                <Icon source="arrow" />
+              </Action>
+            }
+            centerRenderItem={
+              <Text preset="comment" bold>
+                Conteudos
+              </Text>
+            }
+            rightRenderIntem={
+              <Action onPress={() => navigate('GuupContentCreate')}>
+                <Icon source="plus" />
+              </Action>
+            }
+          />
+        </CoursesHeader>
+        <CourseBody>
+          {!R.isEmpty(allCourses) ? (
+            <FlatList
+              keyExtractor={keyExtractor}
+              data={allCourses}
+              renderItem={CourseItem}
+              showsVerticalScrollIndicator={false}
+              scrollEnabled={!!allCourses}
+              maxToRenderPerBatch={20}
+              nestedScrollEnabled
+              ListFooterComponent={ListLoadMore}
+              onEndReachedThreshold={0.9}
+              onEndReached={handlefetchMoreData}
+              refreshing={loading}
+              onRefresh={handleRefresh}
+            />
+          ) : (
+            <ListEmpty />
+          )}
         </CourseBody>
-      )}
-    </CoursesContainer>
+      </CoursesContainer>
+    </Container>
   );
 };
 
-export default CoursesScreen;
+export default Collections;

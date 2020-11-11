@@ -1,9 +1,11 @@
 import {Dimensions} from 'react-native';
 import styled from 'styled-components/native';
 
-export const ProfileContainer = styled.ScrollView`
-  background-color: ${({theme}) => theme.colors.ligth};
+export const ProfileContainer = styled.SafeAreaView`
+  /* background-color: ${({theme}) => theme.colors.ligth}; */
   width: 100%;
+  position: relative;
+  height: 100%;
 `;
 
 export const ProfileHeader = styled.View`
@@ -12,9 +14,12 @@ export const ProfileHeader = styled.View`
   padding-right: ${({theme}) => theme.spacing.padding[25]};
 `;
 
-export const ProfileuserPicture = styled.ImageBackground`
+export const ProfileUserPicture = styled.ImageBackground`
   width: 100%;
-  height: ${Dimensions.get('screen').width + 'px'};
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  height: ${Dimensions.get('screen').height / 2 + 'px'};
   background-color: ${({theme}) => theme.colors.secondary};
   justify-content: flex-end;
   padding-left: ${({theme}) => theme.spacing.padding[25]};
@@ -24,14 +29,13 @@ export const ProfileuserPicture = styled.ImageBackground`
 
 export const ProfileuserData = styled.View`
   width: 70%;
+  height: ${Dimensions.get('screen').height / 2 - 104 + 'px'};
+  justify-content: flex-end;
+  padding-bottom: ${({theme}) => theme.spacing.padding[20]};
 `;
 
-export const ProfileTabContent = styled.View`
-  width: ${Dimensions.get('screen').width + 'px'};
-  border-top-width: 1px;
-  border-top-color: ${({theme}) => theme.colors.ligthGrey};
-  margin-top: ${({theme}) => theme.spacing.margin[20]};
-  margin-left: -25px;
+export const ProfileContent = styled.View`
+  width: 100%;
 `;
 
 export const ProfileBody = styled.View`
@@ -39,9 +43,25 @@ export const ProfileBody = styled.View`
   padding-right: ${({theme}) => theme.spacing.padding[25]};
 `;
 
-export const CourseTabContent = styled.View`
-  padding-top: ${({theme}) => theme.spacing.padding[25]};
-  padding-left: ${({theme}) => theme.spacing.padding[25]};
-  padding-right: ${({theme}) => theme.spacing.padding[25]};
-  padding-bottom: ${({theme}) => theme.spacing.padding[25]};
+export const ProfileEditContainer = styled.View`
+  flex: 1;
+  height: 100%;
+  width: 100%;
+  padding-top: ${({theme}) => theme.spacing[25]};
+`;
+
+export const ProfileEditHeader = styled.View`
+  padding-left: ${({theme}) => theme.spacing[25]};
+  padding-right: ${({theme}) => theme.spacing[25]};
+  padding-top: ${({theme}) => theme.spacing[25]};
+  padding-bottom: ${({theme}) => theme.spacing[25]};
+  width: 75%;
+`;
+
+export const ProfileEditBody = styled.View`
+  flex: 1;
+`;
+
+export const ProfileEditFooter = styled.View`
+  height: 64px;
 `;

@@ -28,7 +28,9 @@ export default ({
   return (
     <HeaderContainer>
       <HeaderLeftItem>{leftRenderIntem}</HeaderLeftItem>
-      <HeaderCenterRenderItem>{centerRenderItem}</HeaderCenterRenderItem>
+      {centerRenderItem && (
+        <HeaderCenterRenderItem>{centerRenderItem}</HeaderCenterRenderItem>
+      )}
       <HeaderRightItem>{rightRenderIntem}</HeaderRightItem>
     </HeaderContainer>
   );

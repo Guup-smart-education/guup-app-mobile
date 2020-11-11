@@ -264,6 +264,7 @@ export type UserProfile = {
   profission?: Maybe<Scalars['String']>;
   presentation?: Maybe<Scalars['String']>;
   experience?: Maybe<Scalars['String']>;
+  bio?: Maybe<Scalars['String']>;
 };
 
 export type UserSkill = {
@@ -389,7 +390,7 @@ export type Query = {
   getAllCompanyByID?: Maybe<UGetCompany>;
   getAllContent?: Maybe<UGetAllContents>;
   getCourses?: Maybe<UGetCourses>;
-  getCoursesByUser?: Maybe<UGetCourses>;
+  getCoursesByUser?: Maybe<UGetCoursesByOwner>;
   getCoursesByPath?: Maybe<UGetCoursesByPath>;
   getCourseByID?: Maybe<UGetCourseDetail>;
   getAllPaths?: Maybe<UGetAllPaths>;
@@ -439,6 +440,7 @@ export type QueryGetCoursesArgs = {
 
 export type QueryGetCoursesByUserArgs = {
   uid?: Maybe<Scalars['String']>;
+  lastCourse?: Maybe<Scalars['String']>;
 };
 
 
@@ -735,6 +737,12 @@ export type GetCourses = {
   success?: Maybe<Success>;
 };
 
+export type GetCoursesByOwner = {
+  __typename?: 'GetCoursesByOwner';
+  coursesByOwner?: Maybe<Array<Maybe<Course>>>;
+  success?: Maybe<Success>;
+};
+
 export type GetCoursesByPath = {
   __typename?: 'GetCoursesByPath';
   coursesByPath?: Maybe<Array<Maybe<Course>>>;
@@ -772,6 +780,8 @@ export type UUpdateCourse = UpdateCourse | ErrorResponse;
 export type UCreateCourse = CreateCourse | ErrorResponse;
 
 export type UGetCourses = GetCourses | ErrorResponse;
+
+export type UGetCoursesByOwner = GetCoursesByOwner | ErrorResponse;
 
 export type UGetCoursesByPath = GetCoursesByPath | ErrorResponse;
 
@@ -917,6 +927,7 @@ export type UPostReview = PostReview | ErrorResponse;
 export type IProfile = {
   displayName?: Maybe<Scalars['String']>;
   photoURL?: Maybe<Scalars['String']>;
+  thumbnailURL?: Maybe<Scalars['String']>;
   profission?: Maybe<Scalars['String']>;
   presentation?: Maybe<Scalars['String']>;
   experience?: Maybe<Scalars['String']>;
@@ -1220,6 +1231,33 @@ export type AuthSignUpMutation = (
   ) }
 );
 
+export type UpdateUserProfileMutationVariables = Exact<{
+  displayName?: Maybe<Scalars['String']>;
+  photoURL?: Maybe<Scalars['String']>;
+  thumbnailURL?: Maybe<Scalars['String']>;
+  profission?: Maybe<Scalars['String']>;
+  experience?: Maybe<Scalars['String']>;
+  presentation?: Maybe<Scalars['String']>;
+}>;
+
+
+export type UpdateUserProfileMutation = (
+  { __typename?: 'Mutation' }
+  & { updateUserProfile?: Maybe<(
+    { __typename?: 'UpdateProfile' }
+    & { success?: Maybe<(
+      { __typename?: 'Success' }
+      & Pick<Success, 'message'>
+    )> }
+  ) | (
+    { __typename?: 'ErrorResponse' }
+    & { error: (
+      { __typename?: 'Error' }
+      & Pick<Error, 'type' | 'message'>
+    ) }
+  )> }
+);
+
 export type GetCoursesQueryVariables = Exact<{
   lastCourse?: Maybe<Scalars['String']>;
 }>;
@@ -1360,6 +1398,36 @@ export type GetCoursesByPathQuery = (
         { __typename?: 'UserProfile' }
         & Pick<UserProfile, 'displayName' | 'photoURL' | 'thumbnailURL' | 'profission'>
       )> }
+    )>>>, success?: Maybe<(
+      { __typename?: 'Success' }
+      & Pick<Success, 'message'>
+    )> }
+  ) | (
+    { __typename?: 'ErrorResponse' }
+    & { error: (
+      { __typename?: 'Error' }
+      & Pick<Error, 'message'>
+    ) }
+  )> }
+);
+
+export type GetCoursesByUserQueryVariables = Exact<{
+  uid?: Maybe<Scalars['String']>;
+  lastCourse?: Maybe<Scalars['String']>;
+}>;
+
+
+export type GetCoursesByUserQuery = (
+  { __typename?: 'Query' }
+  & { getCoursesByUser?: Maybe<(
+    { __typename?: 'GetCoursesByOwner' }
+    & { coursesByOwner?: Maybe<Array<Maybe<(
+      { __typename?: 'Course' }
+      & Pick<Course, 'id' | 'title' | 'description' | 'area' | 'typeContent' | 'difficult' | 'viewsCount' | 'commentsCount'>
+      & { comments?: Maybe<Array<Maybe<(
+        { __typename?: 'Comments' }
+        & Pick<Comments, 'id' | 'owner' | 'description'>
+      )>>> }
     )>>>, success?: Maybe<(
       { __typename?: 'Success' }
       & Pick<Success, 'message'>
@@ -1883,6 +1951,53 @@ export function useAuthSignUpMutation(baseOptions?: Apollo.MutationHookOptions<A
 export type AuthSignUpMutationHookResult = ReturnType<typeof useAuthSignUpMutation>;
 export type AuthSignUpMutationResult = Apollo.MutationResult<AuthSignUpMutation>;
 export type AuthSignUpMutationOptions = Apollo.BaseMutationOptions<AuthSignUpMutation, AuthSignUpMutationVariables>;
+export const UpdateUserProfileDocument = gql`
+    mutation updateUserProfile($displayName: String, $photoURL: String, $thumbnailURL: String, $profission: String, $experience: String, $presentation: String) {
+  updateUserProfile(user: {profile: {displayName: $displayName, photoURL: $photoURL, thumbnailURL: $thumbnailURL, profission: $profission, experience: $experience, presentation: $presentation}}) {
+    ... on UpdateProfile {
+      success {
+        message
+      }
+    }
+    ... on ErrorResponse {
+      error {
+        type
+        message
+      }
+    }
+  }
+}
+    `;
+export type UpdateUserProfileMutationFn = Apollo.MutationFunction<UpdateUserProfileMutation, UpdateUserProfileMutationVariables>;
+
+/**
+ * __useUpdateUserProfileMutation__
+ *
+ * To run a mutation, you first call `useUpdateUserProfileMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUserProfileMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateUserProfileMutation, { data, loading, error }] = useUpdateUserProfileMutation({
+ *   variables: {
+ *      displayName: // value for 'displayName'
+ *      photoURL: // value for 'photoURL'
+ *      thumbnailURL: // value for 'thumbnailURL'
+ *      profission: // value for 'profission'
+ *      experience: // value for 'experience'
+ *      presentation: // value for 'presentation'
+ *   },
+ * });
+ */
+export function useUpdateUserProfileMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUserProfileMutation, UpdateUserProfileMutationVariables>) {
+        return Apollo.useMutation<UpdateUserProfileMutation, UpdateUserProfileMutationVariables>(UpdateUserProfileDocument, baseOptions);
+      }
+export type UpdateUserProfileMutationHookResult = ReturnType<typeof useUpdateUserProfileMutation>;
+export type UpdateUserProfileMutationResult = Apollo.MutationResult<UpdateUserProfileMutation>;
+export type UpdateUserProfileMutationOptions = Apollo.BaseMutationOptions<UpdateUserProfileMutation, UpdateUserProfileMutationVariables>;
 export const GetCoursesDocument = gql`
     query getCourses($lastCourse: String) {
   getCourses(lastCourse: $lastCourse) {
@@ -2203,6 +2318,64 @@ export function useGetCoursesByPathLazyQuery(baseOptions?: Apollo.LazyQueryHookO
 export type GetCoursesByPathQueryHookResult = ReturnType<typeof useGetCoursesByPathQuery>;
 export type GetCoursesByPathLazyQueryHookResult = ReturnType<typeof useGetCoursesByPathLazyQuery>;
 export type GetCoursesByPathQueryResult = Apollo.QueryResult<GetCoursesByPathQuery, GetCoursesByPathQueryVariables>;
+export const GetCoursesByUserDocument = gql`
+    query getCoursesByUser($uid: String, $lastCourse: String) {
+  getCoursesByUser(uid: $uid, lastCourse: $lastCourse) {
+    ... on GetCoursesByOwner {
+      coursesByOwner {
+        id
+        title
+        description
+        area
+        typeContent
+        difficult
+        viewsCount
+        commentsCount
+        comments {
+          id
+          owner
+          description
+        }
+      }
+      success {
+        message
+      }
+    }
+    ... on ErrorResponse {
+      error {
+        message
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetCoursesByUserQuery__
+ *
+ * To run a query within a React component, call `useGetCoursesByUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCoursesByUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCoursesByUserQuery({
+ *   variables: {
+ *      uid: // value for 'uid'
+ *      lastCourse: // value for 'lastCourse'
+ *   },
+ * });
+ */
+export function useGetCoursesByUserQuery(baseOptions?: Apollo.QueryHookOptions<GetCoursesByUserQuery, GetCoursesByUserQueryVariables>) {
+        return Apollo.useQuery<GetCoursesByUserQuery, GetCoursesByUserQueryVariables>(GetCoursesByUserDocument, baseOptions);
+      }
+export function useGetCoursesByUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCoursesByUserQuery, GetCoursesByUserQueryVariables>) {
+          return Apollo.useLazyQuery<GetCoursesByUserQuery, GetCoursesByUserQueryVariables>(GetCoursesByUserDocument, baseOptions);
+        }
+export type GetCoursesByUserQueryHookResult = ReturnType<typeof useGetCoursesByUserQuery>;
+export type GetCoursesByUserLazyQueryHookResult = ReturnType<typeof useGetCoursesByUserLazyQuery>;
+export type GetCoursesByUserQueryResult = Apollo.QueryResult<GetCoursesByUserQuery, GetCoursesByUserQueryVariables>;
 export const GetPathsByOwnerDocument = gql`
     query getPathsByOwner($lastPath: String, $owner: String) {
   getPathsByOwner(lastPath: $lastPath, owner: $owner) {

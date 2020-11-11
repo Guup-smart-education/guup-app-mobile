@@ -1,6 +1,6 @@
 import React, {createContext, useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
-import {UserProfile} from './../graphql/types.d';
+import {User, UserProfile} from './../graphql/types.d';
 
 interface IProvisionAccess {
   user: string;
@@ -11,12 +11,13 @@ interface AuthContextData {
   signed: boolean;
   provisionAccess: IProvisionAccess;
   accessToken: string | null;
-  user: UserProfile | null;
+  user: User | null;
   siginDisable: number;
   signOut: () => void;
   setSession: (user: string, accessToken: string) => void;
   setProvissionAccess: (user: string, accessToken: string) => void;
   setSigninDisable: (locked: number) => void;
+  setUpdateSession: (profile: UserProfile) => void;
 }
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
@@ -43,7 +44,7 @@ export const AuthProvider: React.FC = ({children}) => {
         const userParse = JSON.parse(storageUser);
         console.log('useEffect storageUser', userParse);
         console.log('useEffect storageToken', storageToken);
-        setUser(JSON.parse(userParse));
+        setUser(userParse);
         setAccessToken(storageToken);
         setSigned(true);
       }
@@ -63,9 +64,14 @@ export const AuthProvider: React.FC = ({children}) => {
     });
   };
   const setSession = (user: string, accessToken: string) => {
-    AsyncStorage.setItem('@GUUPAuth:user', JSON.stringify(user));
+    AsyncStorage.setItem('@GUUPAuth:user', user);
     AsyncStorage.setItem('@GUUPAuth:token', accessToken);
     setSigned(true);
+  };
+  const setUpdateSession = (profile: UserProfile) => {
+    const newUser: User = {...user, profile};
+    setUser(newUser);
+    AsyncStorage.setItem('@GUUPAuth:user', JSON.stringify(newUser));
   };
   const setProvissionAccess = (user: string, accessToken: string) => {
     setProvisionAccess({
@@ -95,6 +101,7 @@ export const AuthProvider: React.FC = ({children}) => {
         setSession,
         setProvissionAccess,
         setSigninDisable,
+        setUpdateSession,
       }}>
       {children}
     </AuthContext.Provider>

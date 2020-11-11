@@ -1,0 +1,29 @@
+query getCoursesByUser($uid: String, $lastCourse: String) {
+  getCoursesByUser(uid: $uid, lastCourse: $lastCourse) {
+    ... on GetCoursesByOwner {
+      coursesByOwner {
+        id
+        title
+        description
+        area
+        typeContent
+        difficult
+        viewsCount
+        commentsCount
+        comments {
+          id
+          owner
+          description
+        }
+      }
+      success {
+        message
+      }
+    }
+    ... on ErrorResponse {
+      error {
+        message
+      }
+    }
+  }
+}

@@ -24,9 +24,11 @@ export type RootApp = {
     mode?: keyof typeof EViewMode;
   };
   GuupCollectionCreate: undefined;
-  GuupContentCreate: {
-    path?: string;
-  };
+  GuupContentCreate:
+    | {
+        path?: string;
+      }
+    | undefined;
   GuupNews: undefined;
   GuupAccount: undefined;
   GuupNotifications: undefined;
@@ -38,6 +40,7 @@ export type RootApp = {
   GuupEditCollection: {
     id?: string;
   };
+  GuupCourses: undefined;
   GuupPosts: undefined;
   GuupPostCreate: undefined;
   GuupComments: {

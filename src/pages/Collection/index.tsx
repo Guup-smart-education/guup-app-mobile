@@ -306,10 +306,7 @@ const CourseScreen: React.FC<CollectionDetailPropsApp> = ({
                     mode === 'EDIT' ||
                     currentPath.access === PathAccess.ForEveryone
                   ) {
-                    navigate('GuupContentCreate', {
-                      type: 'CONTENT',
-                      ...(currentPath.id && {path: currentPath.id}),
-                    });
+                    navigate('GuupContentCreate', {path: `${currentPath.id}`});
                   } else if (currentPath.access === PathAccess.LimitAccess) {
                     setShowPermission(true);
                   }

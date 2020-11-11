@@ -1,0 +1,33 @@
+mutation updateUserProfile(
+  $displayName: String
+  $photoURL: String
+  $thumbnailURL: String
+  $profission: String
+  $experience: String
+  $presentation: String
+) {
+  updateUserProfile(
+    user: {
+      profile: {
+        displayName: $displayName
+        photoURL: $photoURL
+        thumbnailURL: $thumbnailURL
+        profission: $profission
+        experience: $experience
+        presentation: $presentation
+      }
+    }
+  ) {
+    ... on UpdateProfile {
+      success {
+        message
+      }
+    }
+    ... on ErrorResponse {
+      error {
+        type
+        message
+      }
+    }
+  }
+}

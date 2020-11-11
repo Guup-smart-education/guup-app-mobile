@@ -11,7 +11,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 // Http Link connection
 const httpLink = createHttpLink({
-  uri: 'http://localhost:8090/graphql',
+  uri: 'http://localhost:4000/graphql',
   credentials: 'same-origin',
 });
 
@@ -62,6 +62,8 @@ export const client = new ApolloClient({
         case 'GetPosts':
         case 'GetCoursesByPath':
         case 'GetComment':
+        case 'GetCoursesByOwner':
+        case 'GetPostsOwner':
           return 'Query';
         default:
           return defaultDataIdFromObject(responseObject);
@@ -73,9 +75,11 @@ export const client = new ApolloClient({
         keyFields: ['allPaths', 'allPost', 'coursesByPath', 'comments'],
         fields: {
           allPost: paginationPolicy(),
+          allPostOwner: paginationPolicy(),
           allPaths: paginationPolicy(),
           courses: paginationPolicy(),
           coursesByPath: paginationPolicy(),
+          coursesByOnwer: paginationPolicy(),
           comments: paginationPolicy(),
         },
       },

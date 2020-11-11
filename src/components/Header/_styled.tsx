@@ -10,13 +10,13 @@ export const HeaderContainer = styled.View`
 `;
 
 export const HeaderLeftItem = styled.View`
-  width: 25%;
+  /* width: 25%; */
   align-items: flex-start;
   justify-content: center;
 `;
 
 export const HeaderRightItem = styled.View`
-  width: 25%;
+  /* width: 25%; */
   align-items: flex-end;
   justify-content: center;
 `;

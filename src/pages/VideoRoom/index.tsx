@@ -55,11 +55,11 @@ const VideoRoom: React.FC<PropsApp> = ({navigation: {goBack}}) => {
           </Text> */}
           <Separator size="small" />
         </VideoRoomBody>
-        <VideoRoomFooter>
+        {/* <VideoRoomFooter>
           <Action onPress={() => Alert.alert('Video', 'Play video')}>
             <Icon source="video" tintColor="contrast" size="large" />
           </Action>
-        </VideoRoomFooter>
+        </VideoRoomFooter> */}
         {/* <FooterPatch /> */}
       </VideoRoomContainer>
       <VideoPlayer
