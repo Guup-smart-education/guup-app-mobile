@@ -129,11 +129,8 @@ const Profile: React.FC<ProfilePropsApp> = ({
       <ProfileContainer>
         <ProfileHeader>
           <GuupHeader
-            leftRenderIntem={
-              <Link onPress={() => goBack()}>
-                <Icon tintColor="ligth" source="arrow" />
-              </Link>
-            }
+            hasBack
+            onLeftPress={() => goBack()}
             rightRenderIntem={
               <Link
                 color="ligth"
@@ -147,13 +144,13 @@ const Profile: React.FC<ProfilePropsApp> = ({
           <ProfileuserData>
             <Action onPress={() => updateInfo('DISPLAY_NAME')}>
               <Text preset="title" color="ligth">
-                {user?.profile?.displayName}
+                {user?.displayName}
               </Text>
             </Action>
             <Separator size="lili" />
             <Action onPress={() => updateInfo('PROFISSION')}>
               <Text preset="comment" color="ligth" underline>
-                {user?.profile?.profission || 'Adicionar uma profissão'}
+                {user?.profission || 'Adicionar uma profissão'}
               </Text>
             </Action>
           </ProfileuserData>
@@ -175,7 +172,7 @@ const Profile: React.FC<ProfilePropsApp> = ({
           </ProfileContent>
         </ProfileBody>
       </ProfileContainer>
-      <ProfileUserPicture source={{uri: `${user?.profile?.photoURL}`}} />
+      <ProfileUserPicture source={{uri: `${user?.photoURL}`}} />
       <Modal
         visible={editModal}
         animationType="slide"

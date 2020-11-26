@@ -1,0 +1,11 @@
+//
+//  Config.xcconfig
+//  GuupSmartEducationAppMobile
+//
+//  Created by Kelvin Flores on 11/11/20.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+#include? "tmp.xcconfig"
+

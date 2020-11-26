@@ -3,7 +3,14 @@ import R from 'ramda';
 import {Alert} from 'react-native';
 import React, {useState, useContext, useEffect} from 'react';
 import AuthContext from './../../contexts/auth';
-import {Separator, FormContainer, RowFullWidth} from './../../ui';
+import {
+  Separator,
+  FormContainer,
+  RowFullWidth,
+  Text,
+  Container,
+  Icon,
+} from './../../ui';
 import {
   KeyboardBlock,
   GuupBot,
@@ -103,34 +110,43 @@ const SigninScreen: React.FC<PropsAuth> = ({navigation}) => {
 
   return (
     <KeyboardBlock hasKeyboardDismiss={false}>
-      <FormContainer>
-        <RowFullWidth padding={50}>
-          <GuupBot message="Digita teu e-mail e em seguida te enviarei um ticket de acesso 😉" />
-        </RowFullWidth>
-        <Separator size="bigger" />
-        <ContainerInputs>
-          <SmartForm {...{register, setValue, errors}}>
-            {FormSignIn.map((i) => {
-              return (
-                <SmartInput
-                  {...i}
-                  editable={!loading || !!siginDisable}
-                  key={nextId('input-signup-')}
-                />
-              );
-            })}
-          </SmartForm>
-        </ContainerInputs>
-      </FormContainer>
-      <GuupActions
-        loading={loading}
-        leftAction={{text: 'Cancel', onPress: goOnboarding}}
-        rightAction={{
-          text: siginDisable ? countDown : 'Enviar',
-          onPress: handleSubmit(handleSignin),
-          disable: !!siginDisable,
-        }}
-      />
+      <Container safe light>
+        <FormContainer>
+          <RowFullWidth padding={50}>
+            <Separator size="large" />
+            <Icon source="guup" size="small" />
+            <Separator size="medium" />
+            <Text preset="header">Digita teu e-mail</Text>
+            <Separator size="medium" />
+            <Text preset="paragraph">
+              Precisamos de teu e-mail para te enviar um ticket de acesso 😉
+            </Text>
+          </RowFullWidth>
+          <Separator size="large" />
+          <ContainerInputs>
+            <SmartForm {...{register, setValue, errors}}>
+              {FormSignIn.map((i) => {
+                return (
+                  <SmartInput
+                    {...i}
+                    editable={!loading || !!siginDisable}
+                    key={nextId('input-signup-')}
+                  />
+                );
+              })}
+            </SmartForm>
+          </ContainerInputs>
+        </FormContainer>
+        <GuupActions
+          loading={loading}
+          leftAction={{text: 'Cancel', onPress: goOnboarding}}
+          rightAction={{
+            text: siginDisable ? countDown : 'Enviar',
+            onPress: handleSubmit(handleSignin),
+            disable: !!siginDisable,
+          }}
+        />
+      </Container>
     </KeyboardBlock>
   );
 };

@@ -1,5 +1,5 @@
-mutation createCourse($course: ICourse) {
-  createCourse(course: $course) {
+mutation createCourse($course: ICourse!, $metadata: IMetaData!) {
+  createCourse(course: $course, metadata: $metadata) {
     ... on CreateCourse {
       createCourse
       success {

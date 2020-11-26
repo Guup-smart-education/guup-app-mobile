@@ -6,11 +6,13 @@ export const AvatarContainer = styled.View`
   flex-direction: row;
 `;
 
-export const AvatarLeft = styled.View`
-  margin-right: ${({theme}) => theme.spacing[15]};
-`;
+export const AvatarLeft = styled.View``;
 
-export const AvatarRight = styled.View``;
+export const AvatarRight = styled.View`
+  margin-left: ${({theme}) => theme.spacing[15]};
+  justify-content: center;
+  margin-bottom: 4px;
+`;
 
 export const Avatarimage = styled.ImageBackground<IProps>`
   height: ${({theme, size}) =>

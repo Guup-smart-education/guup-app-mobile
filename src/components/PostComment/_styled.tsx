@@ -4,8 +4,8 @@ import {Dimensions} from 'react-native';
 export const PostContainer = styled.View`
   width: 100%;
   background-color: ${({theme}) => theme.colors.ligth};
-  border-radius: ${({theme}) => theme.borderRadius[8]};
-  padding-top: ${({theme}) => theme.spacing.padding[15]};
+  /* border-radius: ${({theme}) => theme.borderRadius[8]}; */
+  padding-top: ${({theme}) => theme.spacing[20]};
   padding-bottom: ${({theme}) => theme.spacing[10]};
 `;
 

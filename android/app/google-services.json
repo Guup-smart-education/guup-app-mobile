@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "678115750971",
+    "firebase_url": "https://guup-36ad1.firebaseio.com",
+    "project_id": "guup-36ad1",
+    "storage_bucket": "guup-36ad1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:678115750971:android:931048b8a0c4860252581e",
+        "android_client_info": {
+          "package_name": "com.guupsmarteducationappmobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "678115750971-d8v1bela0i3ecb1i0c7dktmc5s2ctkjq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0pHrNCg3a3GYZy8njvwDhS7NdusOQ34Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "678115750971-d8v1bela0i3ecb1i0c7dktmc5s2ctkjq.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "678115750971-976sjpfumf81lq8i6o379c2j9ljbb66f.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.guupse"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

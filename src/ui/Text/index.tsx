@@ -1,7 +1,6 @@
-import React, {ReactNode, useEffect, useState} from 'react';
+import React, {ReactNode} from 'react';
 import {Text} from './_styled';
 import {EColors} from './../../@enum/color.enum';
-import {Link} from './../../ui';
 
 export enum EPreset {
   'title' = 'title',
@@ -16,6 +15,7 @@ export enum EPreset {
   'comment' = 'comment',
   'tall' = 'tall',
   'date' = 'date',
+  'header' = 'header',
 }
 
 export enum EWeight {
@@ -39,26 +39,11 @@ export interface IProps {
   readonly maxLength?: number;
 }
 
-export default ({children, maxLength, ...args}: IProps) => {
-  // const textLength = children?.toString.length || 0;
-  // const [shortText, setShortText] = useState<string | null>(null);
-  // const [moreText, setMoreText] = useState<boolean>(false);
-  // // Effects
-  // useEffect(() => {
-  //   if (children && maxLength && textLength > maxLength) {
-  //     setShortText(children.toString().substring(0, maxLength));
-  //   }
-  // }, [children]);
+export default ({children, ...args}: IProps) => {
   // End effects
   return (
     <Text {...args} allowFontScaling={false}>
       {children}
-      {/* {shortText}{' '}
-      {maxLength && textLength > maxLength && (
-        <Link onPress={() => setMoreText(!moreText)} color="primary">
-          {moreText ? 'Ver menos' : 'Ver mais'}
-        </Link>
-      )} */}
     </Text>
   );
 };

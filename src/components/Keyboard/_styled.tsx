@@ -6,6 +6,7 @@ export const KeyboardContainer = styled.KeyboardAvoidingView`
   flex-direction: column;
   width: 100%;
   flex: 1;
+  background-color: transparent;
   background-color: ${({theme}) => theme.colors.ligth};
 `;
 

@@ -1,4 +1,6 @@
 import React, {ReactChild} from 'react';
+import {Alert, View} from 'react-native';
+import {Icon, Text, Action} from './../../ui';
 import {
   HeaderContainer,
   HeaderLeftItem,
@@ -18,19 +20,47 @@ interface IGuupHeader {
   readonly rightRenderIntem?: ReactChild;
   readonly centerRenderItem?: ReactChild;
   readonly type?: keyof typeof EHeaderType;
+  readonly loading?: boolean;
+  readonly hasBack?: boolean;
+  readonly hasGuupIcon?: boolean;
+  readonly isDarkTheme?: boolean;
+  readonly title?: string;
+  readonly onLeftPress?: () => void;
 }
 
 export default ({
-  leftRenderIntem,
   rightRenderIntem,
-  centerRenderItem,
+  hasBack,
+  hasGuupIcon,
+  onLeftPress,
+  loading,
+  title,
+  isDarkTheme = false,
 }: IGuupHeader) => {
   return (
     <HeaderContainer>
-      <HeaderLeftItem>{leftRenderIntem}</HeaderLeftItem>
-      {centerRenderItem && (
-        <HeaderCenterRenderItem>{centerRenderItem}</HeaderCenterRenderItem>
-      )}
+      <HeaderLeftItem>
+        {hasBack && !hasGuupIcon && (
+          <Action onPress={() => !loading && onLeftPress && onLeftPress()}>
+            <Icon
+              source="back"
+              tintColor={isDarkTheme ? 'ligth' : 'ultraDark'}
+            />
+          </Action>
+        )}
+        {!hasBack && hasGuupIcon && (
+          <Action onPress={() => Alert.alert('Guup press', 'Guup icon press')}>
+            <View style={{marginRight: 10}}>
+              <Icon source="guup" size="small" />
+            </View>
+          </Action>
+        )}
+        {title && (
+          <Text preset="header" color={isDarkTheme ? 'ligth' : 'ultraDark'}>
+            {title}
+          </Text>
+        )}
+      </HeaderLeftItem>
       <HeaderRightItem>{rightRenderIntem}</HeaderRightItem>
     </HeaderContainer>
   );

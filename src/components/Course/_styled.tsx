@@ -11,20 +11,20 @@ export const CourseHeader = styled.View`
   width: 100%;
   flex-direction: row;
   justify-content: space-between;
-  padding-left: ${({theme}) => theme.spacing.padding[20]};
-  padding-right: ${({theme}) => theme.spacing.padding[20]};
+  padding-left: ${({theme}) => theme.spacing[25]};
+  padding-right: ${({theme}) => theme.spacing[15]};
   margin-bottom: ${({theme}) => theme.spacing[5]};
 `;
 
 export const CourseTitle = styled.View`
-  width: 85%;
+  width: 65%;
 `;
 
 export const CourseAction = styled.View``;
 
 export const CourseBody = styled.View`
-  padding-left: ${({theme}) => theme.spacing.padding[20]};
-  padding-right: ${({theme}) => theme.spacing.padding[20]};
+  padding-left: ${({theme}) => theme.spacing.padding[25]};
+  padding-right: ${({theme}) => theme.spacing.padding[25]};
   padding-top: ${({theme}) => theme.spacing[10]};
   padding-bottom: ${({theme}) => theme.spacing[25]};
   /* flex: 1; */

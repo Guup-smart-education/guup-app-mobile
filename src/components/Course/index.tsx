@@ -126,23 +126,29 @@ export default ({
         </CourseHeader>
         <CourseBody>
           <CourseData>
-            <Text preset="tall" color="greyBrown">
+            <Text preset="comment" color="dark">
               {description}
             </Text>
           </CourseData>
         </CourseBody>
         <CourseFooter>
           <CourseFooterItem>
-            <Icon source="heart" size="small" />
-            <Text preset="date">{viewsCount || '0'}</Text>
+            <Icon source="heart" />
+            <Text preset="comment" bold>
+              {viewsCount || '0'}
+            </Text>
           </CourseFooterItem>
           <CourseFooterItem>
-            <Icon source="forum" size="small" />
-            <Text preset="date">{commentsCount || '0'}</Text>
+            <Icon source="forum" />
+            <Text preset="comment" bold>
+              {commentsCount || '0'}
+            </Text>
           </CourseFooterItem>
           <CourseFooterItem>
-            <Icon source="claps" size="small" />
-            <Text preset="date">{clapsCount || '0'}</Text>
+            <Icon source="claps" />
+            <Text preset="comment" bold>
+              {clapsCount || '0'}
+            </Text>
           </CourseFooterItem>
         </CourseFooter>
       </CourseContainer>

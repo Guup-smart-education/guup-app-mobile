@@ -15,6 +15,12 @@ export type Scalars = {
 };
 
 
+export enum MediaState {
+  Preparing = 'preparing',
+  Ready = 'ready',
+  Errored = 'errored'
+}
+
 export enum EnumLevels {
   Junior = 'JUNIOR',
   Middle = 'MIDDLE',
@@ -216,6 +222,13 @@ export type CourseUser = {
   role?: Maybe<EnumUserRole>;
 };
 
+export type MediaMetaData = {
+  __typename?: 'MediaMetaData';
+  fileFullPath?: Maybe<Scalars['String']>;
+  fileBucket?: Maybe<Scalars['String']>;
+  fileContentType?: Maybe<Scalars['String']>;
+};
+
 export type Course = {
   __typename?: 'Course';
   id?: Maybe<Scalars['String']>;
@@ -225,6 +238,10 @@ export type Course = {
   description?: Maybe<Scalars['String']>;
   photoURL?: Maybe<Scalars['String']>;
   videoURL?: Maybe<Scalars['String']>;
+  thumbnailURL?: Maybe<Scalars['String']>;
+  gifURL?: Maybe<Scalars['String']>;
+  videoAssetId?: Maybe<Scalars['String']>;
+  videoPlaybackID?: Maybe<Scalars['String']>;
   area?: Maybe<Scalars['String']>;
   typeContent?: Maybe<Scalars['String']>;
   difficult?: Maybe<Scalars['String']>;
@@ -235,6 +252,8 @@ export type Course = {
   comments?: Maybe<Array<Maybe<Comments>>>;
   ownerProfile?: Maybe<UserProfile>;
   createdAt?: Maybe<Scalars['Date']>;
+  state?: Maybe<MediaState>;
+  metadata?: Maybe<MediaMetaData>;
 };
 
 export type User = {
@@ -562,7 +581,8 @@ export type MutationUpdateCourseArgs = {
 
 
 export type MutationCreateCourseArgs = {
-  course?: Maybe<ICourse>;
+  course: ICourse;
+  metadata: IMetaData;
 };
 
 
@@ -724,11 +744,15 @@ export type ICourse = {
   path?: Maybe<Scalars['String']>;
   title: Scalars['String'];
   description: Scalars['String'];
-  photoURL?: Maybe<Scalars['String']>;
-  videoURL?: Maybe<Scalars['String']>;
   area: EnumAreas;
   typeContent: EnumContentType;
   difficult: EnumLevels;
+};
+
+export type IMetaData = {
+  fileBucket: Scalars['String'];
+  fileFullPath: Scalars['String'];
+  fileContentType: Scalars['String'];
 };
 
 export type GetCourses = {
@@ -1000,16 +1024,16 @@ export type ClapPostMutation = (
   { __typename?: 'Mutation' }
   & { clapPost?: Maybe<(
     { __typename?: 'ClapPost' }
-    & Pick<ClapPost, 'post'>
+    & Pick<ClapPost, '[object Object]'>
     & { success?: Maybe<(
       { __typename?: 'Success' }
-      & Pick<Success, 'type' | 'message'>
+      & Pick<Success, '[object Object]' | '[object Object]'>
     )> }
   ) | (
     { __typename?: 'ErrorResponse' }
     & { error: (
       { __typename?: 'Error' }
-      & Pick<Error, 'type' | 'message'>
+      & Pick<Error, '[object Object]' | '[object Object]'>
     ) }
   )> }
 );
@@ -1027,26 +1051,27 @@ export type CreateCommentMutation = (
     { __typename?: 'PostComment' }
     & { comment?: Maybe<(
       { __typename?: 'Comments' }
-      & Pick<Comments, 'id' | 'owner' | 'description' | 'createdAt'>
+      & Pick<Comments, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
       & { ownerProfile?: Maybe<(
         { __typename?: 'UserProfile' }
-        & Pick<UserProfile, 'displayName' | 'photoURL' | 'profission'>
+        & Pick<UserProfile, '[object Object]' | '[object Object]' | '[object Object]'>
       )> }
     )>, success?: Maybe<(
       { __typename?: 'Success' }
-      & Pick<Success, 'message'>
+      & Pick<Success, '[object Object]'>
     )> }
   ) | (
     { __typename?: 'ErrorResponse' }
     & { error: (
       { __typename?: 'Error' }
-      & Pick<Error, 'type' | 'message'>
+      & Pick<Error, '[object Object]' | '[object Object]'>
     ) }
   )> }
 );
 
 export type CreateCourseMutationVariables = Exact<{
-  course?: Maybe<ICourse>;
+  course: ICourse;
+  metadata: IMetaData;
 }>;
 
 
@@ -1054,16 +1079,16 @@ export type CreateCourseMutation = (
   { __typename?: 'Mutation' }
   & { createCourse?: Maybe<(
     { __typename?: 'CreateCourse' }
-    & Pick<CreateCourse, 'createCourse'>
+    & Pick<CreateCourse, '[object Object]'>
     & { success?: Maybe<(
       { __typename?: 'Success' }
-      & Pick<Success, 'message'>
+      & Pick<Success, '[object Object]'>
     )> }
   ) | (
     { __typename?: 'ErrorResponse' }
     & { error: (
       { __typename?: 'Error' }
-      & Pick<Error, 'message'>
+      & Pick<Error, '[object Object]'>
     ) }
   )> }
 );
@@ -1079,16 +1104,16 @@ export type CreatePathMutation = (
   { __typename?: 'Mutation' }
   & { createPath?: Maybe<(
     { __typename?: 'CreatePath' }
-    & Pick<CreatePath, 'createPath'>
+    & Pick<CreatePath, '[object Object]'>
     & { success?: Maybe<(
       { __typename?: 'Success' }
-      & Pick<Success, 'message'>
+      & Pick<Success, '[object Object]'>
     )> }
   ) | (
     { __typename?: 'ErrorResponse' }
     & { error: (
       { __typename?: 'Error' }
-      & Pick<Error, 'type' | 'message'>
+      & Pick<Error, '[object Object]' | '[object Object]'>
     ) }
   )> }
 );
@@ -1107,20 +1132,20 @@ export type CreatePostMutation = (
     { __typename?: 'CreatePost' }
     & { createPost?: Maybe<(
       { __typename?: 'Post' }
-      & Pick<Post, 'id' | 'owner' | 'title' | 'description' | 'photoURL' | 'linkURL' | 'viewsCount' | 'commentsCount' | 'clapsCount' | 'createdAt'>
+      & Pick<Post, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
       & { ownerProfile?: Maybe<(
         { __typename?: 'UserProfile' }
-        & Pick<UserProfile, 'displayName' | 'photoURL' | 'profission'>
+        & Pick<UserProfile, '[object Object]' | '[object Object]' | '[object Object]'>
       )> }
     )>, success?: Maybe<(
       { __typename?: 'Success' }
-      & Pick<Success, 'message'>
+      & Pick<Success, '[object Object]'>
     )> }
   ) | (
     { __typename?: 'ErrorResponse' }
     & { error: (
       { __typename?: 'Error' }
-      & Pick<Error, 'type' | 'message'>
+      & Pick<Error, '[object Object]' | '[object Object]'>
     ) }
   )> }
 );
@@ -1134,16 +1159,16 @@ export type RemoveCourseMutation = (
   { __typename?: 'Mutation' }
   & { removeCourse?: Maybe<(
     { __typename?: 'RemoveCourse' }
-    & Pick<RemoveCourse, 'removeCourse'>
+    & Pick<RemoveCourse, '[object Object]'>
     & { success?: Maybe<(
       { __typename?: 'Success' }
-      & Pick<Success, 'message'>
+      & Pick<Success, '[object Object]'>
     )> }
   ) | (
     { __typename?: 'ErrorResponse' }
     & { error: (
       { __typename?: 'Error' }
-      & Pick<Error, 'message'>
+      & Pick<Error, '[object Object]'>
     ) }
   )> }
 );
@@ -1157,16 +1182,16 @@ export type AuthRequestAccessMutation = (
   { __typename?: 'Mutation' }
   & { authRequestAccess: (
     { __typename: 'RequestAccess' }
-    & Pick<RequestAccess, 'expireIn'>
+    & Pick<RequestAccess, '[object Object]'>
     & { success?: Maybe<(
       { __typename?: 'Success' }
-      & Pick<Success, 'message'>
+      & Pick<Success, '[object Object]'>
     )> }
   ) | { __typename: 'SigInSuccess' } | (
     { __typename: 'ErrorResponse' }
     & { error: (
       { __typename?: 'Error' }
-      & Pick<Error, 'type' | 'message'>
+      & Pick<Error, '[object Object]' | '[object Object]'>
     ) }
   ) }
 );
@@ -1183,19 +1208,19 @@ export type AuthSignInMutation = (
     { __typename: 'SigInSuccess' }
     & { access?: Maybe<(
       { __typename?: 'JWT' }
-      & Pick<Jwt, 'token' | 'refreshToken'>
+      & Pick<Jwt, '[object Object]' | '[object Object]'>
     )>, user?: Maybe<(
       { __typename?: 'UserProfile' }
-      & Pick<UserProfile, 'uid' | 'displayName' | 'photoURL' | 'profission'>
+      & Pick<UserProfile, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
     )>, success?: Maybe<(
       { __typename?: 'Success' }
-      & Pick<Success, 'type' | 'message'>
+      & Pick<Success, '[object Object]' | '[object Object]'>
     )> }
   ) | (
     { __typename: 'ErrorResponse' }
     & { error: (
       { __typename?: 'Error' }
-      & Pick<Error, 'type' | 'message'>
+      & Pick<Error, '[object Object]' | '[object Object]'>
     ) }
   ) }
 );
@@ -1214,19 +1239,19 @@ export type AuthSignUpMutation = (
     { __typename?: 'SignUpSuccess' }
     & { access?: Maybe<(
       { __typename?: 'JWT' }
-      & Pick<Jwt, 'token' | 'refreshToken'>
+      & Pick<Jwt, '[object Object]' | '[object Object]'>
     )>, user?: Maybe<(
       { __typename?: 'UserProfile' }
-      & Pick<UserProfile, 'uid' | 'displayName' | 'photoURL' | 'profission' | 'presentation'>
+      & Pick<UserProfile, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
     )>, success?: Maybe<(
       { __typename?: 'Success' }
-      & Pick<Success, 'message'>
+      & Pick<Success, '[object Object]'>
     )> }
   ) | (
     { __typename?: 'ErrorResponse' }
     & { error: (
       { __typename?: 'Error' }
-      & Pick<Error, 'type' | 'message'>
+      & Pick<Error, '[object Object]' | '[object Object]'>
     ) }
   ) }
 );
@@ -1247,13 +1272,13 @@ export type UpdateUserProfileMutation = (
     { __typename?: 'UpdateProfile' }
     & { success?: Maybe<(
       { __typename?: 'Success' }
-      & Pick<Success, 'message'>
+      & Pick<Success, '[object Object]'>
     )> }
   ) | (
     { __typename?: 'ErrorResponse' }
     & { error: (
       { __typename?: 'Error' }
-      & Pick<Error, 'type' | 'message'>
+      & Pick<Error, '[object Object]' | '[object Object]'>
     ) }
   )> }
 );
@@ -1269,23 +1294,23 @@ export type GetCoursesQuery = (
     { __typename?: 'GetCourses' }
     & { courses?: Maybe<Array<Maybe<(
       { __typename?: 'Course' }
-      & Pick<Course, 'id' | 'path' | 'title' | 'description' | 'area' | 'difficult' | 'photoURL' | 'typeContent' | 'viewsCount' | 'clapsCount' | 'commentsCount' | 'owner' | 'createdAt'>
+      & Pick<Course, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
       & { comments?: Maybe<Array<Maybe<(
         { __typename?: 'Comments' }
-        & Pick<Comments, 'id' | 'owner' | 'description'>
+        & Pick<Comments, '[object Object]' | '[object Object]' | '[object Object]'>
       )>>>, ownerProfile?: Maybe<(
         { __typename?: 'UserProfile' }
-        & Pick<UserProfile, 'uid' | 'displayName' | 'thumbnailURL' | 'photoURL' | 'profission'>
+        & Pick<UserProfile, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
       )> }
     )>>>, success?: Maybe<(
       { __typename?: 'Success' }
-      & Pick<Success, 'message'>
+      & Pick<Success, '[object Object]'>
     )> }
   ) | (
     { __typename?: 'ErrorResponse' }
     & { error: (
       { __typename?: 'Error' }
-      & Pick<Error, 'type' | 'message'>
+      & Pick<Error, '[object Object]' | '[object Object]'>
     ) }
   )> }
 );
@@ -1301,23 +1326,23 @@ export type GetAllPathsQuery = (
     { __typename?: 'GetPaths' }
     & { allPaths?: Maybe<Array<Maybe<(
       { __typename?: 'Path' }
-      & Pick<Path, 'id' | 'owner' | 'title' | 'description' | 'photoURL' | 'contentCount' | 'area' | 'access' | 'status' | 'createdAt'>
+      & Pick<Path, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
       & { ownerProfile?: Maybe<(
         { __typename?: 'UserProfile' }
-        & Pick<UserProfile, 'displayName' | 'profission' | 'photoURL' | 'thumbnailURL'>
+        & Pick<UserProfile, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
       )>, owners?: Maybe<Array<Maybe<(
         { __typename?: 'UserProfile' }
-        & Pick<UserProfile, 'uid' | 'displayName' | 'photoURL' | 'thumbnailURL' | 'profission'>
+        & Pick<UserProfile, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
       )>>> }
     )>>>, success?: Maybe<(
       { __typename?: 'Success' }
-      & Pick<Success, 'message'>
+      & Pick<Success, '[object Object]'>
     )> }
   ) | (
     { __typename?: 'ErrorResponse' }
     & { error: (
       { __typename?: 'Error' }
-      & Pick<Error, 'type' | 'message'>
+      & Pick<Error, '[object Object]' | '[object Object]'>
     ) }
   )> }
 );
@@ -1333,20 +1358,20 @@ export type GetAllPostsQuery = (
     { __typename?: 'GetPosts' }
     & { allPost?: Maybe<Array<Maybe<(
       { __typename?: 'Post' }
-      & Pick<Post, 'id' | 'owner' | 'photoURL' | 'title' | 'description' | 'claps' | 'clapsCount' | 'commentsCount' | 'createdAt'>
+      & Pick<Post, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
       & { ownerProfile?: Maybe<(
         { __typename?: 'UserProfile' }
-        & Pick<UserProfile, 'displayName' | 'thumbnailURL' | 'profission'>
+        & Pick<UserProfile, '[object Object]' | '[object Object]' | '[object Object]'>
       )> }
     )>>>, success?: Maybe<(
       { __typename?: 'Success' }
-      & Pick<Success, 'message' | 'type'>
+      & Pick<Success, '[object Object]' | '[object Object]'>
     )> }
   ) | (
     { __typename?: 'ErrorResponse' }
     & { error: (
       { __typename?: 'Error' }
-      & Pick<Error, 'type' | 'message'>
+      & Pick<Error, '[object Object]' | '[object Object]'>
     ) }
   )> }
 );
@@ -1363,17 +1388,17 @@ export type GetCommentByPostQuery = (
     { __typename?: 'GetComment' }
     & { comments?: Maybe<Array<Maybe<(
       { __typename?: 'Comments' }
-      & Pick<Comments, 'id' | 'owner' | 'description' | 'createdAt'>
+      & Pick<Comments, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
       & { ownerProfile?: Maybe<(
         { __typename?: 'UserProfile' }
-        & Pick<UserProfile, 'uid' | 'displayName' | 'thumbnailURL' | 'profission'>
+        & Pick<UserProfile, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
       )> }
     )>>> }
   ) | (
     { __typename?: 'ErrorResponse' }
     & { error: (
       { __typename?: 'Error' }
-      & Pick<Error, 'type' | 'message'>
+      & Pick<Error, '[object Object]' | '[object Object]'>
     ) }
   )> }
 );
@@ -1390,23 +1415,23 @@ export type GetCoursesByPathQuery = (
     { __typename?: 'GetCoursesByPath' }
     & { coursesByPath?: Maybe<Array<Maybe<(
       { __typename?: 'Course' }
-      & Pick<Course, 'id' | 'path' | 'title' | 'description' | 'area' | 'difficult' | 'photoURL' | 'typeContent' | 'viewsCount' | 'clapsCount' | 'commentsCount' | 'owner' | 'createdAt'>
+      & Pick<Course, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
       & { comments?: Maybe<Array<Maybe<(
         { __typename?: 'Comments' }
-        & Pick<Comments, 'id' | 'owner' | 'description'>
+        & Pick<Comments, '[object Object]' | '[object Object]' | '[object Object]'>
       )>>>, ownerProfile?: Maybe<(
         { __typename?: 'UserProfile' }
-        & Pick<UserProfile, 'displayName' | 'photoURL' | 'thumbnailURL' | 'profission'>
+        & Pick<UserProfile, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
       )> }
     )>>>, success?: Maybe<(
       { __typename?: 'Success' }
-      & Pick<Success, 'message'>
+      & Pick<Success, '[object Object]'>
     )> }
   ) | (
     { __typename?: 'ErrorResponse' }
     & { error: (
       { __typename?: 'Error' }
-      & Pick<Error, 'message'>
+      & Pick<Error, '[object Object]'>
     ) }
   )> }
 );
@@ -1423,20 +1448,20 @@ export type GetCoursesByUserQuery = (
     { __typename?: 'GetCoursesByOwner' }
     & { coursesByOwner?: Maybe<Array<Maybe<(
       { __typename?: 'Course' }
-      & Pick<Course, 'id' | 'title' | 'description' | 'area' | 'typeContent' | 'difficult' | 'viewsCount' | 'commentsCount'>
+      & Pick<Course, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
       & { comments?: Maybe<Array<Maybe<(
         { __typename?: 'Comments' }
-        & Pick<Comments, 'id' | 'owner' | 'description'>
+        & Pick<Comments, '[object Object]' | '[object Object]' | '[object Object]'>
       )>>> }
     )>>>, success?: Maybe<(
       { __typename?: 'Success' }
-      & Pick<Success, 'message'>
+      & Pick<Success, '[object Object]'>
     )> }
   ) | (
     { __typename?: 'ErrorResponse' }
     & { error: (
       { __typename?: 'Error' }
-      & Pick<Error, 'message'>
+      & Pick<Error, '[object Object]'>
     ) }
   )> }
 );
@@ -1453,23 +1478,23 @@ export type GetPathsByOwnerQuery = (
     { __typename?: 'GetPathsOwner' }
     & { allPathsOwner?: Maybe<Array<Maybe<(
       { __typename?: 'Path' }
-      & Pick<Path, 'id' | 'owner' | 'title' | 'description' | 'photoURL' | 'contentCount' | 'area' | 'access' | 'status' | 'createdAt'>
+      & Pick<Path, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
       & { ownerProfile?: Maybe<(
         { __typename?: 'UserProfile' }
-        & Pick<UserProfile, 'displayName' | 'profission' | 'photoURL' | 'thumbnailURL'>
+        & Pick<UserProfile, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
       )>, owners?: Maybe<Array<Maybe<(
         { __typename?: 'UserProfile' }
-        & Pick<UserProfile, 'uid' | 'displayName' | 'photoURL' | 'thumbnailURL' | 'profission'>
+        & Pick<UserProfile, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
       )>>> }
     )>>>, success?: Maybe<(
       { __typename?: 'Success' }
-      & Pick<Success, 'message'>
+      & Pick<Success, '[object Object]'>
     )> }
   ) | (
     { __typename?: 'ErrorResponse' }
     & { error: (
       { __typename?: 'Error' }
-      & Pick<Error, 'type' | 'message'>
+      & Pick<Error, '[object Object]' | '[object Object]'>
     ) }
   )> }
 );
@@ -1486,20 +1511,20 @@ export type GetPostsByOwnerQuery = (
     { __typename?: 'GetPostsOwner' }
     & { allPostOwner?: Maybe<Array<Maybe<(
       { __typename?: 'Post' }
-      & Pick<Post, 'id' | 'owner' | 'title' | 'description' | 'claps' | 'clapsCount' | 'commentsCount' | 'createdAt'>
+      & Pick<Post, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
       & { ownerProfile?: Maybe<(
         { __typename?: 'UserProfile' }
-        & Pick<UserProfile, 'displayName' | 'thumbnailURL' | 'profission'>
+        & Pick<UserProfile, '[object Object]' | '[object Object]' | '[object Object]'>
       )> }
     )>>>, success?: Maybe<(
       { __typename?: 'Success' }
-      & Pick<Success, 'message'>
+      & Pick<Success, '[object Object]'>
     )> }
   ) | (
     { __typename?: 'ErrorResponse' }
     & { error: (
       { __typename?: 'Error' }
-      & Pick<Error, 'type' | 'message'>
+      & Pick<Error, '[object Object]' | '[object Object]'>
     ) }
   )> }
 );
@@ -1552,7 +1577,10 @@ export type ClapPostMutationResult = Apollo.MutationResult<ClapPostMutation>;
 export type ClapPostMutationOptions = Apollo.BaseMutationOptions<ClapPostMutation, ClapPostMutationVariables>;
 export const CreateCommentDocument = gql`
     mutation createComment($collection: CommentFor!, $post: String!, $description: String!) {
-  createComment(collection: $collection, comment: {post: $post, description: $description}) {
+  createComment(
+    collection: $collection
+    comment: {post: $post, description: $description}
+  ) {
     ... on PostComment {
       comment {
         id
@@ -1606,8 +1634,8 @@ export type CreateCommentMutationHookResult = ReturnType<typeof useCreateComment
 export type CreateCommentMutationResult = Apollo.MutationResult<CreateCommentMutation>;
 export type CreateCommentMutationOptions = Apollo.BaseMutationOptions<CreateCommentMutation, CreateCommentMutationVariables>;
 export const CreateCourseDocument = gql`
-    mutation createCourse($course: ICourse) {
-  createCourse(course: $course) {
+    mutation createCourse($course: ICourse!, $metadata: IMetaData!) {
+  createCourse(course: $course, metadata: $metadata) {
     ... on CreateCourse {
       createCourse
       success {
@@ -1638,6 +1666,7 @@ export type CreateCourseMutationFn = Apollo.MutationFunction<CreateCourseMutatio
  * const [createCourseMutation, { data, loading, error }] = useCreateCourseMutation({
  *   variables: {
  *      course: // value for 'course'
+ *      metadata: // value for 'metadata'
  *   },
  * });
  */
@@ -1694,7 +1723,9 @@ export type CreatePathMutationResult = Apollo.MutationResult<CreatePathMutation>
 export type CreatePathMutationOptions = Apollo.BaseMutationOptions<CreatePathMutation, CreatePathMutationVariables>;
 export const CreatePostDocument = gql`
     mutation createPost($title: String, $description: String!, $photoURL: String, $linkURL: String) {
-  createPost(post: {title: $title, description: $description, photoURL: $photoURL, linkURL: $linkURL}) {
+  createPost(
+    post: {title: $title, description: $description, photoURL: $photoURL, linkURL: $linkURL}
+  ) {
     ... on CreatePost {
       createPost {
         id
@@ -1897,7 +1928,9 @@ export type AuthSignInMutationResult = Apollo.MutationResult<AuthSignInMutation>
 export type AuthSignInMutationOptions = Apollo.BaseMutationOptions<AuthSignInMutation, AuthSignInMutationVariables>;
 export const AuthSignUpDocument = gql`
     mutation authSignUp($email: String!, $phone: String!, $username: String!, $role: EnumUserRole!) {
-  authSignUp(user: {email: $email, phoneNumber: $phone, displayName: $username, role: $role}) {
+  authSignUp(
+    user: {email: $email, phoneNumber: $phone, displayName: $username, role: $role}
+  ) {
     ... on SignUpSuccess {
       access {
         token
@@ -1953,7 +1986,9 @@ export type AuthSignUpMutationResult = Apollo.MutationResult<AuthSignUpMutation>
 export type AuthSignUpMutationOptions = Apollo.BaseMutationOptions<AuthSignUpMutation, AuthSignUpMutationVariables>;
 export const UpdateUserProfileDocument = gql`
     mutation updateUserProfile($displayName: String, $photoURL: String, $thumbnailURL: String, $profission: String, $experience: String, $presentation: String) {
-  updateUserProfile(user: {profile: {displayName: $displayName, photoURL: $photoURL, thumbnailURL: $thumbnailURL, profission: $profission, experience: $experience, presentation: $presentation}}) {
+  updateUserProfile(
+    user: {profile: {displayName: $displayName, photoURL: $photoURL, thumbnailURL: $thumbnailURL, profission: $profission, experience: $experience, presentation: $presentation}}
+  ) {
     ... on UpdateProfile {
       success {
         message
@@ -2010,6 +2045,11 @@ export const GetCoursesDocument = gql`
         area
         difficult
         photoURL
+        videoURL
+        thumbnailURL
+        gifURL
+        videoPlaybackID
+        videoAssetId
         typeContent
         viewsCount
         clapsCount
@@ -2240,7 +2280,7 @@ export const GetCommentByPostDocument = gql`
  *   },
  * });
  */
-export function useGetCommentByPostQuery(baseOptions?: Apollo.QueryHookOptions<GetCommentByPostQuery, GetCommentByPostQueryVariables>) {
+export function useGetCommentByPostQuery(baseOptions: Apollo.QueryHookOptions<GetCommentByPostQuery, GetCommentByPostQueryVariables>) {
         return Apollo.useQuery<GetCommentByPostQuery, GetCommentByPostQueryVariables>(GetCommentByPostDocument, baseOptions);
       }
 export function useGetCommentByPostLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCommentByPostQuery, GetCommentByPostQueryVariables>) {
@@ -2309,7 +2349,7 @@ export const GetCoursesByPathDocument = gql`
  *   },
  * });
  */
-export function useGetCoursesByPathQuery(baseOptions?: Apollo.QueryHookOptions<GetCoursesByPathQuery, GetCoursesByPathQueryVariables>) {
+export function useGetCoursesByPathQuery(baseOptions: Apollo.QueryHookOptions<GetCoursesByPathQuery, GetCoursesByPathQueryVariables>) {
         return Apollo.useQuery<GetCoursesByPathQuery, GetCoursesByPathQueryVariables>(GetCoursesByPathDocument, baseOptions);
       }
 export function useGetCoursesByPathLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCoursesByPathQuery, GetCoursesByPathQueryVariables>) {

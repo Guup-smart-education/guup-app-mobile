@@ -25,6 +25,7 @@ export const Separator = styled.View<IProps>`
         return theme.spacing[50];
     }
   }};
-  ${({size, theme}) =>
-    size === ESize.stroke && `background-color: ${theme.colors.veryLigthGrey}`}
+  ${({size, theme, color}) =>
+    size === ESize.stroke &&
+    `background-color: ${theme.colors[color || 'veryLigthGrey']}`}
 `;

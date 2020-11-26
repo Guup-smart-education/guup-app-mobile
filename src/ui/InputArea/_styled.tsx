@@ -1,8 +1,10 @@
-import styled, {ThemeProps} from 'styled-components/native';
+import styled from 'styled-components/native';
 import {IProps} from './';
 
 export const InputWrapper = styled.View`
   width: 100%;
+  margin-bottom: ${({theme}) => theme.spacing[25]};
+  position: relative;
 `;
 
 export const InputComponent = styled.TextInput.attrs(
@@ -18,7 +20,7 @@ export const InputComponent = styled.TextInput.attrs(
     } else if (preset === 'subtitle') {
       return theme.fontSize.large;
     }
-    return theme.fontSize.regular;
+    return theme.fontSize.medium;
   }};
   font-weight: ${({theme, preset}) => {
     if (preset === 'title' || preset === 'subtitle') {
@@ -28,7 +30,7 @@ export const InputComponent = styled.TextInput.attrs(
   }};
   padding-left: ${({theme}) => theme.spacing.padding[25]};
   padding-right: ${({theme}) => theme.spacing.padding[25]};
-  padding-bottom: ${({theme}) => theme.spacing.padding[25]};
+  padding-bottom: ${({theme}) => theme.spacing.padding[15]};
   /* padding-top: ${({theme}) => theme.spacing.padding[25]}; */
   line-height: ${({theme}) => theme.spacing.lineHeigth.l24};
   width: 100%;
@@ -36,6 +38,10 @@ export const InputComponent = styled.TextInput.attrs(
 
 export const FlagError = styled.View`
   width: 100%;
-  padding-top: ${({theme}) => theme.spacing[10]};
+  /* padding-top: ${({theme}) => theme.spacing[10]}; */
   padding-bottom: ${({theme}) => theme.spacing[10]};
+  padding-left: ${({theme}) => theme.spacing.padding[25]};
+  padding-right: ${({theme}) => theme.spacing.padding[25]};
+  position: absolute;
+  bottom: -${({theme}) => theme.spacing.padding[20]};
 `;

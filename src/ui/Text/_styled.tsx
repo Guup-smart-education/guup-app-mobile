@@ -44,9 +44,9 @@ export const Text = styled.Text<IProps>`
         return `
           ${
             Platform.OS !== 'ios' &&
-            `font-family: ${theme.fontFamilyAndroid.light}`
+            `font-family: ${theme.fontFamilyAndroid.regular}`
           };
-          font-size: ${theme.fontSize.tiny};
+          font-size: ${theme.fontSize.small};
           letter-spacing: -0.01px;
         `;
       case EPreset.tiny:
@@ -89,14 +89,24 @@ export const Text = styled.Text<IProps>`
           font-size: ${theme.fontSize.large};
           font-weight: ${theme.fontWeight.semiBold};
         `;
+      case EPreset.header:
+        return `
+          ${
+            Platform.OS !== 'ios' &&
+            `font-family: ${theme.fontFamilyAndroid.semiBold}`
+          };
+          font-size: ${theme.fontSize.large};
+          font-weight: ${theme.fontWeight.bold};
+          letter-spacing: ${-0.5}px;
+        `;
       case EPreset.paragraph:
         return `
           ${
             Platform.OS !== 'ios' &&
-            `font-family: ${theme.fontFamilyAndroid.light}`
+            `font-family: ${theme.fontFamilyAndroid.regular}`
           };
           font-size: ${theme.fontSize.medium};
-          font-weight: ${theme.fontWeight.ligth};
+          font-weight: ${theme.fontWeight.regular};
           line-height: ${theme.spacing.lineHeigth.l24};
           letter-spacing: 0.11px;
         `;
@@ -125,7 +135,7 @@ export const Text = styled.Text<IProps>`
             Platform.OS !== 'ios' &&
             `font-family: ${theme.fontFamilyAndroid.semiBold}`
           };
-          font-size: ${theme.fontSize.regular};
+          font-size: ${theme.fontSize.medium};
           font-weight: ${theme.fontWeight.semiBold};
         `;
       default:

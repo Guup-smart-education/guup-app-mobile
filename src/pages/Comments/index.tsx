@@ -233,22 +233,16 @@ const CommentListSection: React.FC<{
     <CommentsList>
       <CommentNav>
         <GuupHeader
-          leftRenderIntem={
-            <Action onPress={() => navigation.goBack()}>
-              <Icon source="arrow" />
-            </Action>
-          }
-          centerRenderItem={
-            <Text preset="comment" bold color="primary">
-              Comentarios
-            </Text>
-          }
+          hasBack
+          title="Comentarios"
+          loading={loading}
+          onLeftPress={() => navigation.goBack()}
           rightRenderIntem={
             <Action
               onPress={() =>
                 Alert.alert('Options comments', 'Show comments options')
               }>
-              <Icon source="dots" backColor="veryLigthGrey" />
+              <Icon source="dots" backColor="veryLigthGrey" size="small" />
             </Action>
           }
         />
@@ -327,9 +321,9 @@ const CommentsScreen: React.FC<CommentPropsApp> = ({
             newComment={newComment}
           />
         </CommentsContent>
-        <GuupFooter>
+        <GuupFooter color="ligth">
           <CommentsActions>
-            <Link onPress={() => toggleComment()} color="contrast">
+            <Link onPress={() => toggleComment()} color="primary">
               Faça um comentario
             </Link>
           </CommentsActions>
@@ -341,7 +335,6 @@ const CommentsScreen: React.FC<CommentPropsApp> = ({
         toggleModal={toggleComment}
         onSendMessage={(message: string) => sendComment(message)}
       />
-      <FooterPatch />
     </Container>
   );
 };

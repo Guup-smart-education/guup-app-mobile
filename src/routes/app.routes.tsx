@@ -1,3 +1,4 @@
+import R from 'ramda';
 import React, {useContext} from 'react';
 import {ThemeContext} from 'styled-components';
 import {Icon} from './../ui';
@@ -25,13 +26,12 @@ import {
 } from './../pages';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {ETabIcon} from './../@enum/icons.enum';
+import {EIcons, ETabIcon} from './../@enum/icons.enum';
 import {
   StackBackOption,
   StackBackOptionTransparent,
   StackOption,
 } from './stack.options';
-import App from 'src/App';
 
 const AppTabStack = createBottomTabNavigator<RootApp>();
 const AppStack = createStackNavigator<RootApp>();
@@ -42,19 +42,37 @@ const HomeRouter: React.FC = () => {
     <AppTabStack.Navigator
       initialRouteName="GuupExplorer"
       tabBarOptions={{
-        activeTintColor: theme.colors.contrast,
-        inactiveTintColor: theme.colors.ligth,
+        activeTintColor: theme.colors.primary,
+        inactiveTintColor: theme.colors.dark,
         showLabel: false,
         style: {
-          backgroundColor: `${theme.colors.ultraDark}`,
-          position: 'absolute',
-          borderTopColor: `${theme.colors.ultraDark}`,
-          elevation: 0,
+          // backgroundColor: 'transparent',
+          backgroundColor: `${theme.colors.ligth}`,
+          // position: 'absolute',
+          borderTopColor: `${theme.colors.ligthGrey}`,
+          // elevation: 0,
         },
       }}
       screenOptions={({route}) => ({
-        tabBarIcon: ({color}) => (
-          <Icon style={{tintColor: color}} source={ETabIcon[route.name]} />
+        tabBarIcon: ({color, focused}) => (
+          <Icon
+            source={R.cond([
+              [
+                R.equals('GuupExplorer'),
+                () =>
+                  focused ? ETabIcon.GuupExplorerFocus : ETabIcon.GuupExplorer,
+              ],
+              [
+                R.equals('GuupNews'),
+                () => (focused ? ETabIcon.GuupNewsFocus : ETabIcon.GuupNews),
+              ],
+              [
+                R.T,
+                () =>
+                  focused ? ETabIcon.GuupAccountFocus : ETabIcon.GuupAccount,
+              ],
+            ])(`${route.name}`)}
+          />
         ),
       })}>
       <AppTabStack.Screen name="GuupNews" component={GuupNews} />

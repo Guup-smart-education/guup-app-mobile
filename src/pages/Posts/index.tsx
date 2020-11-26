@@ -96,7 +96,7 @@ const Posts: React.FC<PropsApp> = ({navigation: {goBack, navigate}}) => {
       const clapped = claps && R.includes(`${authUser.uid}`, claps);
       return (
         <PostItemContainer>
-          <Separator size="large" />
+          <Separator size="tiny" />
           <PostComment
             owner={{
               id: owner || ownerProfile?.uid,
@@ -115,6 +115,7 @@ const Posts: React.FC<PropsApp> = ({navigation: {goBack, navigate}}) => {
             createdAt={createdAt}
             clapped={clapped}
             menu
+            card={false}
           />
         </PostItemContainer>
       );
@@ -186,16 +187,9 @@ const Posts: React.FC<PropsApp> = ({navigation: {goBack, navigate}}) => {
       <PostsContainer>
         <PostsHeader>
           <GuupHeader
-            leftRenderIntem={
-              <Action onPress={() => goBack()}>
-                <Icon source="arrow" />
-              </Action>
-            }
-            centerRenderItem={
-              <Text preset="comment" bold>
-                Publicações
-              </Text>
-            }
+            hasBack
+            title="Meus posts"
+            onLeftPress={() => goBack()}
             rightRenderIntem={
               <Action onPress={() => navigate('GuupPostCreate')}>
                 <Icon source="plus" />

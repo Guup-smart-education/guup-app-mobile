@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Alert, View} from 'react-native';
+import {Alert} from 'react-native';
 import {Maybe} from 'graphql/jsutils/Maybe';
 import {
   CardContainer,
@@ -8,10 +8,9 @@ import {
   CardWrapper,
   CardSectionHeader,
   CardSectionTitle,
-  CardTitle,
-  CardShowMoreContainer,
+  CardOverlay,
 } from './_styled';
-import {Text, Icon, Separator, Action, Link} from './../../ui';
+import {Text, Icon, Separator, Action} from './../../ui';
 import Avatar from './../Avatar';
 import Popover from './../Popover';
 import MenuList from './../MenuList';
@@ -127,63 +126,56 @@ const CourseCard: React.FC<Props> = ({
   };
   // End handlers
   return (
-    <CardContainer
-      source={{
-        uri:
-          imageUri ||
-          'https://media4.giphy.com/media/L2xmR6N2cX94M8iBcX/giphy.gif?cid=ecf05e47e734662ee2e2c424f003c2426d4028038bc1c6ff&rid=giphy.gif',
-      }}
-      onLoadStart={() => setImgLoading(true)}
-      onLoadEnd={() => setImgLoading(false)}>
+    <CardContainer>
       <Action onPress={() => onPress && onPress()}>
         <CardWrapper>
-          <CardActions>
-            <Action onPress={() => setShowOptions(true)}>
-              <Icon source="dots" tintColor="ligth" blur />
-            </Action>
-            <Separator size="lili" />
-            <Action onPress={() => setShowOptions(true)}>
-              <Icon source="claps" tintColor="ligth" blur />
-            </Action>
-            <Separator size="lili" />
-            <Action onPress={() => setShowOptions(true)}>
-              <Icon source="save" tintColor="ligth" blur />
-            </Action>
-          </CardActions>
-          <CardSectionHeader>
+          <CardSectionHeader
+            onLoadStart={() => setImgLoading(true)}
+            onLoadEnd={() => setImgLoading(false)}
+            source={{
+              uri:
+                imageUri ||
+                'https://media4.giphy.com/media/L2xmR6N2cX94M8iBcX/giphy.gif?cid=ecf05e47e734662ee2e2c424f003c2426d4028038bc1c6ff&rid=giphy.gif',
+            }}>
+            <CardActions>
+              <Action onPress={() => setShowOptions(true)}>
+                <Icon source="dots" tintColor="ligth" blur />
+              </Action>
+            </CardActions>
             <CardSectionTitle>
-              <CardTitle>
-                <Separator size="lili" />
-                <Text preset="subtitle" color="ligth" bold lineHeight={32}>
-                  {title}
-                </Text>
-              </CardTitle>
+              <Text preset="subtitle" color="ligth" bold>
+                {title}
+              </Text>
+              <Separator size="tiny" />
+              {/* <Link
+                color="contrast"
+                onPress={() => toggleCourseDescription(!showCourseDescription)}>
+                {showCourseDescription ? 'Ver menos' : 'Ver mais'}
+              </Link> */}
             </CardSectionTitle>
+            <CardOverlay />
           </CardSectionHeader>
-          <CardSectionBody>
-            {showCourseDescription && (
+          {/* {showCourseDescription && (
+            <CardDescription>
               <CardShowMoreContainer>
                 <View>
-                  <Text preset="comment" bold color="ligth">
+                  <Text preset="paragraph" color="dark">
                     {description}
                   </Text>
-                  <Separator size="small" />
                 </View>
               </CardShowMoreContainer>
-            )}
-            <Link
-              color="contrast"
-              onPress={() => toggleCourseDescription(!showCourseDescription)}>
-              Máis detalhes
-            </Link>
-            <Separator size="small" />
+            </CardDescription>
+          )} */}
+          <CardSectionBody>
             <Avatar
-              ligth
               size="comment"
               firstText={owner?.displayName}
               secondText={owner?.profission}
               image={owner?.thumbnailURL}
             />
+            <Action onPress={() => Alert.alert('Clap!!', 'Clap this course')}>
+              <Icon source="claps" />
+            </Action>
           </CardSectionBody>
         </CardWrapper>
       </Action>

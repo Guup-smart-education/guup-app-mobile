@@ -53,10 +53,10 @@ import {IMenuItemProps} from './../../@types/menu.item';
 // List empty data
 const ListEmpty = () => {
   return (
-    <View>
-      <Separator size="large" />
+    <Container center>
       <Text center>Não há conteudos disponiveis</Text>
-    </View>
+      <Separator size="large" />
+    </Container>
   );
 };
 
@@ -317,21 +317,24 @@ const CourseScreen: React.FC<CollectionDetailPropsApp> = ({
           />
         </CourseDetailHeader>
         <CourseDetailContent>
-          <FlatList
-            style={{width: '100%', height: '100%'}}
-            showsVerticalScrollIndicator={false}
-            data={allCourses}
-            keyExtractor={keyExtractor}
-            maxToRenderPerBatch={20}
-            nestedScrollEnabled
-            renderItem={CourseItem}
-            ListEmptyComponent={ListEmpty}
-            ListHeaderComponent={ListHeader}
-            ListFooterComponent={ListLoadMore}
-            onEndReachedThreshold={0.9}
-            refreshing={loading}
-            onRefresh={handleRefresh}
-          />
+          {!allCourses.length ? (
+            <ListEmpty />
+          ) : (
+            <FlatList
+              showsVerticalScrollIndicator={false}
+              data={allCourses}
+              keyExtractor={keyExtractor}
+              maxToRenderPerBatch={20}
+              nestedScrollEnabled
+              renderItem={CourseItem}
+              // ListEmptyComponent={ListEmpty}
+              ListHeaderComponent={ListHeader}
+              ListFooterComponent={ListLoadMore}
+              onEndReachedThreshold={0.9}
+              refreshing={loading}
+              onRefresh={handleRefresh}
+            />
+          )}
         </CourseDetailContent>
       </CourseDetailContainer>
       <Popover

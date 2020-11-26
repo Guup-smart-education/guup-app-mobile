@@ -8,10 +8,13 @@ import {
 import {setContext} from '@apollo/client/link/context';
 import {onError} from '@apollo/client/link/error';
 import AsyncStorage from '@react-native-community/async-storage';
+import Config from 'react-native-config';
 
 // Http Link connection
 const httpLink = createHttpLink({
-  uri: 'http://localhost:4000/graphql',
+  // uri: `${Config.API_URL}`,
+  uri: 'http://192.168.15.78:4000/graphql', // IP: Home
+  // uri: 'http://172.16.204.98:4000/graphql', // IP: Qsaude
   credentials: 'same-origin',
 });
 

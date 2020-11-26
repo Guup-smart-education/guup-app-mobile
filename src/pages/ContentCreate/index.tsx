@@ -1,5 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState, useEffect} from 'react';
+import R from 'ramda';
+import React, {useState, useEffect, useContext} from 'react';
 import {useForm} from 'react-hook-form';
 import {
   Container,
@@ -13,9 +14,13 @@ import {
 import {
   KeyboardBlock,
   GuupUpload,
+  GuupGallery,
   GuupHeader,
+  Modal,
   GuupFooter,
   SmartForm,
+  GuupProgressBar,
+  Carousel,
 } from './../../components';
 import {
   CreateHeader,
@@ -24,6 +29,7 @@ import {
   CreateMedia,
   FormContainer,
   CreateContainer,
+  CreateModalForm,
 } from './_styled';
 import {
   MAX_COURSE_TITLE_LENGTH,
@@ -37,8 +43,18 @@ import {
   EnumContentType,
   EnumAreas,
   EnumLevels,
+  IMetaData,
+  MediaMetaData,
 } from './../../graphql/types.d';
-import {Alert} from 'react-native';
+import {IFileDatUpload} from './../../@types/fileDataUpload';
+import {Alert, View} from 'react-native';
+import {
+  STORAGE_FOLDERS,
+  getUriBlobFile,
+  createBlobFileName,
+  sendFileToStorage,
+} from './../../utils/storage';
+import AuthContext from './../../contexts/auth';
 
 const ContentCreate: React.FC<ContentCreatePropsApp> = ({
   navigation: {goBack, navigate},
@@ -46,21 +62,30 @@ const ContentCreate: React.FC<ContentCreatePropsApp> = ({
     params: {path},
   },
 }) => {
-  const [contentSource, setContentSource] = useState<any>(null);
+  const {user} = useContext(AuthContext);
+  const [page, setPage] = useState<number>(0);
+  const [uploading, setUploading] = useState(false);
+  const [formVisible, setFormVisible] = useState(false);
+  const [uploadingProgress, setUploadingProgress] = useState(0);
+  const [fileDataToUpload, setFileToUpload] = useState<IFileDatUpload>();
+  const [videoDataToUpload, setVideoToUpload] = useState<IFileDatUpload>();
   const [createCourse, {loading, data, error}] = useCreateCourseMutation();
   const {register, errors, getValues, setValue, handleSubmit} = useForm<
     ContentCreateFormData
   >({
     validationSchema: ContentCreateValidation,
   });
-
   // Effects
   useEffect(() => {
     if (data?.createCourse?.__typename === 'ErrorResponse') {
       Alert.alert('Aconteceu um erro', `${data?.createCourse.error.message}`);
     } else if (data?.createCourse?.__typename === 'CreateCourse') {
-      Alert.alert('Parabens!!', 'Conteudo adicionado com sucesso');
-      goBack();
+      Alert.alert('Parabens!!', 'Conteudo adicionado com sucesso', [
+        {
+          text: 'ok',
+          onPress: () => goBack(),
+        },
+      ]);
     }
   }, [data, goBack]);
   useEffect(() => {
@@ -78,28 +103,51 @@ const ContentCreate: React.FC<ContentCreatePropsApp> = ({
   // End effects
 
   // handlers
-  const onSubmit: (dataContent: ContentCreateFormData) => void = ({
+  const onUploading = (progress: number) => {
+    console.log('onUploading progress: ', progress);
+    setUploadingProgress(progress);
+  };
+  const onSubmit: (dataContent: ContentCreateFormData) => void = async ({
     title = '',
     description = '',
   }) => {
-    createCourse({
-      variables: {
-        course: {
-          title,
-          description,
-          typeContent: EnumContentType.Video,
-          area: EnumAreas.Technology,
-          difficult: EnumLevels.Advance,
-          ...(path && {path}),
+    if (fileDataToUpload && user) {
+      setUploading(true);
+      const metaData: any = {...R.omit(['uri'], fileDataToUpload)};
+      const blobFile: Blob = await getUriBlobFile(fileDataToUpload.uri);
+      const fileName: string = await createBlobFileName(fileDataToUpload.type);
+      const metadata: IMetaData = await sendFileToStorage(
+        blobFile,
+        metaData,
+        `${user.uid}`,
+        fileName,
+        STORAGE_FOLDERS.courses,
+        onUploading,
+      );
+      setUploading(false);
+      createCourse({
+        variables: {
+          course: {
+            title,
+            description,
+            typeContent: EnumContentType.Video,
+            area: EnumAreas.Technology,
+            difficult: EnumLevels.Advance,
+            ...(path && {path}),
+          },
+          metadata,
         },
-      },
-    });
+      });
+    } else {
+      Alert.alert('Oops!', 'Selecione outro arquivo para subir');
+      console.log('Não foi encontrada um arquivo para subir');
+    }
   };
   const closeContent = () => {
-    if (loading) {
+    if (loading || uploading) {
       return;
     }
-    if (contentSource || getValues('title') || getValues('description')) {
+    if (fileDataToUpload || getValues('title') || getValues('description')) {
       Alert.alert(
         'Aguarda um momento!',
         'Você deseja descartar as informações prenchidas?',
@@ -118,36 +166,45 @@ const ContentCreate: React.FC<ContentCreatePropsApp> = ({
       goBack();
     }
   };
-  const onUploadVideo = (source: any) => {
-    setContentSource(source);
+  const addDescription = () => {
+    if (!fileDataToUpload) {
+      Alert.alert('Video!!', 'Você ainda não selecionou seu conteudo');
+      return;
+    }
+    setFormVisible(!formVisible);
   };
   // End handlers
   return (
-    <Container safe light>
-      <KeyboardBlock hasKeyboardDismiss>
-        <CreateContainer>
-          <CreateHeader>
-            <GuupHeader
-              leftRenderIntem={
-                <Action onPress={() => !loading && closeContent()}>
-                  <Icon source="arrow" />
-                </Action>
-              }
-              centerRenderItem={
-                <Text preset="comment" bold>
-                  Conteudo
-                </Text>
-              }
+    <Container safe dark>
+      <CreateContainer>
+        <CreateHeader>
+          <GuupHeader
+            hasBack
+            isDarkTheme
+            title="Criar conteudo"
+            onLeftPress={() => !loading && closeContent()}
+            rightRenderIntem={
+              <Link
+                preset="outline"
+                color="contrast"
+                // disable={!fileDataToUpload || !getValues('title')}
+                loading={loading || uploading}
+                onPress={() => addDescription()}>
+                {/* onPress={handleSubmit(onSubmit)}> */}
+                Próximo
+              </Link>
+            }
+          />
+        </CreateHeader>
+        {/* <GuupProgressBar progress={uploadingProgress} /> */}
+        <CreateBody renderToHardwareTextureAndroid focusable={false}>
+          <CreateMedia>
+            <GuupGallery
+              onResponse={setFileToUpload}
+              title="Selecione seu video"
             />
-          </CreateHeader>
-          <CreateBody renderToHardwareTextureAndroid focusable={false}>
-            <CreateMedia>
-              <GuupUpload
-                onResponse={onUploadVideo}
-                title="Selecione uma capa para a sua colecao!"
-              />
-            </CreateMedia>
-            <Separator size="small" />
+          </CreateMedia>
+          {/* <Separator size="small" />
             <FormContainer>
               <SmartForm
                 {...{
@@ -160,39 +217,137 @@ const ContentCreate: React.FC<ContentCreatePropsApp> = ({
                   name="title"
                   editable={!loading}
                   placeholder="Digite um bom titulo para o conteudo aqui…"
-                  preset="subtitle"
-                  color="dark"
-                  style={{width: '75%'}}
+                  label="Titulo do conteudo"
+                  // preset="paragraph"
+                  // color="dark"
+                  // style={{width: '75%'}}
                 />
                 <InputArea
                   maxLength={MAX_COURSE_DESCRIPTION_LENGTH}
                   name="description"
                   editable={!loading}
+                  label="Descrição"
                   placeholder="Digite uma breve descripção aquí…"
                 />
               </SmartForm>
-            </FormContainer>
-          </CreateBody>
-          <Separator size="stroke" />
+            </FormContainer> */}
+        </CreateBody>
+        {/* <Carousel size={2} showDots={false} paging page={page}>
+            <CreateBody renderToHardwareTextureAndroid focusable={false}>
+              <CreateMedia>
+                <GuupGallery
+                  onResponse={setVideoToUpload}
+                  title="Selecione uma capa para a sua colecao!"
+                />
+              </CreateMedia>
+            </CreateBody>
+            <CreateBody renderToHardwareTextureAndroid focusable={false}>
+              <CreateMedia>
+                <GuupUpload
+                  onResponse={setFileToUpload}
+                  title="Selecione uma capa para a sua colecao!"
+                />
+              </CreateMedia>
+              <Separator size="small" />
+              <FormContainer>
+                <SmartForm
+                  {...{
+                    register,
+                    setValue,
+                    errors,
+                  }}>
+                  <InputArea
+                    maxLength={MAX_COURSE_TITLE_LENGTH}
+                    name="title"
+                    editable={!loading}
+                    placeholder="Digite um bom titulo para o conteudo aqui…"
+                    label="Titulo do conteudo"
+                    // preset="paragraph"
+                    // color="dark"
+                    // style={{width: '75%'}}
+                  />
+                  <InputArea
+                    maxLength={MAX_COURSE_DESCRIPTION_LENGTH}
+                    name="description"
+                    editable={!loading}
+                    label="Descrição"
+                    placeholder="Digite uma breve descripção aquí…"
+                  />
+                </SmartForm>
+              </FormContainer>
+            </CreateBody>
+          </Carousel> */}
+        {/* <GuupProgressBar progress={uploadingProgress} /> */}
+        {/* <Separator size="stroke" />
           <GuupFooter color="ligth">
             <FooterLabels>
               <Link
                 disable={loading}
                 color="dark"
                 onPress={() => closeContent()}>
-                Fechar
+                Upload video
               </Link>
               <Link
                 preset="solid"
-                disable={loading || !contentSource || !getValues('title')}
-                loading={loading}
+                disable={!fileDataToUpload || !getValues('title')}
+                loading={loading || uploading}
                 onPress={handleSubmit(onSubmit)}>
                 Publicar
               </Link>
             </FooterLabels>
-          </GuupFooter>
-        </CreateContainer>
-      </KeyboardBlock>
+          </GuupFooter> */}
+      </CreateContainer>
+      <Modal visible={formVisible} presentationStyle="formSheet">
+        <KeyboardBlock hasKeyboardDismiss paddingPageSheet>
+          <CreateModalForm>
+            <FormContainer>
+              <SmartForm
+                {...{
+                  register,
+                  setValue,
+                  errors,
+                }}>
+                <InputArea
+                  maxLength={MAX_COURSE_TITLE_LENGTH}
+                  name="title"
+                  editable={!loading}
+                  placeholder="Digite um bom titulo para o conteudo aqui…"
+                  label="Titulo do conteudo"
+                  // preset="title"
+                  // color="dark"
+                  // style={{width: '75%'}}
+                />
+                <InputArea
+                  maxLength={MAX_COURSE_DESCRIPTION_LENGTH}
+                  name="description"
+                  editable={!loading}
+                  label="Descrição (Opcional)"
+                  // preset="subtitle"
+                  placeholder="Digite uma breve descripção aquí…"
+                />
+              </SmartForm>
+            </FormContainer>
+            {/* <GuupProgressBar progress={uploadingProgress} /> */}
+            <GuupFooter color="ligth">
+              <FooterLabels>
+                <Link
+                  disable={loading}
+                  color="dark"
+                  onPress={() => setFormVisible(!formVisible)}>
+                  Fechar
+                </Link>
+                <Link
+                  preset="solid"
+                  disable={!fileDataToUpload || !getValues('title')}
+                  loading={loading || uploading}
+                  onPress={handleSubmit(onSubmit)}>
+                  Publicar
+                </Link>
+              </FooterLabels>
+            </GuupFooter>
+          </CreateModalForm>
+        </KeyboardBlock>
+      </Modal>
     </Container>
   );
 };

@@ -29,6 +29,8 @@ export {default as GuupDate} from './Date';
 export {default as GuupCourseCard} from './CourseCard';
 export {default as GuupCard} from './Card';
 export {default as GuupUpload} from './Upload';
+export {default as GuupGallery} from './Gallery';
 export {default as GuupMenuList} from './MenuList';
 export {default as GuupDataList} from './DataList';
 export {default as GuupShowMore} from './ShowMore';
+export {default as GuupProgressBar} from './Progress';

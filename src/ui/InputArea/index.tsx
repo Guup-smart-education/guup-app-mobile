@@ -23,7 +23,7 @@ export interface IProps extends TextInputProps {
 const CustomInputArea = forwardRef<any, IProps>(
   (props, ref): ReactElement => {
     const {
-      autoCorrect = false,
+      autoCorrect = true,
       error,
       label,
       color,
@@ -35,7 +35,7 @@ const CustomInputArea = forwardRef<any, IProps>(
         <InputWrapper>
           {label && (
             <RowFullWidth padding={25}>
-              <Text preset="label" bold>
+              <Text preset="chat" bold>
                 {label}
               </Text>
             </RowFullWidth>
@@ -49,8 +49,8 @@ const CustomInputArea = forwardRef<any, IProps>(
           />
           {error && (
             <FlagError>
-              <Text color="primary" preset="label" center bold>
-                Error - {error?.message}
+              <Text color="primary" preset="label" bold>
+                {error?.message}
               </Text>
             </FlagError>
           )}

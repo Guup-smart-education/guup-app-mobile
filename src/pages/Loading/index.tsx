@@ -1,13 +1,19 @@
 import React from 'react';
-import {Text} from 'react-native';
-import Container from './../../ui/Container';
+import {Container, Text, Separator, RowFullWidth} from './../../ui';
 import ActivityIndicator from './../../ui/ActivityIndicator';
 
-const LoadingScreen: React.FC = () => {
+interface ILoading {
+  readonly message?: string;
+}
+
+const LoadingScreen: React.FC<ILoading> = ({message = 'Loading..'}) => {
   return (
-    <Container>
+    <Container safe center>
       <ActivityIndicator />
-      <Text>Loading..</Text>
+      <Separator size="medium" />
+      <Text preset="comment" bold center>
+        {message}
+      </Text>
     </Container>
   );
 };

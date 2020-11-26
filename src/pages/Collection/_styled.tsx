@@ -41,6 +41,7 @@ export const CourseDetailDataRight = styled.View`
 export const CourseDetailDataLeft = styled.View``;
 
 export const CourseDetailContent = styled.View`
+  flex: 1;
   padding-bottom: ${({theme}) => theme.spacing.padding[25]};
 `;
 

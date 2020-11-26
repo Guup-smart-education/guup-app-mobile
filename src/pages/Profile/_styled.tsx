@@ -10,7 +10,7 @@ export const ProfileContainer = styled.SafeAreaView`
 
 export const ProfileHeader = styled.View`
   width: 100%;
-  padding-left: ${({theme}) => theme.spacing.padding[25]};
+  padding-left: ${({theme}) => theme.spacing.padding[15]};
   padding-right: ${({theme}) => theme.spacing.padding[25]};
 `;
 
@@ -19,7 +19,7 @@ export const ProfileUserPicture = styled.ImageBackground`
   position: absolute;
   z-index: -1;
   top: 0;
-  height: ${Dimensions.get('screen').height / 2 + 'px'};
+  height: ${Dimensions.get('screen').height / 1.8 + 'px'};
   background-color: ${({theme}) => theme.colors.secondary};
   justify-content: flex-end;
   padding-left: ${({theme}) => theme.spacing.padding[25]};
@@ -29,7 +29,7 @@ export const ProfileUserPicture = styled.ImageBackground`
 
 export const ProfileuserData = styled.View`
   width: 70%;
-  height: ${Dimensions.get('screen').height / 2 - 104 + 'px'};
+  /* height: ${Dimensions.get('screen').height / 2 - 64 + 'px'}; */
   justify-content: flex-end;
   padding-bottom: ${({theme}) => theme.spacing.padding[20]};
 `;

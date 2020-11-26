@@ -19,7 +19,7 @@ import {PropsApp} from './../../@types/app.navigation';
 import {GetUniqueId, shadowStyle} from './../../helper';
 import {LIMIT_PER_PAGE} from './../../constants';
 import {Post, useGetAllPostsLazyQuery} from './../../graphql/types.d';
-import NewsLoading from './_loading';
+// import NewsLoading from './_loading';
 import Authcontext from './../../contexts/auth';
 
 interface IProstItem {
@@ -28,9 +28,10 @@ interface IProstItem {
 // List empty data
 const ListEmpty = () => {
   return (
-    <NewsEmpty>
+    <Container center>
       <Text center>Não publicações disponiveis</Text>
-    </NewsEmpty>
+      <Separator size="large" />
+    </Container>
   );
 };
 // List loading more
@@ -119,7 +120,8 @@ const NewsScreen: React.FC<PropsApp> = ({navigation: {navigate}}) => {
     const authUser = authContext.user || {};
     const clapped = claps && R.includes(`${authUser.uid}`, claps);
     return (
-      <NewsPost style={shadowStyle.newPost}>
+      <NewsPost>
+        {/* <NewsPost style={shadowStyle.newPost}> */}
         <PostComment
           owner={{
             id: owner || ownerProfile?.uid,
@@ -137,35 +139,13 @@ const NewsScreen: React.FC<PropsApp> = ({navigation: {navigate}}) => {
           createdAt={createdAt}
           clapped={!!clapped}
           menu
+          card={false}
         />
-        <Separator size="large" />
+        {/* <Separator size="stroke" /> */}
+        <Separator size="tiny" />
       </NewsPost>
     );
   }, []);
-  const ListHeader = useCallback(
-    () => (
-      <NewsHeader>
-        <NewsActions>
-          <GuupHeader
-            leftRenderIntem={<Icon source="guup" size="small" />}
-            rightRenderIntem={
-              <Link preset="simple" onPress={() => navigate('GuupPostCreate')}>
-                Criar um post +
-              </Link>
-            }
-          />
-        </NewsActions>
-        <Separator size="tiny" />
-        <NewsTitle>
-          <Text preset="largePrice">
-            Confira as ultimas novidades na empresa
-          </Text>
-        </NewsTitle>
-        <Separator size="large" />
-      </NewsHeader>
-    ),
-    [],
-  );
   // End callbacks
 
   // Render Branchs
@@ -183,9 +163,9 @@ const NewsScreen: React.FC<PropsApp> = ({navigation: {navigate}}) => {
       </Text>
     );
   }
-  if (loading) {
-    return <NewsLoading />;
-  }
+  // if (loading) {
+  //   return <NewsLoading />;
+  // }
 
   // Handlers
   const handlefetchMoreData = () => {
@@ -211,21 +191,43 @@ const NewsScreen: React.FC<PropsApp> = ({navigation: {navigate}}) => {
   // End Handlers
 
   return (
-    <Container safe>
+    <Container safe light>
       <NewsContainer>
+        <NewsHeader>
+          <NewsActions>
+            <GuupHeader
+              hasGuupIcon
+              title="Noticias"
+              rightRenderIntem={
+                <Link
+                  preset="simple"
+                  onPress={() => navigate('GuupPostCreate')}>
+                  <Icon source="plus" blur />
+                </Link>
+              }
+            />
+          </NewsActions>
+          {/* <NewsTitle>
+            <Text preset="header">Confira as ultimas novidades</Text>
+          </NewsTitle>
+          <Separator size="small" /> */}
+          <Separator size="stroke" color="veryLigthGrey" />
+        </NewsHeader>
         <NewsBody>
           <NewsContent>
-            {allPostsData && (
+            {!allPostsData.length ? (
+              <ListEmpty />
+            ) : allPostsData.length && !loading ? (
               <FlatList
                 showsVerticalScrollIndicator={false}
-                scrollEnabled={!!allPostsData}
+                scrollEnabled={!!allPostsData.length}
                 data={allPostsData}
                 keyExtractor={keyExtractor}
                 maxToRenderPerBatch={20}
                 nestedScrollEnabled
                 renderItem={PostItem}
                 ListEmptyComponent={ListEmpty}
-                ListHeaderComponent={ListHeader}
+                ListHeaderComponent={<Separator size="tiny" />}
                 ListFooterComponent={
                   <ListLoadMore loading={loadMore && !isNoMorePosts} />
                 }
@@ -234,6 +236,10 @@ const NewsScreen: React.FC<PropsApp> = ({navigation: {navigate}}) => {
                 refreshing={loading}
                 onRefresh={handleRefresh}
               />
+            ) : (
+              <Container center>
+                <ActivityIndicator size="small" />
+              </Container>
             )}
           </NewsContent>
         </NewsBody>

@@ -7,18 +7,20 @@ export const HeaderContainer = styled.View`
   justify-content: space-between;
   flex-direction: row;
   position: relative;
+  height: 54px;
 `;
 
 export const HeaderLeftItem = styled.View`
-  /* width: 25%; */
-  align-items: flex-start;
-  justify-content: center;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: row;
+  flex: 1;
 `;
 
 export const HeaderRightItem = styled.View`
-  /* width: 25%; */
   align-items: flex-end;
   justify-content: center;
+  flex: 1;
 `;
 
 export const HeaderCenterRenderItem = styled.View`

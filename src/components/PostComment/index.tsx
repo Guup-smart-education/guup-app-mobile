@@ -82,6 +82,7 @@ export default ({
           }>
           <View>
             <Avatar
+              size="comment"
               image={owner && owner.ownerPicture}
               firstText={owner && owner.ownerName}
               secondText={owner && owner.ownerProsiffion}
@@ -106,7 +107,7 @@ export default ({
       )}
       <PostBody>
         <PostContent card={!!card}>
-          <Text preset="comment">{postComment}</Text>
+          <Text preset="paragraph">{postComment}</Text>
           {createdAt && (
             <>
               <Separator size="small" />
@@ -125,7 +126,7 @@ export default ({
                   : {}
               }>
               <PostActionItem>
-                <Text preset="label" color="dark" bold underline>
+                <Text preset="comment" color="dark" bold underline>
                   {comments} comentarios
                 </Text>
               </PostActionItem>

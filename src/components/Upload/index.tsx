@@ -1,5 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+// import RNFetchBlob from 'rn-fetch-blob';
 import React, {useState, forwardRef, ReactElement, useEffect} from 'react';
-import {Alert, TextInputProps} from 'react-native';
+import {IFileDatUpload} from './../../@types/fileDataUpload';
 import {Action, Icon, Text} from './../../ui';
 import ImagePicker, {ImagePickerOptions} from 'react-native-image-picker';
 import {
@@ -7,8 +9,8 @@ import {
   MediaContainer,
   LoadingIndicator,
   MediaTextContent,
-  TextInputNone,
 } from './_styled';
+import {Alert, Platform} from 'react-native';
 
 interface IUpload {
   readonly title?: string;
@@ -22,27 +24,38 @@ const OPTIONS: ImagePickerOptions = {
     path: 'photos',
     skipBackup: true,
   },
+  videoQuality: 'high',
 };
 
 const GuupUpload = forwardRef<any, IUpload>(
   (props, ref): ReactElement => {
     const {title, onResponse} = props;
     const [source, setSource] = useState<any>();
+    const [fileUploadInfo, setFileUploadInfo] = useState<IFileDatUpload>();
     const [loading, setLoading] = useState<boolean>(false);
     // handlers
     const pickSourceLibrary = () => {
       setLoading(true);
-      ImagePicker.launchImageLibrary(OPTIONS, (response) => {
+      ImagePicker.launchImageLibrary(OPTIONS, async (response) => {
         if (response.didCancel) {
           console.log('User cancelled image picker');
         } else if (response.error) {
+          Alert.alert(
+            'Error ✋',
+            'Aconteceu um erro na hora de subir a imagem, tente novamente',
+          );
           console.log('ImagePicker Error: ', response.error);
-        } else if (response.customButton) {
-          console.log('User tapped custom button: ', response.customButton);
         } else {
-          const imageSource = {uri: response.uri};
-          console.log('imageSource: ', imageSource);
+          const {uri, type, fileSize, width, height} = response;
+          const imageSource = {uri, type};
           setSource(imageSource);
+          setFileUploadInfo({
+            uri: Platform.OS === 'ios' ? uri.replace('file://', '') : uri,
+            type: `${type}`,
+            fileSize,
+            width,
+            height,
+          });
         }
         setLoading(false);
       });
@@ -57,12 +70,15 @@ const GuupUpload = forwardRef<any, IUpload>(
     // End handlers
     // Effects
     useEffect(() => {
-      onResponse(source);
-    }, [source, onResponse]);
+      if (fileUploadInfo) {
+        onResponse(fileUploadInfo);
+      }
+    }, [fileUploadInfo]);
     // End effects
     return (
       <UploadContainer>
         <MediaContainer
+          ref={ref}
           source={source}
           onLoadStart={onLoadStart}
           onLoadEnd={onLoadEnd}

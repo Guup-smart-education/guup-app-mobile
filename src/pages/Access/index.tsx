@@ -1,8 +1,16 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import R from 'ramda';
 import React, {useEffect, useState, useContext} from 'react';
 import AuthContext from './../../contexts/auth';
 import AsyncStorage from '@react-native-community/async-storage';
-import {Separator, FormContainer, RowFullWidth, Text} from './../../ui';
+import {
+  Separator,
+  FormContainer,
+  RowFullWidth,
+  Text,
+  Icon,
+  Container,
+} from './../../ui';
 import {
   KeyboardBlock,
   GuupBot,
@@ -17,6 +25,7 @@ import {
 } from './../../graphql/types.d';
 import {useCountDown} from './Hooks';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
+import {Alert} from 'react-native';
 
 const SigninScreen: React.FC<PropsAuth> = ({
   navigation,
@@ -28,7 +37,7 @@ const SigninScreen: React.FC<PropsAuth> = ({
   const [custonExpire, setCustonExpire] = useState<number>(120);
   const {countDown, resetCountDown} = useCountDown(custonExpire);
   const [bootMessage, setBootMessage] = useState<string>(
-    `Digite o token de accesso que acabamos de te enviar para ${email}`,
+    `Acabamos de enviar um e-mail para ${email}`,
   );
   const [tokenAccess, setTokenAccess] = useState<string>('');
   // Mutation
@@ -50,7 +59,7 @@ const SigninScreen: React.FC<PropsAuth> = ({
     if (signinData) {
       const {authSignIn} = signinData;
       if (authSignIn.__typename === 'ErrorResponse') {
-        setBootMessage(authSignIn.error.message || 'Oops!! Aconteceu um erro');
+        Alert.alert('ops!! Aconteceu um erro', `${authSignIn.error.message}`);
       } else if (
         authSignIn.__typename === 'SigInSuccess' &&
         authSignIn.success?.type === 'OLD_USERS'
@@ -67,7 +76,7 @@ const SigninScreen: React.FC<PropsAuth> = ({
         navigation.navigate('AuthSignUp');
       }
     } else if (signinError) {
-      setBootMessage('Oops!! Aconteceu um erro, tenta novamente');
+      Alert.alert('Oops!! Aconteceu um erro', 'Tenta novamente');
     }
   }, [signinData, signinError]);
 
@@ -75,57 +84,68 @@ const SigninScreen: React.FC<PropsAuth> = ({
     if (accessData) {
       const {authRequestAccess} = accessData;
       if (authRequestAccess.__typename === 'ErrorResponse') {
-        setBootMessage(
-          authRequestAccess.error.message || 'Oops!! Aconteceu um erro',
+        Alert.alert(
+          'Oops!! Aconteceu um erro',
+          `${authRequestAccess.error.message}`,
         );
       } else if (authRequestAccess.__typename === 'RequestAccess') {
         setCustonExpire(120);
         resetCountDown();
-        setBootMessage(
-          authRequestAccess.success?.message || 'Eba!!! Deu tudo certo',
+        Alert.alert(
+          'Eba!!! Deu tudo certo',
+          `${authRequestAccess.success?.message}`,
         );
       }
     } else if (accessError) {
-      setBootMessage('Oops!! Aconteceu um erro, tenta novamente');
+      Alert.alert('Oops!! Aconteceu um erro', 'Tenta novamente');
     }
   }, [accessData, accessError]);
   return (
     <KeyboardBlock hasKeyboardDismiss={false}>
-      <FormContainer>
-        <RowFullWidth padding={50}>
-          <GuupBot message={bootMessage} />
-        </RowFullWidth>
-        <Separator size="bigger" />
-        <ContainerInputs>
-          <InputToken onSetValue={(token: string) => setTokenAccess(token)} />
-          <ExpireTime>
-            {parseInt(R.replace(/:/g, '', countDown), 0) ? (
-              <Text preset="label" color="greyBrown">
-                Solicitar novo token em {countDown}
-              </Text>
-            ) : (
-              <TouchableWithoutFeedback
-                onPress={() => requestAccess({variables: {email}})}>
-                <Text preset="label" color="primary" underline bold>
-                  Solicitar novo token
+      <Container safe light>
+        <FormContainer>
+          <RowFullWidth padding={50}>
+            <Separator size="large" />
+            <Icon source="guup" size="small" />
+            <Separator size="medium" />
+            <Text preset="header">Digita o voucher</Text>
+            <Separator size="medium" />
+            <Text preset="paragraph">{bootMessage}</Text>
+          </RowFullWidth>
+          <Separator size="large" />
+          <ContainerInputs>
+            <InputToken onSetValue={(token: string) => setTokenAccess(token)} />
+            <ExpireTime>
+              {parseInt(R.replace(/:/g, '', countDown), 0) ? (
+                <Text preset="label" color="greyBrown">
+                  Solicitar novo token em {countDown}
                 </Text>
-              </TouchableWithoutFeedback>
-            )}
-          </ExpireTime>
-        </ContainerInputs>
-      </FormContainer>
-      <GuupActions
-        loading={loading || accessLoading}
-        leftAction={{text: 'Cancel', onPress: goOnboarding}}
-        rightAction={{
-          text: 'Enviar',
-          onPress: () =>
-            requestSignin({
-              variables: {email, tokenAccess: parseInt(tokenAccess, 0)},
-            }),
-          disable: tokenAccess?.length < 4,
-        }}
-      />
+              ) : (
+                <TouchableWithoutFeedback
+                  onPress={() =>
+                    !accessLoading && requestAccess({variables: {email}})
+                  }>
+                  <Text preset="label" color="primary" underline bold>
+                    Solicitar novo token
+                  </Text>
+                </TouchableWithoutFeedback>
+              )}
+            </ExpireTime>
+          </ContainerInputs>
+        </FormContainer>
+        <GuupActions
+          loading={loading || accessLoading}
+          leftAction={{text: 'Cancel', onPress: goOnboarding}}
+          rightAction={{
+            text: 'Enviar',
+            onPress: () =>
+              requestSignin({
+                variables: {email, tokenAccess: parseInt(tokenAccess, 0)},
+              }),
+            disable: tokenAccess?.length < 4,
+          }}
+        />
+      </Container>
     </KeyboardBlock>
   );
 };

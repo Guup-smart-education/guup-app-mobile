@@ -9,6 +9,11 @@ query getCourses($lastCourse: String) {
         area
         difficult
         photoURL
+        videoURL
+        thumbnailURL
+        gifURL
+        videoPlaybackID
+        videoAssetId
         typeContent
         viewsCount
         clapsCount

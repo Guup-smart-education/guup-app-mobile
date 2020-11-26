@@ -4,6 +4,8 @@ export const ContainerInputs = styled.View`
   width: 100%;
   position: relative;
   align-items: center;
+  padding-left: 50px;
+  padding-right: 50px;
 `;
 
 export const TokenInput = styled.TextInput`

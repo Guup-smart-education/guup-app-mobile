@@ -30,9 +30,12 @@ declare module 'styled-components' {
     icons: {
       guup: Blob;
       explorer: Blob;
+      explorerFilled: Blob;
       news: Blob;
+      newsFilled: Blob;
       box: Blob;
       profile: Blob;
+      profileFilled: Blob;
       search: Blob;
       heart: Blob;
       arrow: Blob;
@@ -57,6 +60,7 @@ declare module 'styled-components' {
       settings: Blob;
       trash: Blob;
       alert: Blob;
+      back: Blob;
     };
     iconsSizes: {
       small: string;

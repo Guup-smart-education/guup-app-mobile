@@ -29,11 +29,15 @@ export enum EIcons {
   'settings',
   'trash',
   'alert',
+  'back',
 }
 
 export enum ETabIcon {
   'GuupExplorer' = 'explorer',
+  'GuupExplorerFocus' = 'explorerFilled',
   'GuupNews' = 'news',
+  'GuupNewsFocus' = 'newsFilled',
   'GuupCourse' = 'box',
   'GuupAccount' = 'profile',
+  'GuupAccountFocus' = 'profileFilled',
 }

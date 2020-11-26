@@ -5,10 +5,14 @@ import AuthContext from './../contexts/auth';
 import LoadingScreen from './../pages/Loading';
 
 const Routes: React.FC = () => {
-  const {appLoading, signed, user} = useContext(AuthContext);
+  const {appLoading, signed, user, isSignOut} = useContext(AuthContext);
   console.log([signed, user]);
   if (appLoading) {
-    return <LoadingScreen />;
+    return <LoadingScreen message="Estamos trazendo informações, aguerde" />;
+  } else if (isSignOut) {
+    return (
+      <LoadingScreen message="Estamos deslogando a sua conta, aguarde un momento porfavor" />
+    );
   }
   return signed ? <AppRouter /> : <AuthRouter />;
 };

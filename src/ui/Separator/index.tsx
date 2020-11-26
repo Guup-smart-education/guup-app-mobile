@@ -1,5 +1,6 @@
 import React from 'react';
 import {Separator} from './_styled';
+import {EColors} from './../../@enum/color.enum';
 
 export enum ESize {
   'stroke' = 'stroke',
@@ -15,6 +16,7 @@ export enum ESize {
 
 export type IProps = {
   readonly size?: keyof typeof ESize;
+  readonly color?: keyof typeof EColors;
 };
 
-export default ({size}: IProps) => <Separator {...{size}} />;
+export default ({size, color}: IProps) => <Separator {...{size, color}} />;

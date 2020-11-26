@@ -24,5 +24,5 @@ export const MenuListItemcontainer = styled.View<{
 
 export const MenuListText = styled.View`
   flex: 1;
-  padding-left: 10px;
+  /* padding-left: 10px; */
 `;

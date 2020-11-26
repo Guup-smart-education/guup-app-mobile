@@ -31,9 +31,12 @@ export const guupTheme: DefaultTheme = {
   icons: {
     guup: require('./../../assets/icons/guupIconLogo.png'),
     explorer: require('./../../assets/icons/guupIconExplore.png'),
+    explorerFilled: require('./../../assets/icons/guupIconExploreFilled.png'),
     news: require('./../../assets/icons/guupIconNews.png'),
+    newsFilled: require('./../../assets/icons/guupIconNewsFilled.png'),
     box: require('./../../assets/icons/guupIconBox.png'),
     profile: require('./../../assets/icons/guupIconProfile.png'),
+    profileFilled: require('./../../assets/icons/guupIconProfileFilled.png'),
     search: require('./../../assets/icons/guupIconSearch.png'),
     heart: require('./../../assets/icons/guupIconHeart.png'),
     arrow: require('./../../assets/icons/guupIconArrow.png'),
@@ -58,6 +61,7 @@ export const guupTheme: DefaultTheme = {
     settings: require('./../../assets/icons/guupIconSettings.png'),
     trash: require('./../../assets/icons/guupIconTrash.png'),
     alert: require('./../../assets/icons/guupIconAlert.png'),
+    back: require('./../../assets/icons/guupIconBack.png'),
   },
   iconsSizes: {
     small: '28px',

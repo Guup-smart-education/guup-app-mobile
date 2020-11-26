@@ -2,25 +2,36 @@ import {Dimensions} from 'react-native';
 import styled from 'styled-components/native';
 import {hasNotch} from 'react-native-device-info';
 
-export const CardContainer = styled.ImageBackground`
+export const CardOverlay = styled.View`
+  background-color: ${({theme}) => theme.colors.ultraDark};
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  opacity: 0.2;
+  z-index: 0;
+`;
+
+export const CardContainer = styled.View`
   width: 100%;
-  height: 100%;
-  padding-top: ${hasNotch() ? 28 : 0}px;
-  padding-bottom: ${20 + (hasNotch() ? 84 : 50)}px;
-  justify-content: flex-end;
-  /* align-items: center; */
+  /* padding-left: ${({theme}) => theme.spacing[25]};
+  padding-right: ${({theme}) => theme.spacing[25]}; */
+  justify-content: center;
+  align-items: center;
 `;
 
 export const CardWrapper = styled.View`
+  /* width: ${Dimensions.get('screen').width}px; */
   width: 100%;
+  height: 100%;
   flex: 1;
-  /* justify-content: center;
-  align-items: center; */
-  padding-left: ${({theme}) => theme.spacing.padding[25]};
-  padding-right: ${({theme}) => theme.spacing.padding[25]};
-  padding-bottom: ${({theme}) => theme.spacing.padding[20]};
-  padding-top: 75px;
-  /* background-color: cornflowerblue; */
+  justify-content: center;
+  align-items: center;
+  background-color: ${({theme}) => theme.colors.ligth};
+  /* border-radius: ${({theme}) => theme.borderRadius[8]}; */
+  overflow: hidden;
+  /* position: relative; */
 `;
 
 export const CardSectionTop = styled.View`
@@ -28,31 +39,47 @@ export const CardSectionTop = styled.View`
   width: 100%;
 `;
 
-export const CardSectionHeader = styled.View`
+export const CardSectionHeader = styled.ImageBackground`
   width: 100%;
+  flex: 1;
+  justify-content: flex-end;
+  padding-bottom: ${({theme}) => theme.spacing[15]};
+  padding-top: ${({theme}) => theme.spacing[20]};
+  padding-right: ${({theme}) => theme.spacing[25]};
+  padding-left: ${({theme}) => theme.spacing[25]};
+  height: ${Dimensions.get('screen').width + 40}px;
+  position: relative;
 `;
 
 export const CardSectionTitle = styled.View`
-  flex-direction: row;
-  width: 100%;
-  justify-content: space-between;
-  padding-bottom: ${({theme}) => theme.spacing.padding[20]};
+  width: 75%;
+  margin-bottom: ${({theme}) => theme.spacing[15]};
+  z-index: 1;
 `;
 
 export const CardTitle = styled.View`
-  width: 80%;
+  width: 100%;
 `;
 
 export const CardDescription = styled.View`
   width: 100%;
-  background-color: burlywood;
-  flex: 1;
-  justify-content: space-between;
+  padding-right: ${({theme}) => theme.spacing[25]};
+  padding-top: ${({theme}) => theme.spacing[20]};
+  padding-bottom: ${({theme}) => theme.spacing[25]};
+  padding-left: ${({theme}) => theme.spacing[25]};
+  border-bottom-width: 1px;
+  border-bottom-color: ${({theme}) => theme.colors.veryLigthGrey};
 `;
 
 export const CardSectionBody = styled.View`
-  /* flex-grow: 1; */
   width: 100%;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: ${({theme}) => theme.spacing[20]};
+  padding-top: ${({theme}) => theme.spacing[15]};
+  padding-right: ${({theme}) => theme.spacing[25]};
+  padding-left: ${({theme}) => theme.spacing[25]};
 `;
 
 export const CardContent = styled.View`
@@ -64,6 +91,7 @@ export const CardActions = styled.View`
   flex: 1;
   width: 100%;
   align-items: flex-end;
+  z-index: 1;
 `;
 
 export const CardBottomActions = styled.View`

@@ -9,11 +9,12 @@ type Props = {
 export const SafeContainer = styled.SafeAreaView<Props>`
   background-color: ${({dark, light, theme}) =>
     dark
-      ? theme.colors.dark
+      ? theme.colors.ultraDark
       : light
       ? theme.colors.ligth
       : theme.colors.veryLigthGrey};
   flex: 1;
+  width: 100%;
   ${({center}) => center && 'justify-content: center; align-items: center'};
 `;
 
@@ -24,6 +25,7 @@ export const ContainerGradient = styled.ImageBackground.attrs(({theme}) => ({
   flex: 1;
   justify-content: center;
   align-items: center;
+  width: 100%;
 `;
 
 export const Container = styled.View<Props>`
@@ -32,4 +34,5 @@ export const Container = styled.View<Props>`
   flex: 1;
   justify-content: center;
   align-items: center;
+  width: 100%;
 `;

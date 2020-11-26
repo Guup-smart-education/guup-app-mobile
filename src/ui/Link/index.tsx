@@ -31,20 +31,28 @@ export default ({
   preset = EPreset.simple,
   loading,
   disable,
+  color,
   ...args
 }: IProps) => {
   return (
     <TouchableWithoutFeedback onPress={() => !loading && !disable && onPress()}>
       {preset === EPreset.simple ? (
-        <Link {...{...args, loading, disable}}>{children}</Link>
+        <Link {...{...args, color, loading, disable}}>{children}</Link>
       ) : (
-        <LinkWrapper {...{...args, preset, loading, disable}}>
+        <LinkWrapper {...{...args, color, preset, loading, disable}}>
           {loading && (
             <LinkOverlay>
-              <LinkLoadingIndicator size="small" />
+              <LinkLoadingIndicator
+                size="small"
+                color={
+                  preset === EPreset.solid
+                    ? EColors.ligth
+                    : color || EColors.contrast
+                }
+              />
             </LinkOverlay>
           )}
-          <Link {...{...args, preset, loading}}>{children}</Link>
+          <Link {...{...args, color, preset, loading}}>{children}</Link>
         </LinkWrapper>
       )}
     </TouchableWithoutFeedback>

@@ -87,6 +87,7 @@ const OnboardScreen: React.FC<PropsAuth> = ({navigation}) => {
   return (
     <Container safe light>
       <Carousel
+        enabled={DataOnboarding.slider.length > 1}
         scrollX={scrollX}
         size={DataOnboarding.slider.length}
         dotsPosition="left"

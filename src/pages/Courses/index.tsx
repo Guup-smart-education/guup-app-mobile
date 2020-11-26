@@ -89,8 +89,9 @@ const Collections: React.FC<PropsApp> = ({navigation: {goBack, navigate}}) => {
   const CourseItem = useCallback(
     ({item}: {item: CourseType}) => {
       return (
-        <CourseItemContainer style={shadowStyle.newPost}>
-          <Separator size="large" />
+        <CourseItemContainer>
+          {/* <CourseItemContainer style={shadowStyle.newPost}> */}
+          <Separator size="tiny" />
           <Course {...{...item}} model="OWNER" />
         </CourseItemContainer>
       );
@@ -99,12 +100,12 @@ const Collections: React.FC<PropsApp> = ({navigation: {goBack, navigate}}) => {
   );
   const ListEmpty = useCallback(
     () => (
-      <View>
+      <Container center>
         <Text center>Não conteudos disponiveis</Text>
         <Link onPress={() => navigate('GuupContentCreate', {path: ''})}>
-          Comparte um conteudo
+          Criar um conteudo
         </Link>
-      </View>
+      </Container>
     ),
     [navigate],
   );
@@ -158,16 +159,9 @@ const Collections: React.FC<PropsApp> = ({navigation: {goBack, navigate}}) => {
       <CoursesContainer>
         <CoursesHeader>
           <GuupHeader
-            leftRenderIntem={
-              <Action onPress={() => goBack()}>
-                <Icon source="arrow" />
-              </Action>
-            }
-            centerRenderItem={
-              <Text preset="comment" bold>
-                Conteudos
-              </Text>
-            }
+            hasBack
+            title="Meus conteudos"
+            onLeftPress={() => goBack()}
             rightRenderIntem={
               <Action onPress={() => navigate('GuupContentCreate')}>
                 <Icon source="plus" />

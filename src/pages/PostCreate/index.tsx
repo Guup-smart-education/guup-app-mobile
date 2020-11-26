@@ -75,20 +75,14 @@ const PostCreate: React.FC<PropsApp> = ({navigation: {goBack}}) => {
         <CreateContainer>
           <CreateHeader>
             <GuupHeader
-              leftRenderIntem={
-                <Action onPress={() => !loading && goBack()}>
-                  <Icon source="arrow" />
-                </Action>
-              }
-              centerRenderItem={
-                <Text preset="comment" bold>
-                  Post
-                </Text>
-              }
+              hasBack
+              title="Publique algo"
+              loading={loading}
+              onLeftPress={() => !loading && goBack()}
             />
           </CreateHeader>
           <CreateBody>
-            <CreateDescription>
+            {/* <CreateDescription>
               <CreateTitle>
                 <Text preset="subtitle">
                   Compartilhe alguma coisa interesante
@@ -97,13 +91,14 @@ const PostCreate: React.FC<PropsApp> = ({navigation: {goBack}}) => {
               <CreateImage>
                 <GuupUpload onResponse={(val: string) => setPostImage(val)} />
               </CreateImage>
-            </CreateDescription>
-            <Separator size="medium" />
+            </CreateDescription> */}
+            {/* <Separator size="medium" /> */}
             <CreateInput>
               <InputArea
+                label="Digite algo"
                 maxLength={MAX_POST_DESCRIPTION_LENGTH}
                 onChangeText={(val: string) => setPost(val)}
-                placeholder="Digita aqui a sua publicação"
+                placeholder="Compartilhe alguma coisa interesante"
               />
             </CreateInput>
           </CreateBody>

@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {useContext} from 'react';
+import {ThemeContext} from 'styled-components';
 import {SignIn, SignUp, Access, Onboarding, Waiting} from './../pages';
 import {RootAuth} from './../@types/auth.navigation';
 import {
@@ -14,6 +15,7 @@ const NoHeaderOptions: StackNavigationOptions = {
 };
 
 const AuthRouter: React.FC = () => {
+  const theme = useContext(ThemeContext);
   return (
     <AuthStack.Navigator
       // mode="modal"
@@ -22,6 +24,14 @@ const AuthRouter: React.FC = () => {
         headerLeftContainerStyle: {paddingLeft: 25},
         headerRightContainerStyle: {paddingRight: 25},
         headerTransparent: false,
+        headerStyle: {
+          backgroundColor: `${theme.colors.ligth}`,
+          elevation: 0,
+          shadowOffset: {
+            height: 0,
+            width: 0,
+          },
+        },
       }}>
       <AuthStack.Screen
         options={() => {

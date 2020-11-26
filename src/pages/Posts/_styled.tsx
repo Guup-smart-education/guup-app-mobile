@@ -7,7 +7,7 @@ export const PostsContainer = styled.View`
 `;
 
 export const PostsHeader = styled.View`
-  padding-left: ${({theme}) => theme.spacing[20]};
+  padding-left: ${({theme}) => theme.spacing[15]};
   padding-right: ${({theme}) => theme.spacing[20]};
   /* border-bottom-width: 1px;
   border-color: ${({theme}) => theme.colors.ligthGrey}; */
@@ -21,8 +21,9 @@ export const PostsBody = styled.View`
 `;
 
 export const PostItemContainer = styled.View`
-  padding-left: ${({theme}) => theme.spacing[20]};
-  padding-right: ${({theme}) => theme.spacing[20]};
+  width: 100%;
+  /* padding-left: ${({theme}) => theme.spacing[20]};
+  padding-right: ${({theme}) => theme.spacing[20]}; */
 `;
 
 export const EmptyContainer = styled.View`

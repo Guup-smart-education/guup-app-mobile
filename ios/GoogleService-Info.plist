@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>678115750971-976sjpfumf81lq8i6o379c2j9ljbb66f.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.678115750971-976sjpfumf81lq8i6o379c2j9ljbb66f</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBXMwN3-46Ft6wbh-zG6h14hIVPVFqak9w</string>
+	<key>GCM_SENDER_ID</key>
+	<string>678115750971</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.guupse</string>
+	<key>PROJECT_ID</key>
+	<string>guup-36ad1</string>
+	<key>STORAGE_BUCKET</key>
+	<string>guup-36ad1.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:678115750971:ios:cfa7efaa24b19b1752581e</string>
+	<key>DATABASE_URL</key>
+	<string>https://guup-36ad1.firebaseio.com</string>
+</dict>
+</plist>

@@ -47,7 +47,7 @@ export const CommentsActions = styled.View`
 
 export const CommentNav = styled.View`
   width: 100%;
-  padding-left: ${({theme}) => theme.spacing.padding[20]};
+  padding-left: ${({theme}) => theme.spacing.padding[15]};
   padding-right: ${({theme}) => theme.spacing.padding[20]};
   background-color: ${({theme}) => theme.colors.ligth};
   border-bottom-width: 1px;

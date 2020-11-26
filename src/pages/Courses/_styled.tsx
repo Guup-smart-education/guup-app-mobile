@@ -10,13 +10,14 @@ export const CoursesHeader = styled.View`
   width: 100%;
   background-color: ${({theme}) => theme.colors.ligth};
   align-items: center;
-  padding-left: ${({theme}) => theme.spacing.padding[25]};
+  padding-left: ${({theme}) => theme.spacing.padding[15]};
   padding-right: ${({theme}) => theme.spacing.padding[25]};
 `;
 
 export const CourseBody = styled.View`
   width: 100%;
   background-color: ${({theme}) => theme.colors.veryLigthGrey};
+  flex: 1;
   /* padding-left: ${({theme}) => theme.spacing.padding[25]};
   padding-right: ${({theme}) => theme.spacing.padding[25]}; */
 `;
@@ -37,6 +38,6 @@ export const CourseEmpty = styled.View`
 `;
 
 export const CourseItem = styled.View`
-  padding-left: ${({theme}) => theme.spacing.padding[25]};
-  padding-right: ${({theme}) => theme.spacing.padding[25]};
+  /* padding-left: ${({theme}) => theme.spacing.padding[25]};
+  padding-right: ${({theme}) => theme.spacing.padding[25]}; */
 `;

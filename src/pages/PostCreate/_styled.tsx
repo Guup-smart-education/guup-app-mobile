@@ -6,7 +6,7 @@ export const CreateContainer = styled.View`
 `;
 
 export const CreateHeader = styled.View`
-  padding-left: ${({theme}) => theme.spacing[20]};
+  padding-left: ${({theme}) => theme.spacing[15]};
   padding-right: ${({theme}) => theme.spacing[20]};
   width: 100%;
   border-bottom-width: 1px;

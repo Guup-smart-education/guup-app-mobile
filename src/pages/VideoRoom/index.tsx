@@ -22,36 +22,43 @@ import {usePathContext} from './../../contexts/path';
 import {Alert} from 'react-native';
 
 const VideoRoom: React.FC<PropsApp> = ({navigation: {goBack}}) => {
-  const {state, dispatch} = usePathContext();
+  const {
+    state: {currentCourse},
+    dispatch,
+  } = usePathContext();
   const onBuffer = (buffer) => {
     console.log('buffer => ', buffer);
   };
+  console.log('currentCourse: ', currentCourse);
   return (
-    <Container>
+    <Container safe dark>
       <VideoRoomContainer>
         <VideoRoomHeader>
           <GuupHeader
-            leftRenderIntem={
-              <Action onPress={() => goBack()}>
-                <Icon source="arrow" tintColor="ligth" size="normal" />
-              </Action>
-            }
+            hasBack
+            isDarkTheme
+            onLeftPress={() => goBack()}
+            // leftRenderIntem={
+            //   <Action onPress={() => goBack()}>
+            //     <Icon source="arrow" tintColor="ligth" size="normal" />
+            //   </Action>
+            // }
           />
         </VideoRoomHeader>
         <VideoRoomBody>
           <View style={{width: '75%'}}>
             <Text preset="subtitle" color="ligth">
-              {state.currentCourse?.title}
+              {currentCourse?.title}
             </Text>
           </View>
           <Separator size="small" />
           <GuupShowMore
             preset="comment"
             color="ligth"
-            text={state.currentCourse?.description || ''}
+            text={currentCourse?.description || ''}
           />
           {/* <Text preset="comment" color="ligth" maxLength={250}>
-            {state.currentCourse?.description}
+            {currentCourse?.description}
           </Text> */}
           <Separator size="small" />
         </VideoRoomBody>
@@ -63,9 +70,12 @@ const VideoRoom: React.FC<PropsApp> = ({navigation: {goBack}}) => {
         {/* <FooterPatch /> */}
       </VideoRoomContainer>
       <VideoPlayer
-        muted={true}
         onBuffer={onBuffer}
-        source={require('../../../assets/videos/video_horizontal.mp4')}
+        resizeMode="cover"
+        source={{
+          uri: `https://stream.mux.com/${currentCourse?.videoPlaybackID}.m3u8`,
+        }}
+        onVideoLoad={() => console.log('video loading')}
       />
     </Container>
   );

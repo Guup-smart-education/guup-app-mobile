@@ -9,6 +9,7 @@ interface IProvisionAccess {
 interface AuthContextData {
   appLoading: boolean;
   signed: boolean;
+  isSignOut: boolean;
   provisionAccess: IProvisionAccess;
   accessToken: string | null;
   user: User | null;
@@ -30,6 +31,7 @@ export const AuthProvider: React.FC = ({children}) => {
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [appLoading, setAppLoading] = useState<boolean>(true);
   const [siginDisable, setSiginDisable] = useState<number>(0);
+  const [isSignOut, setIsSignOut] = useState<boolean>(0);
   // Effects
   useEffect(() => {
     (async () => {
@@ -56,12 +58,16 @@ export const AuthProvider: React.FC = ({children}) => {
       setAppLoading(false);
     })();
   }, [signed]);
-  const signOut = () => {
-    AsyncStorage.clear().then(() => {
-      setUser(null);
-      setAccessToken(null);
-      setSigned(false);
-    });
+  const signOut = async () => {
+    setIsSignOut(true);
+    setTimeout(() => {
+      AsyncStorage.clear().then(() => {
+        setUser(null);
+        setAccessToken(null);
+        setSigned(false);
+        setIsSignOut(false);
+      });
+    }, 3000);
   };
   const setSession = (user: string, accessToken: string) => {
     AsyncStorage.setItem('@GUUPAuth:user', user);
@@ -93,6 +99,7 @@ export const AuthProvider: React.FC = ({children}) => {
       value={{
         appLoading,
         signed,
+        isSignOut,
         provisionAccess,
         user,
         accessToken,

@@ -20,19 +20,17 @@ import {AppScreenNavigationProp} from './../../@types/app.navigation';
 
 const GuupAccount: React.FC<AppScreenNavigationProp> = () => {
   const {navigate, goBack} = useNavigation<AppScreenNavigationProp>();
-  const {user} = useContext(AuthContext);
+  const {user, signOut} = useContext(AuthContext);
   const MENU_ACCOUNT: Array<IMenuItemProps> = [
     // {
     //   text: 'Minhas coleções',
     //   onPress: () => navigate('GuupCollections'),
     // },
     {
-      icon: 'video',
       text: 'Meus conteudos',
       onPress: () => navigate('GuupCourses'),
     },
     {
-      icon: 'news',
       text: 'Minhas publicações',
       onPress: () => navigate('GuupPosts'),
     },
@@ -56,20 +54,18 @@ const GuupAccount: React.FC<AppScreenNavigationProp> = () => {
     //   text: 'Notificações',
     //   onPress: () => navigate('GuupNotifications'),
     // },
+    // {
+    //   text: 'Ajustes de privacidade',
+    //   onPress: () => navigate('GuupSettings'),
+    // },
     {
-      icon: 'alert',
-      text: 'Ajustes de privacidade',
-      onPress: () => navigate('GuupSettings'),
-    },
-    {
-      icon: 'box',
       text: 'Sair do guup',
       onPress: () =>
         Alert.alert('Logout', 'Sair do guup', [
           {
             text: 'Sim',
             style: 'destructive',
-            onPress: () => console.log('Logout'),
+            onPress: () => signOut(),
           },
           {
             text: 'Não',
@@ -90,7 +86,7 @@ const GuupAccount: React.FC<AppScreenNavigationProp> = () => {
       <AccountContainer>
         <AccountHeader>
           <GuupHeader
-            leftRenderIntem={<Icon source="guup" size="small" />}
+            hasGuupIcon
             rightRenderIntem={
               <Link
                 onPress={() => navigate('GuupUserProfile', {type: 'OWNER'})}>
