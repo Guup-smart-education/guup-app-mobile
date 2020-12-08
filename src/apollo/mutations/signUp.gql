@@ -19,12 +19,21 @@ mutation authSignUp(
       }
       user {
         uid
-        displayName
-        photoURL
-        profission
-        presentation
+        email
+        phoneNumber
+        role
+        profile {
+          displayName
+          photoURL
+          thumbnailURL
+          profission
+          presentation
+          experience
+          bio
+        }
       }
       success {
+        type
         message
       }
     }

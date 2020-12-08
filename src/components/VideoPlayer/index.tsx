@@ -1,51 +1,105 @@
-import React, {useState} from 'react';
-import {Alert, StyleSheet, ActivityIndicator} from 'react-native';
-import VideoPlayer, {VideoProperties, OnLoadData} from 'react-native-video';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, {useState, useRef, useEffect} from 'react';
+import {StyleSheet} from 'react-native';
+import VideoPlayer, {
+  VideoProperties,
+  OnLoadData,
+  OnBufferData,
+  LoadError,
+  OnProgressData,
+} from 'react-native-video';
+import {ActivityIndicator} from './../../ui';
 import {VideoLoading} from './_styled';
 
-// interface IProps extends VideoProperties;
+interface IProps extends VideoProperties {
+  readonly videoIsLoading?: any;
+  readonly videoIsPlaying?: any;
+}
 
-export default (props: VideoProperties) => {
+export default (props: IProps) => {
+  const {
+    onEnd,
+    onError,
+    onLoad,
+    onReadyForDisplay,
+    onBuffer,
+    videoIsLoading,
+    videoIsPlaying,
+    ...args
+  } = props;
   const [loading, setLoading] = useState(true);
-  const onLoadStart = (data) => {
-    console.log('onLoadStart: ', data);
+  const [readyForDisplay, setReadyForDisplay] = useState(false);
+  const [readyToPlay, setReadyToPlay] = useState(false);
+  const [videoData, setVideoData] = useState<OnLoadData>();
+  const [videoProgressData, setVideoProgressData] = useState<OnProgressData>();
+  const [videoOrientation, setVideoOrientation] = useState<string>();
+  const videoRef = useRef<VideoPlayer>(null);
+  // Video Events
+  const onVideoBuffer = (buffer: OnBufferData) => {
+    onBuffer && onBuffer(buffer);
   };
-  const onVideoLoadStart = (data) => {
-    console.log('onLoadStart: ', data);
+  const onVideoError = (error: LoadError) => {
+    onError && onError(error);
   };
-  const onVideoEnd = (data) => {
-    console.log('onVideoEnd: ', data);
+  const onVideoLoad = (data: OnLoadData) => {
+    onLoad && onLoad(data);
+    setVideoData(data);
   };
-  const onVideoProgress = (data) => {
-    console.log('onVideoProgress: ', data);
+  const onVideoReadyForDisplay = () => {
+    onReadyForDisplay && onReadyForDisplay();
+    setReadyForDisplay(true);
   };
-  const onVideoSeek = (data) => {
-    console.log('onVideoSeek: ', data);
+  const onVideoEnd = () => {
+    setVideoProgressData(undefined);
+    onEnd && onEnd();
   };
-  const onReadyForDisplay = (data) => {
-    console.log('onReadyForDisplay: ', data);
+  const onVideoIsPlaying = (data: OnProgressData) => {
+    if (!videoProgressData && data.currentTime > 0.5) {
+      console.log('onVideoIsPlaying: ', data);
+      setVideoProgressData(data);
+    }
   };
-  const onVideoError = (error) => {
-    console.log('onVideoError: ', error);
-  };
-  const onVideoLoad = (load) => {
-    console.log('onVideoLoad: ', load);
-  };
+  // Effects
+  useEffect(() => {
+    if (readyForDisplay && videoData) {
+      setReadyToPlay(true);
+      setVideoOrientation(videoData.naturalSize.orientation);
+      setLoading(false);
+    }
+  }, [videoData, readyForDisplay]);
+  useEffect(() => {
+    videoIsLoading && videoIsLoading(loading);
+  }, [loading]);
+  useEffect(() => {
+    videoIsPlaying && videoIsPlaying(!!videoProgressData);
+  }, [videoProgressData]);
   return (
     <>
       <VideoPlayer
+        // Configs
+        ref={videoRef}
         muted={false}
+        playInBackground
+        paused={!readyToPlay}
         style={StyleSheet.absoluteFill}
-        // onLoadStart={onLoadStart}
-        // onVideoLoadStart={onVideoLoadStart}
-        // onVideoError={onVideoError}
-        // onVideoProgress={onVideoProgress}
-        // onVideoEnd={onVideoEnd}
-        // onReadyForDisplay={onReadyForDisplay}
-        // onVideoSeek={onVideoSeek}
-        // onVideoLoad={onVideoLoad}
-        {...props}
+        volume={1.0}
+        rate={1.0}
+        ignoreSilentSwitch="ignore"
+        // Events
+        onBuffer={onVideoBuffer}
+        onError={onVideoError}
+        onReadyForDisplay={onVideoReadyForDisplay}
+        onEnd={onVideoEnd}
+        onLoad={onVideoLoad}
+        onProgress={onVideoIsPlaying}
+        resizeMode={videoOrientation === 'portrait' ? 'cover' : 'none'}
+        {...args}
       />
+      {loading && (
+        <VideoLoading style={StyleSheet.absoluteFill}>
+          <ActivityIndicator color="contrast" />
+        </VideoLoading>
+      )}
     </>
   );
 };

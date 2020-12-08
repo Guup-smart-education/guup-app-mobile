@@ -13,8 +13,6 @@ import {
   ExplorerContainer,
   ExplorerHeader,
   ExplorerAction,
-  ExplorerTitle,
-  ExplorerEmpty,
   ExplorerCourseItem,
   ExplorerBody,
 } from './_styled';
@@ -25,11 +23,6 @@ import {LIMIT_LIST} from './../../constants';
 import {useNavigation, useIsFocused} from '@react-navigation/native';
 import {Path, Course, useGetCoursesLazyQuery} from './../../graphql/types.d';
 import AuthContext from './../../contexts/auth';
-
-enum TABS {
-  'collections' = 'collections',
-  'courses' = 'courses',
-}
 
 // Principal component
 const ExplorerScreen: React.FC = () => {
@@ -49,8 +42,8 @@ const ExplorerScreen: React.FC = () => {
       data: dataCourses,
       loading: loadingCourses,
       error: errorCourses,
-      refetch: refetchCourses,
-      fetchMore: fetchMoreCourses,
+      refetch,
+      fetchMore,
     },
   ] = useGetCoursesLazyQuery();
   // Effects
@@ -61,16 +54,18 @@ const ExplorerScreen: React.FC = () => {
   }, [getAllCourses, allCourseData]);
 
   useEffect(() => {
-    if (isFocused) {
+    console.log('isFocused: ', isFocused);
+    console.log('refetch: ', !!refetch);
+    if (isFocused && refetch) {
       setIsRefetch(true);
-      refetchCourses && refetchCourses();
+      refetch();
     }
-  }, [refetchCourses, isFocused]);
+  }, [refetch, isFocused]);
 
   useEffect(() => {
     if (loadMore && snapshot && !isNoMoreData) {
-      fetchMoreCourses &&
-        fetchMoreCourses({
+      fetchMore &&
+        fetchMore({
           variables: {
             lastCourse: snapshot,
           },
@@ -87,6 +82,8 @@ const ExplorerScreen: React.FC = () => {
         [...(!isRefetch ? allCourseData : [])],
         [...allCourses],
       );
+      console.log('allCourses: ', allCourses.length);
+      console.log('unionCourses: ', unionCourses.length);
       setAllCoursesData(unionCourses);
       setIsNoMoreData(allCourses.length < LIMIT_LIST.medium);
       setIsRefetch(false);
@@ -113,10 +110,19 @@ const ExplorerScreen: React.FC = () => {
   };
 
   const handleRefresh = () => {
+    console.log('handleRefresh');
     // setIsNoMoreData(false);
     setLoadMore(false);
     setIsRefetch(true);
-    refetchCourses && refetchCourses();
+    refetch && refetch();
+  };
+
+  const onRemoveCourse = (id: string) => {
+    console.log('onRemoveCourse: ', id);
+    const i = R.findIndex(R.propEq('id', id))(allCourseData);
+    const r = R.remove(i, 1, allCourseData);
+    console.log('onRemoveCourse', r.length);
+    setAllCoursesData(r);
   };
   // End handlers
 
@@ -142,6 +148,7 @@ const ExplorerScreen: React.FC = () => {
             dispatch({type: PathTypes.SET_CURRENT_COURSE, payload: item});
             navigation.navigate('GuupClassVideo', {id: `${item.id}`});
           }}
+          onRemove={onRemoveCourse}
         />
         <Separator size="tiny" />
       </ExplorerCourseItem>
@@ -176,14 +183,14 @@ const ExplorerScreen: React.FC = () => {
   // Branchs
   if (loadingCourses) {
     return (
-      <Container dark>
+      <Container light>
         <ActivityIndicator size="small" />
       </Container>
     );
   }
   if (errorCourses) {
     return (
-      <Container dark>
+      <Container light>
         <Text color="primary">error</Text>
       </Container>
     );
@@ -225,7 +232,6 @@ const ExplorerScreen: React.FC = () => {
             ) : (
               <FlatList
                 showsVerticalScrollIndicator={false}
-                // scrollEnabled={!!allCourseData.length}
                 data={allCourseData}
                 keyExtractor={keyExtractor}
                 maxToRenderPerBatch={20}
@@ -243,6 +249,7 @@ const ExplorerScreen: React.FC = () => {
           </ExplorerBody>
         </ExplorerContainer>
       </Container>
+      {/* Popover para criacao de conteudos */}
       <Popover
         visible={toggleModal}
         toggle={() => setToggleModal(false)}

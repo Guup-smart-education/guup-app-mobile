@@ -309,8 +309,7 @@ const CommentsScreen: React.FC<CommentPropsApp> = ({
   // End handlers
 
   return (
-    <Container safe center={false}>
-      <HeaderPatch />
+    <Container safe light center={false}>
       <CommentsContainer>
         <CommentsContent>
           <CommentListSection

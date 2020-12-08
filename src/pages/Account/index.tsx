@@ -2,7 +2,7 @@ import R from 'ramda';
 import React, {useContext} from 'react';
 import {Alert} from 'react-native';
 import {Container, Text, Button, Icon, Link, Separator} from './../../ui';
-import {GuupHeader, GuupMenuList} from './../../components';
+import {GuupHeader, GuupMenuList, Avatar} from './../../components';
 import {
   AccountContainer,
   AccountHeader,
@@ -22,10 +22,6 @@ const GuupAccount: React.FC<AppScreenNavigationProp> = () => {
   const {navigate, goBack} = useNavigation<AppScreenNavigationProp>();
   const {user, signOut} = useContext(AuthContext);
   const MENU_ACCOUNT: Array<IMenuItemProps> = [
-    // {
-    //   text: 'Minhas coleções',
-    //   onPress: () => navigate('GuupCollections'),
-    // },
     {
       text: 'Meus conteudos',
       onPress: () => navigate('GuupCourses'),
@@ -34,30 +30,6 @@ const GuupAccount: React.FC<AppScreenNavigationProp> = () => {
       text: 'Minhas publicações',
       onPress: () => navigate('GuupPosts'),
     },
-    // {
-    //   icon: 'save',
-    //   text: 'Conteudos salvos',
-    //   onPress: () => navigate('GuupNotifications'),
-    // },
-    // {
-    //   icon: 'claps',
-    //   text: 'A minha atividade',
-    //   onPress: () => navigate('GuupNotifications'),
-    // },
-    // {
-    //   icon: 'heart',
-    //   text: 'Logros',
-    //   onPress: () => Alert.alert('Achievements', 'Show achievements'),
-    // },
-    // {
-    //   icon: 'bell',
-    //   text: 'Notificações',
-    //   onPress: () => navigate('GuupNotifications'),
-    // },
-    // {
-    //   text: 'Ajustes de privacidade',
-    //   onPress: () => navigate('GuupSettings'),
-    // },
     {
       text: 'Sair do guup',
       onPress: () =>
@@ -96,13 +68,21 @@ const GuupAccount: React.FC<AppScreenNavigationProp> = () => {
           />
           <Separator size="medium" />
           <AccountInformation>
+            {user && (
+              <Avatar
+                image={user.profile?.thumbnailURL}
+                firstText={user.profile?.displayName || 'Sem nome'}
+                secondText={user.profile?.profission || 'Sem profissão'}
+              />
+            )}
+            {/* <Avatar image={user.photoURL}/>
             <AccountUserAvatar source={{uri: `${user?.photoURL}`}} />
             <AccountUserName>
               <Text preset="comment" bold>
                 {user?.displayName || 'Adicione seu role'}
               </Text>
               <Text color="primary">{user?.profission}</Text>
-            </AccountUserName>
+            </AccountUserName> */}
           </AccountInformation>
           <Separator size="medium" />
           {/* <AccountUserDescription>

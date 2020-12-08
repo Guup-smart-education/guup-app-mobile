@@ -13,7 +13,7 @@ import {
 } from './../../ui';
 import {
   KeyboardBlock,
-  GuupBot,
+  GuupHeader,
   GuupActions,
   InputToken,
 } from './../../components';
@@ -36,9 +36,6 @@ const SigninScreen: React.FC<PropsAuth> = ({
   const {setSession, setProvissionAccess} = useContext(AuthContext);
   const [custonExpire, setCustonExpire] = useState<number>(120);
   const {countDown, resetCountDown} = useCountDown(custonExpire);
-  const [bootMessage, setBootMessage] = useState<string>(
-    `Acabamos de enviar um e-mail para ${email}`,
-  );
   const [tokenAccess, setTokenAccess] = useState<string>('');
   // Mutation
   const [
@@ -73,10 +70,15 @@ const SigninScreen: React.FC<PropsAuth> = ({
         authSignIn.success?.type === 'NEW_USERS'
       ) {
         setProvissionAccess(email, authSignIn.access?.token || '');
-        navigation.navigate('AuthSignUp');
+        Alert.alert('Um novo!!', `${authSignIn.success.message}`, [
+          {
+            text: 'Vamos lá',
+            onPress: () => navigation.navigate('AuthSignUp'),
+          },
+        ]);
       }
     } else if (signinError) {
-      Alert.alert('Oops!! Aconteceu um erro', 'Tenta novamente');
+      Alert.alert('Oops!! Aconteceu um erro', `${signinError.message}`);
     }
   }, [signinData, signinError]);
 
@@ -97,20 +99,24 @@ const SigninScreen: React.FC<PropsAuth> = ({
         );
       }
     } else if (accessError) {
-      Alert.alert('Oops!! Aconteceu um erro', 'Tenta novamente');
+      Alert.alert('Oops!! Aconteceu um erro', `${accessError.message}`);
     }
   }, [accessData, accessError]);
   return (
     <KeyboardBlock hasKeyboardDismiss={false}>
       <Container safe light>
+        <RowFullWidth padding={25}>
+          <GuupHeader hasGuupIcon />
+        </RowFullWidth>
         <FormContainer>
           <RowFullWidth padding={50}>
             <Separator size="large" />
-            <Icon source="guup" size="small" />
-            <Separator size="medium" />
             <Text preset="header">Digita o voucher</Text>
             <Separator size="medium" />
-            <Text preset="paragraph">{bootMessage}</Text>
+            <Text preset="paragraph">
+              No teu e-mail você encontrará o código de acesso que há pouco
+              tempo te enviamos.
+            </Text>
           </RowFullWidth>
           <Separator size="large" />
           <ContainerInputs>

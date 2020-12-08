@@ -3,14 +3,15 @@ import {Alert} from 'react-native';
 import {Maybe} from 'graphql/jsutils/Maybe';
 import {
   CardContainer,
-  CardSectionBody,
   CardActions,
   CardWrapper,
   CardSectionHeader,
   CardSectionTitle,
   CardOverlay,
+  CardOwner,
+  CardLoading,
 } from './_styled';
-import {Text, Icon, Separator, Action} from './../../ui';
+import {Text, Icon, Separator, Action, ActivityIndicator} from './../../ui';
 import Avatar from './../Avatar';
 import Popover from './../Popover';
 import MenuList from './../MenuList';
@@ -35,16 +36,17 @@ export interface Props {
   readonly owner?: UserProfile | undefined;
   readonly owners?: Maybe<UserProfile>[] | undefined | null;
   readonly onPress?: () => void;
+  readonly onRemove: (id: string) => void;
 }
 
 const CourseCard: React.FC<Props> = ({
   model = 'PUBLIC',
   imageUri,
   title,
-  description,
   onPress,
   owner,
   id,
+  onRemove,
 }) => {
   // const {navigate} = useNavigation<EditCollectionScreenNavigationProp>();
   const OPTIONS_ITEMS: Array<IMenuItemProps> =
@@ -80,7 +82,6 @@ const CourseCard: React.FC<Props> = ({
         ];
   const [imgLoading, setImgLoading] = useState(false);
   const [showOptions, setShowOptions] = useState(false);
-  const [showCourseDescription, toggleCourseDescription] = useState(false);
   const [removeCourse, {data, loading, error}] = useRemoveCourseMutation();
   // Effects
   useEffect(() => {
@@ -117,7 +118,16 @@ const CourseCard: React.FC<Props> = ({
             variables: {
               course: id,
             },
-          }),
+          })
+            .then(() => {
+              console.log('removeCourse');
+              onRemove(id);
+            })
+            .catch((e) => {
+              console.log('error');
+              Alert.alert('Aconteceu um error 🛑', `Error: ${e}`);
+            })
+            .finally(() => setShowOptions(false)),
       },
       {
         text: 'Nao',
@@ -132,51 +142,46 @@ const CourseCard: React.FC<Props> = ({
           <CardSectionHeader
             onLoadStart={() => setImgLoading(true)}
             onLoadEnd={() => setImgLoading(false)}
+            // loadingIndicatorSource={} TODO: Add loading image
             source={{
               uri:
                 imageUri ||
                 'https://media4.giphy.com/media/L2xmR6N2cX94M8iBcX/giphy.gif?cid=ecf05e47e734662ee2e2c424f003c2426d4028038bc1c6ff&rid=giphy.gif',
             }}>
-            <CardActions>
-              <Action onPress={() => setShowOptions(true)}>
-                <Icon source="dots" tintColor="ligth" blur />
-              </Action>
-            </CardActions>
-            <CardSectionTitle>
-              <Text preset="subtitle" color="ligth" bold>
-                {title}
-              </Text>
-              <Separator size="tiny" />
-              {/* <Link
-                color="contrast"
-                onPress={() => toggleCourseDescription(!showCourseDescription)}>
-                {showCourseDescription ? 'Ver menos' : 'Ver mais'}
-              </Link> */}
-            </CardSectionTitle>
+            {imgLoading || loading ? (
+              <CardLoading>
+                <ActivityIndicator color="dark" />
+              </CardLoading>
+            ) : (
+              <>
+                <CardActions>
+                  <Action onPress={() => setShowOptions(true)}>
+                    <Icon source="dots" tintColor="ligth" blur size="small" />
+                  </Action>
+                </CardActions>
+                <CardSectionTitle>
+                  <Text preset="subtitle" color="ligth" bold>
+                    {title}
+                  </Text>
+                  <Separator size="tiny" />
+                </CardSectionTitle>
+                <CardOwner>
+                  <Avatar
+                    ligth
+                    size="comment"
+                    firstText={owner?.displayName}
+                    secondText={owner?.profission}
+                    image={owner?.thumbnailURL}
+                  />
+                  <Action
+                    onPress={() => Alert.alert('Clap!!', 'Clap this course')}>
+                    <Icon source="claps" tintColor="ligth" />
+                  </Action>
+                </CardOwner>
+              </>
+            )}
             <CardOverlay />
           </CardSectionHeader>
-          {/* {showCourseDescription && (
-            <CardDescription>
-              <CardShowMoreContainer>
-                <View>
-                  <Text preset="paragraph" color="dark">
-                    {description}
-                  </Text>
-                </View>
-              </CardShowMoreContainer>
-            </CardDescription>
-          )} */}
-          <CardSectionBody>
-            <Avatar
-              size="comment"
-              firstText={owner?.displayName}
-              secondText={owner?.profission}
-              image={owner?.thumbnailURL}
-            />
-            <Action onPress={() => Alert.alert('Clap!!', 'Clap this course')}>
-              <Icon source="claps" />
-            </Action>
-          </CardSectionBody>
         </CardWrapper>
       </Action>
       <Popover

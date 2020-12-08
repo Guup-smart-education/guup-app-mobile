@@ -9,14 +9,13 @@ import {
   RowFullWidth,
   Text,
   Container,
-  Icon,
 } from './../../ui';
 import {
   KeyboardBlock,
-  GuupBot,
   GuupActions,
   SmartForm,
   SmartInput,
+  GuupHeader,
 } from './../../components';
 import nextId from 'react-id-generator';
 import {PropsAuth} from './../../@types/auth.navigation';
@@ -36,11 +35,7 @@ const SigninScreen: React.FC<PropsAuth> = ({navigation}) => {
   ] = useAuthRequestAccessMutation();
   // Context
   const {siginDisable, setSigninDisable} = useContext(AuthContext);
-  // const [siginError, setSigninError] = useState<boolean>(false);
   const [attempts, setAttempts] = useState<number>(0);
-  // const [botMessage, setBotMessage] = useState<string>(
-  //   'Digita teu e-mail e em seguida te enviarei um ticket de acesso 😉',
-  // );
   const {countDown} = useCountDown(siginDisable, setSigninDisable);
   const {handleSubmit, register, setValue, errors, getValues} = useForm<
     SigninFormData
@@ -89,16 +84,7 @@ const SigninScreen: React.FC<PropsAuth> = ({navigation}) => {
       const {expireIn} = signinData.authRequestAccess;
       navigation.navigate('AuthAccess', {email, expireIn});
     }
-  }, [
-    signinData,
-    // signinError,
-    // getValues,
-    // setBotMessage,
-    // navigation,
-    // Verify thoses information
-    // setSigninDisable,
-    // attempts,
-  ]);
+  }, [signinData]);
 
   useEffect(() => {
     if (signinError) {
@@ -111,15 +97,17 @@ const SigninScreen: React.FC<PropsAuth> = ({navigation}) => {
   return (
     <KeyboardBlock hasKeyboardDismiss={false}>
       <Container safe light>
+        <RowFullWidth padding={25}>
+          <GuupHeader hasGuupIcon />
+        </RowFullWidth>
         <FormContainer>
           <RowFullWidth padding={50}>
             <Separator size="large" />
-            <Icon source="guup" size="small" />
-            <Separator size="medium" />
             <Text preset="header">Digita teu e-mail</Text>
             <Separator size="medium" />
             <Text preset="paragraph">
-              Precisamos de teu e-mail para te enviar um ticket de acesso 😉
+              Para acessar precisaremos de um e-mail e enseguida te enviaremos
+              um código de acesso
             </Text>
           </RowFullWidth>
           <Separator size="large" />

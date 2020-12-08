@@ -2893,7 +2893,7 @@
             "args": [],
             "type": {
               "kind": "OBJECT",
-              "name": "UserProfile",
+              "name": "User",
               "ofType": null
             },
             "isDeprecated": false,
@@ -2975,7 +2975,7 @@
             "args": [],
             "type": {
               "kind": "OBJECT",
-              "name": "UserProfile",
+              "name": "User",
               "ofType": null
             },
             "isDeprecated": false,
@@ -2988,29 +2988,6 @@
             "type": {
               "kind": "OBJECT",
               "name": "Success",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "inputFields": null,
-        "interfaces": [],
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "OBJECT",
-        "name": "MessageError",
-        "description": null,
-        "fields": [
-          {
-            "name": "error",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "OBJECT",
-              "name": "Error",
               "ofType": null
             },
             "isDeprecated": false,

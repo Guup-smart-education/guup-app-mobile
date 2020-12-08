@@ -20,12 +20,7 @@ interface IUpload {
 
 const OPTIONS: ImagePickerOptions = {
   title: 'Seleciona o video',
-  cancelButtonTitle: 'Ok',
-  storageOptions: {
-    path: 'photos',
-    skipBackup: true,
-  },
-  videoQuality: 'high',
+  videoQuality: 'medium',
   mediaType: 'video',
 };
 
@@ -49,15 +44,13 @@ const GuupGallery = forwardRef<any, IUpload>(
           console.log('ImagePicker Error: ', response.error);
         } else {
           console.log('response: ', response);
-          const {uri, type, fileSize, width, height} = response;
+          const {uri, type, fileSize} = response;
           const fileSource = {uri, type};
           setSource(fileSource);
           setFileUploadInfo({
             uri: Platform.OS === 'ios' ? uri.replace('file://', '') : uri,
             type: `${type || 'mp4'}`,
             fileSize,
-            width,
-            height,
           });
         }
         setLoading(false);
@@ -80,7 +73,9 @@ const GuupGallery = forwardRef<any, IUpload>(
     // End effects
     return (
       <UploadContainer>
-        {source && <VideoPlayer source={source} muted repeat />}
+        {source && fileUploadInfo && (
+          <VideoPlayer source={source} repeat resizeMode="cover" />
+        )}
         <MediaContainer
           ref={ref}
           source={source}

@@ -1,23 +1,19 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import R from 'ramda';
+import {ThemeContext} from 'styled-components';
 import React, {useState, useContext, useEffect} from 'react';
-import {Alert, TextInput} from 'react-native';
-import {
-  Text,
-  Separator,
-  Container,
-  Icon,
-  Link,
-  Action,
-  InputArea,
-} from './../../ui';
+import {Alert, StyleSheet, View} from 'react-native';
+import {Text, Separator, Container, Link, Action, InputArea} from './../../ui';
 import {
   GuupHeader,
   Modal,
   KeyboardBlock,
   GuupActions,
   SmartForm,
+  GuupImagePicker,
 } from './../../components';
 import {ProfilePropsApp} from './../../@types/app.navigation';
+import {IFileImagePicker} from './../../@types/fileDataUpload';
 import {
   ProfileContainer,
   ProfileUserPicture,
@@ -29,11 +25,12 @@ import {
   ProfileEditFooter,
   ProfileEditBody,
   ProfileEditHeader,
+  ProfileBottom,
+  ProfileTop,
 } from './_styled';
 import AuthContext from './../../contexts/auth';
 import {
   useUpdateUserProfileMutation,
-  User,
   UserProfile,
 } from './../../graphql/types.d';
 import {useForm} from 'react-hook-form';
@@ -58,16 +55,17 @@ const Profile: React.FC<ProfilePropsApp> = ({
     params: {type},
   },
 }) => {
+  const theme = useContext(ThemeContext);
   const {user, setUpdateSession} = useContext(AuthContext);
   const [currentInput, setCurrentInput] = useState<keyof typeof EInputs>();
   const [editModal, togleEditModal] = useState<boolean>(false);
+  const [imageLoading, setImageLoading] = useState<boolean>(false);
+  const [imageUpload, setImageUpload] = useState<IFileImagePicker | null>();
   const [
     updateProfile,
     {data, error, loading},
   ] = useUpdateUserProfileMutation();
-  const {register, errors, getValues, setValue, handleSubmit} = useForm<
-    IUpdateForm
-  >();
+  const {register, errors, setValue, handleSubmit} = useForm<IUpdateForm>();
   // Handlers
   const toggleModal = () => togleEditModal(!editModal);
   const updateInfo: (input: keyof typeof EInputs) => void = (input) => {
@@ -124,55 +122,104 @@ const Profile: React.FC<ProfilePropsApp> = ({
       'presentation',
     ].forEach((name) => register({name, options: {required: false}}));
   }, [register]);
+  if (!user || !user.profile) {
+    return (
+      <Container safe center>
+        <Text>Não há informações para mostrar</Text>
+        <Link onPress={() => Alert.alert('Sair', 'Sair para logar novamente')}>
+          Faça login novamente
+        </Link>
+      </Container>
+    );
+  }
+  const {
+    profile: {displayName, photoURL, profission, presentation},
+  } = user;
   return (
-    <Container>
+    <Container safe light>
       <ProfileContainer>
-        <ProfileHeader>
-          <GuupHeader
-            hasBack
-            onLeftPress={() => goBack()}
-            rightRenderIntem={
-              <Link
-                color="ligth"
-                onPress={() => Alert.alert('Perfil', 'Atualizar perfil')}>
-                Foto de perfil
-              </Link>
-            }
-          />
-        </ProfileHeader>
-        <ProfileBody>
+        <ProfileTop>
+          <ProfileHeader>
+            <GuupHeader
+              hasBack
+              isDarkTheme
+              onLeftPress={() => goBack()}
+              rightRenderIntem={
+                <GuupImagePicker
+                  title="Foto de perfil"
+                  titleColor="ligth"
+                  onLoading={(imageLoad) => setImageLoading(imageLoad)}
+                  onResponse={(imageDate: IFileImagePicker) => {
+                    console.log('imageDate: ', imageDate);
+                    setImageUpload(imageDate);
+                  }}
+                />
+              }
+            />
+          </ProfileHeader>
           <ProfileuserData>
             <Action onPress={() => updateInfo('DISPLAY_NAME')}>
               <Text preset="title" color="ligth">
-                {user?.displayName}
+                {displayName}
               </Text>
             </Action>
             <Separator size="lili" />
             <Action onPress={() => updateInfo('PROFISSION')}>
               <Text preset="comment" color="ligth" underline>
-                {user?.profission || 'Adicionar uma profissão'}
+                {profission || 'Adicionar uma profissão'}
               </Text>
             </Action>
           </ProfileuserData>
-          <ProfileContent>
-            <Separator size="medium" />
-            <Text preset="label" color="darkGrey">
-              Apresentação
-            </Text>
-            <Separator size="tiny" />
-            <Action onPress={() => updateInfo('PRESENTATION')}>
-              {user?.profile?.presentation ? (
-                <Text preset="comment">{user?.profile?.presentation}</Text>
-              ) : (
-                <Text underline preset="paragraph">
-                  Adicionar presentação
-                </Text>
-              )}
-            </Action>
-          </ProfileContent>
-        </ProfileBody>
+        </ProfileTop>
+        <ProfileBottom>
+          <ProfileBody>
+            <ProfileContent>
+              <Separator size="medium" />
+              <Text preset="label" color="darkGrey">
+                Apresentação
+              </Text>
+              <Separator size="tiny" />
+              <Action onPress={() => updateInfo('PRESENTATION')}>
+                {presentation ? (
+                  <Text preset="comment">{presentation}</Text>
+                ) : (
+                  <Text underline preset="paragraph">
+                    Adicionar presentação
+                  </Text>
+                )}
+              </Action>
+            </ProfileContent>
+          </ProfileBody>
+          {imageUpload && (
+            <View
+              style={(StyleSheet.hairlineWidth, {bottom: 0, width: '100%'})}>
+              <GuupActions
+                noPadding
+                loading={loading || imageLoading}
+                leftAction={{
+                  text: 'Cancelar',
+                  onPress: () => setImageUpload(null),
+                }}
+                rightAction={{
+                  text: 'Enviar foto',
+                  onPress: () =>
+                    Alert.alert('Enviar foto', 'Sim enviar outra foto'),
+                  // onPress: handleSubmit(sendNewProfileInfo),
+                }}
+              />
+            </View>
+          )}
+        </ProfileBottom>
       </ProfileContainer>
-      <ProfileUserPicture source={{uri: `${user?.photoURL}`}} />
+      {
+        <ProfileUserPicture
+          style={StyleSheet.absoluteFill}
+          blurRadius={imageLoading ? 40 : 0}
+          defaultSource={theme.images.bgc.empty.spaces}
+          loadingIndicatorSource={theme.images.bgc.empty.spaces}
+          source={imageUpload ? imageUpload.source : {uri: `${photoURL}`}}
+        />
+      }
       <Modal
         visible={editModal}
         animationType="slide"

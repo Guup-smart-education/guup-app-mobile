@@ -23,7 +23,6 @@ export default ({
   owner,
   postComment,
   menu,
-  ratingValue,
   navigateProfile = true,
   showComments,
   navigateComments = true,

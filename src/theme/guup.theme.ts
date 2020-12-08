@@ -15,6 +15,11 @@ export const guupTheme: DefaultTheme = {
     avatar: {
       blank: require('./../../assets/images/guupBlankAvatar.png'),
     },
+    bgc: {
+      empty: {
+        spaces: require('./../../assets/images/guupBgcEmptySpace.jpg'),
+      },
+    },
   },
   device: {
     header: {
@@ -62,11 +67,15 @@ export const guupTheme: DefaultTheme = {
     trash: require('./../../assets/icons/guupIconTrash.png'),
     alert: require('./../../assets/icons/guupIconAlert.png'),
     back: require('./../../assets/icons/guupIconBack.png'),
+    videoPlay: require('./../../assets/icons/guupVideoPlay.png'),
+    videoPause: require('./../../assets/icons/guupVideoPause.png'),
   },
   iconsSizes: {
     small: '28px',
     normal: '36px',
     large: '44px',
+    xlarge: '56px',
+    xxlarge: '64px',
   },
   colors: {
     ligth: '#FFFFFF',

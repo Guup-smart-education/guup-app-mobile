@@ -1,11 +1,13 @@
 import storage, {firebase} from '@react-native-firebase/storage';
 import {Alert} from 'react-native';
 import {GetUniqueId} from './../../helper';
-import {MediaMetaData, IMetaData} from './../../graphql/types.d';
+import {IMetaData} from './../../graphql/types.d';
+import {Primitive} from 'react-hook-form';
 
 enum STORAGE_FOLDERS {
   'courses' = 'courses',
   'profile' = 'profile',
+  'posts' = 'posts',
 }
 
 const createBlobFileName = (type: string) => {
@@ -109,10 +111,40 @@ const sendFileToStorage = async (
   });
 };
 
+const getDowloadUrl = (ref: string): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const stg = firebase.storage();
+    const pathReference = stg.ref(ref);
+    pathReference
+      .getDownloadURL()
+      .then((downloadUrl) => {
+        resolve(downloadUrl);
+      })
+      .catch((error) => {
+        switch (error) {
+          case 'storage/object-not-found':
+            console.log('storage/object-not-found');
+            break;
+          case 'storage/unauthorized':
+            console.log('storage/unauthorized');
+            break;
+          case 'storage/storage/unknown':
+            console.log('storage/storage/unknown');
+            break;
+          default:
+            break;
+        }
+        console.log('Error', error);
+        reject(error);
+      });
+  });
+};
+
 export {
   STORAGE_FOLDERS,
   storage,
   createBlobFileName,
   sendFileToStorage,
   getUriBlobFile,
+  getDowloadUrl,
 };

@@ -8,9 +8,18 @@ mutation authSignIn($email: String!, $tokenAccess: Int!) {
       }
       user {
         uid
-        displayName
-        photoURL
-        profission
+        email
+        phoneNumber
+        role
+        profile {
+          displayName
+          photoURL
+          thumbnailURL
+          profission
+          presentation
+          experience
+          bio
+        }
       }
       success {
         type

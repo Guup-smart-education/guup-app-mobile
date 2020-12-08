@@ -9,6 +9,8 @@ enum ESizes {
   'small' = 'small',
   'normal' = 'normal',
   'large' = 'large',
+  'xlarge' = 'xlarge',
+  'xxlarge' = 'xxlarge',
 }
 
 export interface IProps {

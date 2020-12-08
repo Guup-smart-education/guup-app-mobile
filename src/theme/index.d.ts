@@ -14,6 +14,11 @@ declare module 'styled-components' {
       avatar: {
         blank: Blob;
       };
+      bgc: {
+        empty: {
+          spaces: Blob;
+        };
+      };
     };
     device: {
       header: {
@@ -61,11 +66,15 @@ declare module 'styled-components' {
       trash: Blob;
       alert: Blob;
       back: Blob;
+      videoPlay: Blob;
+      videoPause: Blob;
     };
     iconsSizes: {
       small: string;
       normal: string;
       large: string;
+      xlarge: string;
+      xxlarge: string;
     };
     colors: {
       ligth: string;

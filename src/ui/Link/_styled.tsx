@@ -1,6 +1,7 @@
 import {Platform} from 'react-native';
 import styled from 'styled-components/native';
-import {EColors, EPreset} from './';
+import {EColors} from './../../@enum/color.enum';
+import {EPreset} from './';
 
 type IProps = {
   readonly color?: keyof typeof EColors;

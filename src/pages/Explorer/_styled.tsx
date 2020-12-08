@@ -1,11 +1,7 @@
-import {Dimensions} from 'react-native';
 import styled from 'styled-components/native';
-import {hasNotch} from 'react-native-device-info';
 
 export const ExplorerContainer = styled.View`
   flex: 1;
-  /* margin-left: ${({theme}) => theme.spacing.padding[25]};
-  margin-right: ${({theme}) => theme.spacing.padding[25]}; */
   width: 100%;
   height: 100%;
 `;
@@ -45,6 +41,7 @@ export const ExplorerTitle = styled.View`
 
 export const ExplorerBody = styled.View`
   flex: 1;
+  width: 100%;
   background-color: ${({theme}) => theme.colors.veryLigthGrey};
 `;
 
@@ -52,6 +49,10 @@ export const ExplorerFooter = styled.View``;
 
 export const ExplorerCourseItem = styled.View`
   width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  border-radius: 8px;
+  overflow: hidden;
 `;
 
 export const ExplorerEmptyList = styled.View`

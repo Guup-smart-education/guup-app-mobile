@@ -18,7 +18,7 @@ import {
   Path,
   Course as CourseType,
 } from './../../graphql/types.d';
-import {GetUniqueId, shadowStyle} from './../../helper';
+import {GetUniqueId} from './../../helper';
 import {LIMIT_PER_PAGE} from './../../constants';
 // import {usePathContext} from './../../contexts/path';
 

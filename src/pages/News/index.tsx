@@ -163,9 +163,6 @@ const NewsScreen: React.FC<PropsApp> = ({navigation: {navigate}}) => {
       </Text>
     );
   }
-  // if (loading) {
-  //   return <NewsLoading />;
-  // }
 
   // Handlers
   const handlefetchMoreData = () => {
@@ -215,7 +212,7 @@ const NewsScreen: React.FC<PropsApp> = ({navigation: {navigate}}) => {
         </NewsHeader>
         <NewsBody>
           <NewsContent>
-            {!allPostsData.length ? (
+            {!allPostsData.length && !loading ? (
               <ListEmpty />
             ) : allPostsData.length && !loading ? (
               <FlatList
@@ -226,7 +223,7 @@ const NewsScreen: React.FC<PropsApp> = ({navigation: {navigate}}) => {
                 maxToRenderPerBatch={20}
                 nestedScrollEnabled
                 renderItem={PostItem}
-                ListEmptyComponent={ListEmpty}
+                // ListEmptyComponent={ListEmpty}
                 ListHeaderComponent={<Separator size="tiny" />}
                 ListFooterComponent={
                   <ListLoadMore loading={loadMore && !isNoMorePosts} />

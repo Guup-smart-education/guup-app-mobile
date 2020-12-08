@@ -30,6 +30,8 @@ export enum EIcons {
   'trash',
   'alert',
   'back',
+  'videoPlay',
+  'videoPause',
 }
 
 export enum ETabIcon {

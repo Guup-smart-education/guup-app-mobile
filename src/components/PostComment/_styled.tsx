@@ -51,7 +51,7 @@ export const PostActionItem = styled.View`
 
 export const PostMedia = styled.View`
   width: 100%;
-  height: ${Dimensions.get('window').width - 50}px;
+  height: ${Dimensions.get('window').width * 1.2}px;
   background-color: aliceblue;
 `;
 

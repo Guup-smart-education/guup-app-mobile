@@ -1,82 +1,132 @@
-import React, {useState, useEffect} from 'react';
-import {View} from 'react-native';
-import {
-  Icon,
-  Action,
-  Container,
-  Text,
-  RowFullWidth,
-  Separator,
-  Link,
-  FooterPatch,
-} from './../../ui';
+import React, {useState, useEffect, useRef} from 'react';
+import {TouchableWithoutFeedback, Animated} from 'react-native';
+// import Animated, {Easing} from 'react-native-reanimated';
+import {Icon, Action, Container, Text, Separator} from './../../ui';
 import {VideoPlayer, GuupHeader, GuupShowMore} from './../../components';
 import {
   VideoRoomContainer,
   VideoRoomHeader,
   VideoRoomBody,
   VideoRoomFooter,
+  VideoTitleContainer,
+  VideoTitle,
 } from './_styled';
 import {PropsApp} from './../../@types/app.navigation';
 import {usePathContext} from './../../contexts/path';
-import {Alert} from 'react-native';
+import {buildMxVideoUrl} from './../../utils/mux';
 
 const VideoRoom: React.FC<PropsApp> = ({navigation: {goBack}}) => {
+  // Animation
+  const fadeAnimation = useRef(new Animated.Value(0)).current;
+  const fadeInAnimation = () => {
+    console.log('fadeInAnimation');
+    Animated.timing(fadeAnimation, {
+      toValue: 1,
+      duration: 400,
+      useNativeDriver: true,
+    }).start();
+  };
+  const fadeOutAnimation = () => {
+    console.log('fadeOutAnimation');
+    Animated.timing(fadeAnimation, {
+      toValue: 0,
+      duration: 400,
+      useNativeDriver: true,
+    }).start();
+  };
+  // End Animation
   const {
     state: {currentCourse},
-    dispatch,
   } = usePathContext();
-  const onBuffer = (buffer) => {
-    console.log('buffer => ', buffer);
+  const [videoIsLoading, setVideoIsLoading] = useState<boolean>(false);
+  const [videoIsPlaying, setVideoIsPlaying] = useState<boolean>(false);
+  const [isEnded, setIsEnded] = useState<boolean>(false);
+  const [paused, setPaused] = useState<boolean>(true);
+  const [videoUrl, seetVideoUrl] = useState<string>();
+  useEffect(() => {
+    if (currentCourse) {
+      const mxUrl = buildMxVideoUrl(`${currentCourse.videoPlaybackID}`);
+      mxUrl && seetVideoUrl(mxUrl);
+    }
+  }, [currentCourse]);
+  // Handlers
+  const startVideo = () => {
+    setPaused(!paused);
+    setVideoIsPlaying(!videoIsPlaying);
+    // fadeOutAnimation();
   };
-  console.log('currentCourse: ', currentCourse);
+  const onEnd = () => {
+    setPaused(true);
+    setIsEnded(true);
+  };
+  // useEffect(() => {
+  //   videoIsPlaying && fadeOutAnimation();
+  // }, [videoIsPlaying]);
+  useEffect(() => {
+    isEnded && setIsEnded(false) && fadeInAnimation();
+  }, [isEnded]);
+  useEffect(() => {
+    paused ? fadeInAnimation() : fadeOutAnimation();
+  }, [paused]);
   return (
     <Container safe dark>
-      <VideoRoomContainer>
+      <VideoRoomContainer
+        as={Animated.View}
+        style={[
+          {
+            opacity: fadeAnimation,
+          },
+        ]}>
         <VideoRoomHeader>
-          <GuupHeader
-            hasBack
-            isDarkTheme
-            onLeftPress={() => goBack()}
-            // leftRenderIntem={
-            //   <Action onPress={() => goBack()}>
-            //     <Icon source="arrow" tintColor="ligth" size="normal" />
-            //   </Action>
-            // }
-          />
+          <GuupHeader hasBack isDarkTheme onLeftPress={() => goBack()} />
         </VideoRoomHeader>
-        <VideoRoomBody>
-          <View style={{width: '75%'}}>
-            <Text preset="subtitle" color="ligth">
-              {currentCourse?.title}
-            </Text>
-          </View>
-          <Separator size="small" />
-          <GuupShowMore
-            preset="comment"
-            color="ligth"
-            text={currentCourse?.description || ''}
-          />
-          {/* <Text preset="comment" color="ligth" maxLength={250}>
-            {currentCourse?.description}
-          </Text> */}
-          <Separator size="small" />
-        </VideoRoomBody>
-        {/* <VideoRoomFooter>
-          <Action onPress={() => Alert.alert('Video', 'Play video')}>
-            <Icon source="video" tintColor="contrast" size="large" />
-          </Action>
-        </VideoRoomFooter> */}
-        {/* <FooterPatch /> */}
+        {(!videoIsLoading || isEnded) && (
+          <>
+            <TouchableWithoutFeedback onPress={startVideo}>
+              <VideoRoomBody>
+                <Separator size="small" />
+                <VideoTitleContainer>
+                  <VideoTitle>
+                    <Text preset="header" color="ligth">
+                      {/* {currentCourse?.title} */}
+                      Some title for a video you can like
+                    </Text>
+                  </VideoTitle>
+                </VideoTitleContainer>
+                <Separator size="small" />
+                <GuupShowMore
+                  preset="paragraph"
+                  color="ligth"
+                  text="Maybe its something you would like, and i can give you"
+                  // text={currentCourse?.description || ''}
+                />
+                <Separator size="small" />
+              </VideoRoomBody>
+            </TouchableWithoutFeedback>
+            <VideoRoomFooter>
+              <Action onPress={startVideo}>
+                <Icon
+                  source={paused ? 'videoPlay' : 'videoPause'}
+                  size="xxlarge"
+                />
+              </Action>
+            </VideoRoomFooter>
+          </>
+        )}
       </VideoRoomContainer>
-      <VideoPlayer
-        onBuffer={onBuffer}
-        resizeMode="cover"
-        source={{
-          uri: `https://stream.mux.com/${currentCourse?.videoPlaybackID}.m3u8`,
-        }}
-        onVideoLoad={() => console.log('video loading')}
-      />
+      {videoUrl && (
+        <VideoPlayer
+          resizeMode="cover"
+          source={{
+            uri: videoUrl,
+          }}
+          videoIsLoading={setVideoIsLoading}
+          // videoIsPlaying={setVideoIsPlaying}
+          onEnd={onEnd}
+          repeat
+          {...{paused}}
+        />
+      )}
     </Container>
   );
 };

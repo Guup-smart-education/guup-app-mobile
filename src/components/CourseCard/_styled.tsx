@@ -1,6 +1,5 @@
 import {Dimensions} from 'react-native';
 import styled from 'styled-components/native';
-import {hasNotch} from 'react-native-device-info';
 
 export const CardOverlay = styled.View`
   background-color: ${({theme}) => theme.colors.ultraDark};
@@ -13,25 +12,27 @@ export const CardOverlay = styled.View`
   z-index: 0;
 `;
 
-export const CardContainer = styled.View`
-  width: 100%;
-  /* padding-left: ${({theme}) => theme.spacing[25]};
-  padding-right: ${({theme}) => theme.spacing[25]}; */
+export const CardLoading = styled.View`
+  flex: 1;
   justify-content: center;
   align-items: center;
 `;
 
-export const CardWrapper = styled.View`
-  /* width: ${Dimensions.get('screen').width}px; */
+export const CardContainer = styled.View`
   width: 100%;
-  height: 100%;
-  flex: 1;
+  border-radius: ${({theme}) => theme.borderRadius[8]};
+  overflow: hidden;
   justify-content: center;
   align-items: center;
+  background-color: azure;
+  height: ${Dimensions.get('screen').width * 1.4}px;
+`;
+
+export const CardWrapper = styled.View`
+  width: ${Dimensions.get('screen').width}px;
+  width: 100%;
+  flex: 1;
   background-color: ${({theme}) => theme.colors.ligth};
-  /* border-radius: ${({theme}) => theme.borderRadius[8]}; */
-  overflow: hidden;
-  /* position: relative; */
 `;
 
 export const CardSectionTop = styled.View`
@@ -40,14 +41,12 @@ export const CardSectionTop = styled.View`
 `;
 
 export const CardSectionHeader = styled.ImageBackground`
-  width: 100%;
   flex: 1;
   justify-content: flex-end;
   padding-bottom: ${({theme}) => theme.spacing[15]};
   padding-top: ${({theme}) => theme.spacing[20]};
   padding-right: ${({theme}) => theme.spacing[25]};
   padding-left: ${({theme}) => theme.spacing[25]};
-  height: ${Dimensions.get('screen').width + 40}px;
   position: relative;
 `;
 
@@ -61,14 +60,13 @@ export const CardTitle = styled.View`
   width: 100%;
 `;
 
-export const CardDescription = styled.View`
+export const CardOwner = styled.View`
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-bottom: ${({theme}) => theme.spacing[15]};
   width: 100%;
-  padding-right: ${({theme}) => theme.spacing[25]};
-  padding-top: ${({theme}) => theme.spacing[20]};
-  padding-bottom: ${({theme}) => theme.spacing[25]};
-  padding-left: ${({theme}) => theme.spacing[25]};
-  border-bottom-width: 1px;
-  border-bottom-color: ${({theme}) => theme.colors.veryLigthGrey};
+  z-index: 1;
 `;
 
 export const CardSectionBody = styled.View`

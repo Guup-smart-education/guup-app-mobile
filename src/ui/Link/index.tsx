@@ -1,13 +1,14 @@
 import React, {ReactNode} from 'react';
 import {TouchableWithoutFeedback} from 'react-native';
 import {LinkWrapper, Link, LinkOverlay, LinkLoadingIndicator} from './_styled';
+import {EColors} from './../../@enum/color.enum';
 
-export enum EColors {
-  'ligth' = 'ligth',
-  'dark' = 'dark',
-  'primary' = 'primary',
-  'contrast' = 'contrast',
-}
+// export enum EColors {
+//   'ligth' = 'ligth',
+//   'dark' = 'dark',
+//   'primary' = 'primary',
+//   'contrast' = 'contrast',
+// }
 
 export enum EPreset {
   'solid' = 'solid',

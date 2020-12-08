@@ -74,20 +74,21 @@ const SignUpScreen: React.FC<PropsAuth> = ({navigation}) => {
     if (signupData) {
       const {authSignUp} = signupData;
       if (authSignUp.__typename === 'ErrorResponse') {
-        setBotMessage(authSignUp.error.message || 'Opps!! Aconteceu um erro');
+        Alert.alert('Aconteceu um erro!', `${authSignUp.error.message}`);
       } else if (authSignUp.__typename === 'SignUpSuccess') {
+        console.log('authSignUp.user: ', authSignUp.user);
         setSession(
           JSON.stringify(authSignUp.user),
           authSignUp.access?.token || '',
         );
       }
     } else if (signupError) {
-      setBotMessage(signupError.message || 'Opps!! Aconteceu um erro');
+      Alert.alert('Oops!!', `${signupError.message}`);
     }
   }, [signupData, signupError, setSession]);
 
   return (
-    <KeyboardBlock hasKeyboardDismiss={false}>
+    <KeyboardBlock hasKeyboardDismiss={true}>
       <FormContainer>
         <Separator size="bigger" />
         <RowFullWidth padding={50}>
@@ -101,9 +102,7 @@ const SignUpScreen: React.FC<PropsAuth> = ({navigation}) => {
             enabled={false}
             page={step}
             paging>
-            <SmartForm
-              {...{register, setValue, errors, currentInput: step}}
-              autoFocus>
+            <SmartForm {...{register, setValue, errors, currentInput: step}}>
               {FormSignup.map((i) => {
                 return (
                   <SmartInput

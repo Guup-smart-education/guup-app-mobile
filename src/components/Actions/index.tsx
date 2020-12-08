@@ -3,22 +3,28 @@ import {Actions} from './_styled';
 import {Link} from './../../ui';
 
 type Props = {
-  loading: boolean;
-  leftAction: {
+  readonly loading: boolean;
+  readonly leftAction: {
     text: string;
     onPress: () => void;
     disable?: boolean;
   };
-  rightAction: {
+  readonly rightAction: {
     text: string;
     onPress: () => void;
     disable?: boolean;
   };
+  readonly noPadding?: boolean;
 };
 
-const GuupActions: React.FC<Props> = ({leftAction, rightAction, loading}) => {
+const GuupActions: React.FC<Props> = ({
+  leftAction,
+  rightAction,
+  loading,
+  noPadding,
+}) => {
   return (
-    <Actions>
+    <Actions {...{noPadding}}>
       <Link
         loading={loading}
         disable={leftAction.disable}

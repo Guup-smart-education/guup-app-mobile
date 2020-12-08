@@ -1,4 +1,5 @@
 import styled from 'styled-components/native';
+import {Dimensions} from 'react-native';
 
 export const CreateContainer = styled.View`
   flex: 1;
@@ -14,15 +15,14 @@ export const CreateHeader = styled.View`
   background-color: ${({theme}) => theme.colors.ligth};
 `;
 
-export const CreateBody = styled.View`
+export const CreateBody = styled.ScrollView`
   flex: 1;
-  padding-top: ${({theme}) => theme.spacing[20]};
   width: 100%;
 `;
 
 export const CreateFooter = styled.View`
   width: 100%;
-  background-color: azure;
+  /* flex: 1; */
 `;
 
 export const CreateDescription = styled.View`
@@ -35,15 +35,22 @@ export const CreateDescription = styled.View`
 
 export const CreateTitle = styled.View``;
 
-export const CreateImage = styled.View`
-  height: 64px;
-  width: 64px;
-  border-radius: ${({theme}) => theme.borderRadius[8]};
-  background-color: ${({theme}) => theme.colors.veryLigthGrey};
-  overflow: hidden;
+export const CreateImage = styled.ImageBackground`
+  height: ${Dimensions.get('window').width}px;
+  width: 100%;
+  background-color: ${({theme}) => theme.colors.dark};
+  align-items: center;
+  justify-content: center;
+`;
+
+export const CreateMedia = styled.View`
+  padding-left: ${({theme}) => theme.spacing[25]};
+  padding-right: ${({theme}) => theme.spacing[25]};
+  margin-top: 25px;
 `;
 
 export const CreateInput = styled.View`
+  margin-top: 25px;
   width: 100%;
 `;
 

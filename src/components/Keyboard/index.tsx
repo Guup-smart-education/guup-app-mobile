@@ -1,11 +1,11 @@
 import React, {ReactNode, useState, useEffect, useContext} from 'react';
 import {Alert} from 'react-native';
-import {Platform, Keyboard} from 'react-native';
+import {Platform, Keyboard, KeyboardAvoidingViewProps} from 'react-native';
 import {KeyboardContainer, KeyboardDismiss, KeyboardBlock} from './_styled';
 import {hasNotch} from 'react-native-device-info';
 import {ThemeContext} from 'styled-components/native';
 
-interface IProps {
+interface IProps extends KeyboardAvoidingViewProps {
   children: ReactNode;
   hasKeyboardDismiss?: boolean;
   paddingPageSheet?: boolean;
@@ -15,6 +15,7 @@ export default ({
   hasKeyboardDismiss = true,
   paddingPageSheet = false,
   children,
+  ...args
 }: IProps) => {
   const theme = useContext(ThemeContext);
   const [paddingVertical, setPaddingVertical] = useState(
@@ -36,7 +37,8 @@ export default ({
           : {};
       })()}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      enabled>
+      enabled
+      {...args}>
       <KeyboardDismiss
         onPress={hasKeyboardDismiss ? Keyboard.dismiss : () => {}}>
         <KeyboardBlock>{children}</KeyboardBlock>

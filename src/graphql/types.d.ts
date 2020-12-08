@@ -372,7 +372,7 @@ export type RequestAccess = {
 export type SigInSuccess = {
   __typename?: 'SigInSuccess';
   access?: Maybe<Jwt>;
-  user?: Maybe<UserProfile>;
+  user?: Maybe<User>;
   success?: Maybe<Success>;
 };
 
@@ -385,13 +385,8 @@ export type SuccessAccess = {
 export type SignUpSuccess = {
   __typename?: 'SignUpSuccess';
   access?: Maybe<Jwt>;
-  user?: Maybe<UserProfile>;
+  user?: Maybe<User>;
   success?: Maybe<Success>;
-};
-
-export type MessageError = {
-  __typename?: 'MessageError';
-  error?: Maybe<Error>;
 };
 
 export type URequestAccess = RequestAccess | SigInSuccess | ErrorResponse;
@@ -1210,8 +1205,12 @@ export type AuthSignInMutation = (
       { __typename?: 'JWT' }
       & Pick<Jwt, '[object Object]' | '[object Object]'>
     )>, user?: Maybe<(
-      { __typename?: 'UserProfile' }
-      & Pick<UserProfile, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
+      { __typename?: 'User' }
+      & Pick<User, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
+      & { profile?: Maybe<(
+        { __typename?: 'UserProfile' }
+        & Pick<UserProfile, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
+      )> }
     )>, success?: Maybe<(
       { __typename?: 'Success' }
       & Pick<Success, '[object Object]' | '[object Object]'>
@@ -1241,11 +1240,15 @@ export type AuthSignUpMutation = (
       { __typename?: 'JWT' }
       & Pick<Jwt, '[object Object]' | '[object Object]'>
     )>, user?: Maybe<(
-      { __typename?: 'UserProfile' }
-      & Pick<UserProfile, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
+      { __typename?: 'User' }
+      & Pick<User, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
+      & { profile?: Maybe<(
+        { __typename?: 'UserProfile' }
+        & Pick<UserProfile, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
+      )> }
     )>, success?: Maybe<(
       { __typename?: 'Success' }
-      & Pick<Success, '[object Object]'>
+      & Pick<Success, '[object Object]' | '[object Object]'>
     )> }
   ) | (
     { __typename?: 'ErrorResponse' }
@@ -1882,9 +1885,18 @@ export const AuthSignInDocument = gql`
       }
       user {
         uid
-        displayName
-        photoURL
-        profission
+        email
+        phoneNumber
+        role
+        profile {
+          displayName
+          photoURL
+          thumbnailURL
+          profission
+          presentation
+          experience
+          bio
+        }
       }
       success {
         type
@@ -1938,12 +1950,21 @@ export const AuthSignUpDocument = gql`
       }
       user {
         uid
-        displayName
-        photoURL
-        profission
-        presentation
+        email
+        phoneNumber
+        role
+        profile {
+          displayName
+          photoURL
+          thumbnailURL
+          profission
+          presentation
+          experience
+          bio
+        }
       }
       success {
+        type
         message
       }
     }

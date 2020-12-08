@@ -2,25 +2,14 @@
 import R from 'ramda';
 import React, {useState, useEffect, useContext} from 'react';
 import {useForm} from 'react-hook-form';
-import {
-  Container,
-  Text,
-  InputArea,
-  Separator,
-  Action,
-  Icon,
-  Link,
-} from './../../ui/';
+import {Container, InputArea, Link} from './../../ui/';
 import {
   KeyboardBlock,
-  GuupUpload,
   GuupGallery,
   GuupHeader,
   Modal,
   GuupFooter,
   SmartForm,
-  GuupProgressBar,
-  Carousel,
 } from './../../components';
 import {
   CreateHeader,
@@ -44,10 +33,9 @@ import {
   EnumAreas,
   EnumLevels,
   IMetaData,
-  MediaMetaData,
 } from './../../graphql/types.d';
 import {IFileDatUpload} from './../../@types/fileDataUpload';
-import {Alert, View} from 'react-native';
+import {Alert} from 'react-native';
 import {
   STORAGE_FOLDERS,
   getUriBlobFile,
@@ -57,18 +45,16 @@ import {
 import AuthContext from './../../contexts/auth';
 
 const ContentCreate: React.FC<ContentCreatePropsApp> = ({
-  navigation: {goBack, navigate},
+  navigation: {goBack},
   route: {
     params: {path},
   },
 }) => {
   const {user} = useContext(AuthContext);
-  const [page, setPage] = useState<number>(0);
   const [uploading, setUploading] = useState(false);
   const [formVisible, setFormVisible] = useState(false);
   const [uploadingProgress, setUploadingProgress] = useState(0);
   const [fileDataToUpload, setFileToUpload] = useState<IFileDatUpload>();
-  const [videoDataToUpload, setVideoToUpload] = useState<IFileDatUpload>();
   const [createCourse, {loading, data, error}] = useCreateCourseMutation();
   const {register, errors, getValues, setValue, handleSubmit} = useForm<
     ContentCreateFormData
@@ -116,7 +102,7 @@ const ContentCreate: React.FC<ContentCreatePropsApp> = ({
       const metaData: any = {...R.omit(['uri'], fileDataToUpload)};
       const blobFile: Blob = await getUriBlobFile(fileDataToUpload.uri);
       const fileName: string = await createBlobFileName(fileDataToUpload.type);
-      const metadata: IMetaData = await sendFileToStorage(
+      const fileInformation: IMetaData = await sendFileToStorage(
         blobFile,
         metaData,
         `${user.uid}`,
@@ -135,7 +121,7 @@ const ContentCreate: React.FC<ContentCreatePropsApp> = ({
             difficult: EnumLevels.Advance,
             ...(path && {path}),
           },
-          metadata,
+          metadata: fileInformation,
         },
       });
     } else {
@@ -187,16 +173,13 @@ const ContentCreate: React.FC<ContentCreatePropsApp> = ({
               <Link
                 preset="outline"
                 color="contrast"
-                // disable={!fileDataToUpload || !getValues('title')}
                 loading={loading || uploading}
                 onPress={() => addDescription()}>
-                {/* onPress={handleSubmit(onSubmit)}> */}
                 Próximo
               </Link>
             }
           />
         </CreateHeader>
-        {/* <GuupProgressBar progress={uploadingProgress} /> */}
         <CreateBody renderToHardwareTextureAndroid focusable={false}>
           <CreateMedia>
             <GuupGallery
@@ -204,98 +187,7 @@ const ContentCreate: React.FC<ContentCreatePropsApp> = ({
               title="Selecione seu video"
             />
           </CreateMedia>
-          {/* <Separator size="small" />
-            <FormContainer>
-              <SmartForm
-                {...{
-                  register,
-                  setValue,
-                  errors,
-                }}>
-                <InputArea
-                  maxLength={MAX_COURSE_TITLE_LENGTH}
-                  name="title"
-                  editable={!loading}
-                  placeholder="Digite um bom titulo para o conteudo aqui…"
-                  label="Titulo do conteudo"
-                  // preset="paragraph"
-                  // color="dark"
-                  // style={{width: '75%'}}
-                />
-                <InputArea
-                  maxLength={MAX_COURSE_DESCRIPTION_LENGTH}
-                  name="description"
-                  editable={!loading}
-                  label="Descrição"
-                  placeholder="Digite uma breve descripção aquí…"
-                />
-              </SmartForm>
-            </FormContainer> */}
         </CreateBody>
-        {/* <Carousel size={2} showDots={false} paging page={page}>
-            <CreateBody renderToHardwareTextureAndroid focusable={false}>
-              <CreateMedia>
-                <GuupGallery
-                  onResponse={setVideoToUpload}
-                  title="Selecione uma capa para a sua colecao!"
-                />
-              </CreateMedia>
-            </CreateBody>
-            <CreateBody renderToHardwareTextureAndroid focusable={false}>
-              <CreateMedia>
-                <GuupUpload
-                  onResponse={setFileToUpload}
-                  title="Selecione uma capa para a sua colecao!"
-                />
-              </CreateMedia>
-              <Separator size="small" />
-              <FormContainer>
-                <SmartForm
-                  {...{
-                    register,
-                    setValue,
-                    errors,
-                  }}>
-                  <InputArea
-                    maxLength={MAX_COURSE_TITLE_LENGTH}
-                    name="title"
-                    editable={!loading}
-                    placeholder="Digite um bom titulo para o conteudo aqui…"
-                    label="Titulo do conteudo"
-                    // preset="paragraph"
-                    // color="dark"
-                    // style={{width: '75%'}}
-                  />
-                  <InputArea
-                    maxLength={MAX_COURSE_DESCRIPTION_LENGTH}
-                    name="description"
-                    editable={!loading}
-                    label="Descrição"
-                    placeholder="Digite uma breve descripção aquí…"
-                  />
-                </SmartForm>
-              </FormContainer>
-            </CreateBody>
-          </Carousel> */}
-        {/* <GuupProgressBar progress={uploadingProgress} /> */}
-        {/* <Separator size="stroke" />
-          <GuupFooter color="ligth">
-            <FooterLabels>
-              <Link
-                disable={loading}
-                color="dark"
-                onPress={() => closeContent()}>
-                Upload video
-              </Link>
-              <Link
-                preset="solid"
-                disable={!fileDataToUpload || !getValues('title')}
-                loading={loading || uploading}
-                onPress={handleSubmit(onSubmit)}>
-                Publicar
-              </Link>
-            </FooterLabels>
-          </GuupFooter> */}
       </CreateContainer>
       <Modal visible={formVisible} presentationStyle="formSheet">
         <KeyboardBlock hasKeyboardDismiss paddingPageSheet>
@@ -313,21 +205,16 @@ const ContentCreate: React.FC<ContentCreatePropsApp> = ({
                   editable={!loading}
                   placeholder="Digite um bom titulo para o conteudo aqui…"
                   label="Titulo do conteudo"
-                  // preset="title"
-                  // color="dark"
-                  // style={{width: '75%'}}
                 />
                 <InputArea
                   maxLength={MAX_COURSE_DESCRIPTION_LENGTH}
                   name="description"
                   editable={!loading}
                   label="Descrição (Opcional)"
-                  // preset="subtitle"
                   placeholder="Digite uma breve descripção aquí…"
                 />
               </SmartForm>
             </FormContainer>
-            {/* <GuupProgressBar progress={uploadingProgress} /> */}
             <GuupFooter color="ligth">
               <FooterLabels>
                 <Link

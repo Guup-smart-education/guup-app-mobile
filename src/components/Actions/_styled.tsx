@@ -6,6 +6,8 @@ export const Actions = styled.View`
   align-items: center;
   width: 100%;
   flex-direction: row;
-  padding-left: ${({theme}) => theme.spacing.padding[40]};
-  padding-right: ${({theme}) => theme.spacing.padding[40]};
+  padding-left: ${({theme, noPadding}) =>
+    noPadding ? 0 : theme.spacing.padding[40]};
+  padding-right: ${({theme, noPadding}) =>
+    noPadding ? 0 : theme.spacing.padding[40]};
 `;
