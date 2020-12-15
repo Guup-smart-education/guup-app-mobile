@@ -5,7 +5,6 @@ import {FlatList, View, Alert, ActivityIndicator} from 'react-native';
 import {Container, Text, Icon, Action, Separator, Link} from './../../ui';
 import {GuupHeader, Course} from './../../components';
 import {PropsApp} from './../../@types/app.navigation';
-import {IMenuItemProps} from './../../@types/menu.item';
 import {
   CoursesContainer,
   CoursesHeader,
@@ -23,7 +22,12 @@ import {LIMIT_PER_PAGE} from './../../constants';
 // import {usePathContext} from './../../contexts/path';
 
 // Component
-const Collections: React.FC<PropsApp> = ({navigation: {goBack, navigate}}) => {
+const Collections: React.FC<PropsApp> = ({
+  navigation: {goBack, navigate},
+  route: {
+    params: {owner, type},
+  },
+}) => {
   const isFocused = useIsFocused();
   // const {state, dispatch} = usePathContext();
   const [
@@ -43,8 +47,16 @@ const Collections: React.FC<PropsApp> = ({navigation: {goBack, navigate}}) => {
     }
   }, [refetch, isFocused]);
   useEffect(() => {
-    R.isEmpty(allCourses) && getCourses();
-  }, [allCourses, getCourses]);
+    R.isEmpty(allCourses) &&
+      getCourses({
+        variables: {
+          uid: owner,
+        },
+      });
+    return () => {
+      setAllCourses([]);
+    };
+  }, [getCourses]);
 
   useEffect(() => {
     if (fetchMore && loadMore && snapshot && !isNoMoreCourses) {
@@ -56,10 +68,15 @@ const Collections: React.FC<PropsApp> = ({navigation: {goBack, navigate}}) => {
   }, [snapshot, loadMore]);
 
   useEffect(() => {
-    if (data?.getCoursesByUser?.__typename === 'GetCoursesByOwner') {
+    if (!data || !data.getCoursesByUser) {
+      return;
+    }
+    if (data.getCoursesByUser.__typename === 'GetCoursesByOwner') {
       const courseData: Array<any> = [
         ...(data.getCoursesByUser.coursesByOwner || []),
-      ];
+      ].filter(
+        (item: CourseType | null) => !owner || (item && item.owner === owner),
+      );
       const unionCourses = R.union(
         [...(!isRefetch ? allCourses : [])],
         [...courseData],
@@ -71,7 +88,7 @@ const Collections: React.FC<PropsApp> = ({navigation: {goBack, navigate}}) => {
       setLoadMore(false);
       setSnapshot(null);
       setIsRefetch(false);
-    } else if (data?.getCoursesByUser?.__typename === 'ErrorResponse') {
+    } else if (data.getCoursesByUser.__typename === 'ErrorResponse') {
       Alert.alert(
         'Aconteceu um erro',
         `${data.getCoursesByUser.error.message}`,
@@ -88,11 +105,15 @@ const Collections: React.FC<PropsApp> = ({navigation: {goBack, navigate}}) => {
 
   const CourseItem = useCallback(
     ({item}: {item: CourseType}) => {
+      console.log('CourseItem: ', owner);
       return (
         <CourseItemContainer>
-          {/* <CourseItemContainer style={shadowStyle.newPost}> */}
           <Separator size="tiny" />
-          <Course {...{...item}} model="OWNER" />
+          <Course
+            {...{...item}}
+            model={type}
+            photoURL={item.photoURL || item.gifURL || item.thumbnailURL}
+          />
         </CourseItemContainer>
       );
     },
@@ -123,13 +144,13 @@ const Collections: React.FC<PropsApp> = ({navigation: {goBack, navigate}}) => {
   }, [loadMore]);
   // End callbacks
   // Branchs
-  if (loading) {
-    return (
-      <Container>
-        <ActivityIndicator size="small" />
-      </Container>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <Container>
+  //       <ActivityIndicator size="small" />
+  //     </Container>
+  //   );
+  // }
   if (error) {
     return (
       <Container>
@@ -160,17 +181,21 @@ const Collections: React.FC<PropsApp> = ({navigation: {goBack, navigate}}) => {
         <CoursesHeader>
           <GuupHeader
             hasBack
-            title="Meus conteudos"
+            title="Conteudos"
             onLeftPress={() => goBack()}
             rightRenderIntem={
-              <Action onPress={() => navigate('GuupContentCreate')}>
-                <Icon source="plus" />
-              </Action>
+              type === 'PUBLIC' ? (
+                <></>
+              ) : (
+                <Action onPress={() => navigate('GuupContentCreate')}>
+                  <Icon source="plus" />
+                </Action>
+              )
             }
           />
         </CoursesHeader>
         <CourseBody>
-          {!R.isEmpty(allCourses) ? (
+          {!R.isEmpty(allCourses) && !loading ? (
             <FlatList
               keyExtractor={keyExtractor}
               data={allCourses}
@@ -185,8 +210,12 @@ const Collections: React.FC<PropsApp> = ({navigation: {goBack, navigate}}) => {
               refreshing={loading}
               onRefresh={handleRefresh}
             />
-          ) : (
+          ) : R.isEmpty(allCourses) && !loading ? (
             <ListEmpty />
+          ) : (
+            <Container center>
+              <ActivityIndicator size="small" />
+            </Container>
           )}
         </CourseBody>
       </CoursesContainer>

@@ -9,6 +9,7 @@ query getCommentByPost($post: String!, $lastComment: String) {
           uid
           displayName
           thumbnailURL
+          photoURL
           profission
         }
         createdAt

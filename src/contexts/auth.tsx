@@ -38,6 +38,9 @@ export const AuthProvider: React.FC = ({children}) => {
       const storageUser = await AsyncStorage.getItem('@GUUPAuth:user');
       const storageToken = await AsyncStorage.getItem('@GUUPAuth:token');
       const disable = await AsyncStorage.getItem('@GUUPAuth:signinDisable');
+      console.log('storageUser: ', storageUser);
+      console.log('storageToken: ', storageToken);
+      console.log('disable: ', disable);
       if (disable) {
         // TODO: Adicionar limitador de solicitudes
         setSiginDisable(parseInt(disable, 0));

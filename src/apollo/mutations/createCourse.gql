@@ -1,5 +1,15 @@
-mutation createCourse($course: ICourse!, $metadata: IMetaData!) {
-  createCourse(course: $course, metadata: $metadata) {
+mutation createCourse(
+  $course: ICourse!
+  $videoMetadata: IMetaData!
+  $coverMetadata: IMetaData!
+  $ownerProfile: IProfile!
+) {
+  createCourse(
+    course: $course
+    videoMetadata: $videoMetadata
+    coverMetadata: $coverMetadata
+    ownerProfile: $ownerProfile
+  ) {
     ... on CreateCourse {
       createCourse
       success {

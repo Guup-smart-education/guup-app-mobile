@@ -7,6 +7,8 @@ import {
   VideoRoomContainer,
   VideoRoomHeader,
   VideoRoomBody,
+  VideoRoomBodyTop,
+  VideoRoomBodyBottom,
   VideoRoomFooter,
   VideoTitleContainer,
   VideoTitle,
@@ -78,29 +80,38 @@ const VideoRoom: React.FC<PropsApp> = ({navigation: {goBack}}) => {
           },
         ]}>
         <VideoRoomHeader>
-          <GuupHeader hasBack isDarkTheme onLeftPress={() => goBack()} />
+          <GuupHeader
+            leftRenderIntem={
+              <Action onPress={() => goBack()}>
+                <Icon burble back source="back" size="small" tintColor="dark" />
+              </Action>
+            }
+            isDarkTheme
+          />
         </VideoRoomHeader>
         {(!videoIsLoading || isEnded) && (
           <>
             <TouchableWithoutFeedback onPress={startVideo}>
               <VideoRoomBody>
-                <Separator size="small" />
-                <VideoTitleContainer>
-                  <VideoTitle>
-                    <Text preset="header" color="ligth">
-                      {/* {currentCourse?.title} */}
-                      Some title for a video you can like
-                    </Text>
-                  </VideoTitle>
-                </VideoTitleContainer>
-                <Separator size="small" />
-                <GuupShowMore
-                  preset="paragraph"
-                  color="ligth"
-                  text="Maybe its something you would like, and i can give you"
-                  // text={currentCourse?.description || ''}
-                />
-                <Separator size="small" />
+                <VideoRoomBodyTop>
+                  <Separator size="small" />
+                  <VideoTitleContainer>
+                    <VideoTitle>
+                      <Text preset="title" color="ligth">
+                        {currentCourse?.title}
+                      </Text>
+                    </VideoTitle>
+                  </VideoTitleContainer>
+                  <Separator size="small" />
+                </VideoRoomBodyTop>
+                <VideoRoomBodyBottom>
+                  <GuupShowMore
+                    preset="paragraph"
+                    color="ligth"
+                    text={currentCourse?.description || ''}
+                  />
+                  <Separator size="small" />
+                </VideoRoomBodyBottom>
               </VideoRoomBody>
             </TouchableWithoutFeedback>
             <VideoRoomFooter>
@@ -116,14 +127,15 @@ const VideoRoom: React.FC<PropsApp> = ({navigation: {goBack}}) => {
       </VideoRoomContainer>
       {videoUrl && (
         <VideoPlayer
-          resizeMode="cover"
+          // resizeMode="cover"
           source={{
             uri: videoUrl,
           }}
           videoIsLoading={setVideoIsLoading}
-          // videoIsPlaying={setVideoIsPlaying}
+          videoPoster={`${currentCourse?.photoURL}`}
           onEnd={onEnd}
           repeat
+          muted
           {...{paused}}
         />
       )}

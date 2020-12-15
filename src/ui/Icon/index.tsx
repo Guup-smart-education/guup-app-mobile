@@ -1,9 +1,11 @@
 import React from 'react';
+// import {ThemeContext} from 'styled-components';
 import {ImageProps, StyleSheet} from 'react-native';
-import {Icon} from './_styled';
+import {Icon, BurbleIcon} from './_styled';
 import {EIcons} from './../../@enum/icons.enum';
 import {EColors} from './../../@enum/color.enum';
 import {BlurView} from '@react-native-community/blur';
+import FastImage from 'react-native-fast-image';
 
 enum ESizes {
   'small' = 'small',
@@ -20,10 +22,20 @@ export interface IProps {
   readonly size?: keyof typeof ESizes;
   readonly style?: ImageProps;
   readonly blur?: boolean;
+  readonly back?: boolean;
+  readonly burble?: boolean;
   readonly blurDark?: boolean;
 }
 
-export default ({size = 'normal', blur, blurDark, ...args}: IProps) => {
+export default ({
+  size = 'normal',
+  blur,
+  blurDark,
+  burble = false,
+  back = false,
+  ...args
+}: IProps) => {
+  // const theme = useContext(ThemeContext);
   if (blur) {
     return (
       <BlurView
@@ -32,6 +44,13 @@ export default ({size = 'normal', blur, blurDark, ...args}: IProps) => {
         blurType={blurDark ? 'material' : 'light'}>
         <Icon {...{...args, size}} />
       </BlurView>
+    );
+  }
+  if (back && burble) {
+    return (
+      <BurbleIcon as={BlurView} blurType="light" blurRadius={0.5}>
+        <Icon {...{...args, size}} />
+      </BurbleIcon>
     );
   }
   return <Icon {...{...args, size}} />;

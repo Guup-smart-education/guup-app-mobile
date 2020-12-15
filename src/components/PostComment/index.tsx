@@ -1,6 +1,9 @@
 import React, {useState, useEffect} from 'react';
 import {Avatar} from './../';
-import {Text, Separator, Icon, Action} from './../../ui';
+import {Text, Separator, Icon, Action, ActivityIndicator} from './../../ui';
+import Popover from './../Popover';
+import MenuList from './../MenuList';
+
 import {
   PostContainer,
   PostHeader,
@@ -9,14 +12,15 @@ import {
   PostActions,
   PostActionItem,
   PostMedia,
-  PostMediaImage,
 } from './_styled';
 import {useNavigation} from '@react-navigation/native';
 import {PostProps} from './../../@types/post.comment';
+import {IMenuItemProps} from './../../@types/menu.item';
 import {AppScreenNavigationProp} from './../../@types/app.navigation';
-import {Alert, View} from 'react-native';
+import {Alert, StyleSheet, View} from 'react-native';
 import {ClapFor, Post, useClapPostMutation} from './../../graphql/types.d';
 import GuupDate from './../Date';
+import FastImage from 'react-native-fast-image';
 
 export default ({
   id: postID,
@@ -33,9 +37,40 @@ export default ({
   clapped = false,
   card = true,
   createdAt,
+  model = 'PUBLIC',
+  onRemove,
+  loading,
 }: PostProps) => {
   const navigation = useNavigation<AppScreenNavigationProp>();
-  const [isClapped, setIsClapped] = useState<boolean>(clapped);
+  const OPTIONS_ITEMS: Array<IMenuItemProps> =
+    model === 'OWNER'
+      ? [
+          {
+            text: 'Remover conteudo',
+            onPress: () => remove(`${postID}`),
+            icon: 'trash',
+          },
+        ]
+      : [
+          {
+            text: 'Ver mais tarde',
+            onPress: () => Alert.alert('Ver!!', 'Ver mais tarde'),
+            icon: 'save',
+          },
+          {
+            text: 'Me avise de novo conteudo',
+            onPress: () => Alert.alert('Ver!!', 'Ver mais tarde'),
+            icon: 'bell',
+          },
+          {
+            text: 'Reportar conteudo',
+            onPress: () => Alert.alert('Report!!', 'Reportar'),
+            icon: 'alert',
+          },
+        ];
+  const [imgLoading, setImgLoading] = useState(false);
+  const [showOptions, setShowOptions] = useState(false);
+  const [isClapped, setIsClapped] = useState<boolean>(!!clapped);
   const [sendClap, {data, error}] = useClapPostMutation();
   const cleanPost: Post = {
     id: postID,
@@ -60,6 +95,12 @@ export default ({
       Alert.alert('Aconteceu um problema', `${error.message}`);
     }
   }, [data, error]);
+  // useEffect(() => {
+  //   if (loading !== undefined) {
+  //     setShowOptions(!loading);
+  //   }
+  // }, [loading]);
+  // End useeffects
   // Handlers
   const clapPost = () => {
     setIsClapped(!isClapped);
@@ -70,13 +111,19 @@ export default ({
       },
     });
   };
+  const remove = (key: string) => onRemove(key);
+  // End handlers
   return (
     <PostContainer>
       <PostHeader card={!!card}>
         <Action
           onPress={() =>
             navigateProfile
-              ? navigation.navigate('GuupUserProfile', {type: 'PUBLIC'})
+              ? navigation.navigate('GuupUserProfile', {
+                  type: 'PUBLIC',
+                  id: `${owner ? owner.id : ''}`,
+                  // id: `${model === 'PUBLIC' && owner ? owner.id : ''}`,
+                })
               : {}
           }>
           <View>
@@ -89,8 +136,7 @@ export default ({
           </View>
         </Action>
         {menu && (
-          <Action
-            onPress={() => Alert.alert('Show menu post', 'Add menu post her')}>
+          <Action onPress={() => setShowOptions(!showOptions)}>
             <Icon source="dots" backColor="veryLigthGrey" size="small" />
           </Action>
         )}
@@ -99,7 +145,15 @@ export default ({
       {!!media && (
         <>
           <PostMedia>
-            <PostMediaImage source={{uri: media}} />
+            <FastImage
+              style={StyleSheet.absoluteFill}
+              source={{uri: media, priority: FastImage.priority.high}}
+              resizeMode={FastImage.resizeMode.cover}
+              onLoadStart={() => setImgLoading(true)}
+              onLoadEnd={() => setImgLoading(false)}
+            />
+            {imgLoading && <ActivityIndicator color="dark" size="small" />}
+            {/* <PostMediaImage source={{uri: media}} /> */}
           </PostMedia>
           <Separator size="small" />
         </>
@@ -138,6 +192,12 @@ export default ({
           </PostActions>
         )}
       </PostBody>
+      <Popover
+        visible={showOptions}
+        height={50 + OPTIONS_ITEMS.length * 44}
+        toggle={() => setShowOptions(false)}>
+        <MenuList menuItems={OPTIONS_ITEMS} hideChevron compress noBorder />
+      </Popover>
     </PostContainer>
   );
 };

@@ -35,13 +35,20 @@ export type RootApp = {
   GuupSettings: undefined;
   GuupUserProfile: {
     type?: keyof typeof EProfileType;
+    id?: string;
   };
   GuupCollections: undefined;
   GuupEditCollection: {
     id?: string;
   };
-  GuupCourses: undefined;
-  GuupPosts: undefined;
+  GuupCourses: {
+    type?: keyof typeof EProfileType;
+    owner?: string;
+  };
+  GuupPosts: {
+    type?: keyof typeof EProfileType;
+    owner?: string;
+  };
   GuupPostCreate: undefined;
   GuupComments: {
     post?: Post;

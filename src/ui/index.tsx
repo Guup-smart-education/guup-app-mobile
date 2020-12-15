@@ -14,5 +14,8 @@ export {default as Score} from './Score';
 export {default as Action} from './Action';
 export {default as TouchArea} from './TouchArea';
 export {default as Dot} from './Dot';
+export {default as BlockLoading} from './BlockLoading';
 export {default as GroupAvatar} from './GroupAvatar';
+export {default as GuupTabs} from './Tabs';
+export {default as GuupProgress} from './LoadingProgress';
 export {HeaderPatch, FooterPatch} from './Patchs';

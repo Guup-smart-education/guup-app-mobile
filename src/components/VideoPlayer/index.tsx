@@ -14,6 +14,7 @@ import {VideoLoading} from './_styled';
 interface IProps extends VideoProperties {
   readonly videoIsLoading?: any;
   readonly videoIsPlaying?: any;
+  readonly videoPoster?: string;
 }
 
 export default (props: IProps) => {
@@ -25,6 +26,7 @@ export default (props: IProps) => {
     onBuffer,
     videoIsLoading,
     videoIsPlaying,
+    videoPoster,
     ...args
   } = props;
   const [loading, setLoading] = useState(true);
@@ -78,13 +80,16 @@ export default (props: IProps) => {
       <VideoPlayer
         // Configs
         ref={videoRef}
-        muted={false}
         playInBackground
         paused={!readyToPlay}
         style={StyleSheet.absoluteFill}
         volume={1.0}
         rate={1.0}
         ignoreSilentSwitch="ignore"
+        pictureInPicture
+        renderToHardwareTextureAndroid
+        posterResizeMode="cover"
+        poster={videoPoster}
         // Events
         onBuffer={onVideoBuffer}
         onError={onVideoError}
@@ -92,12 +97,12 @@ export default (props: IProps) => {
         onEnd={onVideoEnd}
         onLoad={onVideoLoad}
         onProgress={onVideoIsPlaying}
-        resizeMode={videoOrientation === 'portrait' ? 'cover' : 'none'}
+        // resizeMode={videoOrientation === 'portrait' ? 'cover' : 'none'}
         {...args}
       />
       {loading && (
         <VideoLoading style={StyleSheet.absoluteFill}>
-          <ActivityIndicator color="contrast" />
+          <ActivityIndicator color="contrast" size="small" />
         </VideoLoading>
       )}
     </>

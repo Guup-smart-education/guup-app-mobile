@@ -3,6 +3,8 @@ mutation createPost(
   $description: String!
   $photoURL: String
   $linkURL: String
+  $ownerProfile: IProfile!
+  $metadata: IMetaData
 ) {
   createPost(
     post: {
@@ -11,6 +13,8 @@ mutation createPost(
       photoURL: $photoURL
       linkURL: $linkURL
     }
+    ownerProfile: $ownerProfile
+    metadata: $metadata
   ) {
     ... on CreatePost {
       createPost {

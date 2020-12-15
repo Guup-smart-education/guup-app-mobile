@@ -1,5 +1,6 @@
-import {string} from 'yup';
-
+interface Source {
+  readonly uri: string;
+}
 export interface IFileDatUpload {
   readonly uri: string;
   readonly type: string;
@@ -9,6 +10,6 @@ export interface IFileDatUpload {
 }
 
 export interface IFileImagePicker {
-  readonly source: string;
+  readonly source: Source;
   readonly fileUploadInfo: IFileDatUpload;
 }

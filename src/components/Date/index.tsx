@@ -20,6 +20,10 @@ export default ({date}: IDate) => {
       </Text>
     );
   } catch (error) {
-    return <Text>Em algum momento</Text>;
+    return (
+      <Text preset="date" color="darkGrey">
+        Em algum momento
+      </Text>
+    );
   }
 };

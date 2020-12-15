@@ -1847,6 +1847,18 @@
             "deprecationReason": null
           },
           {
+            "name": "clapped",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "commentsCount",
             "description": null,
             "args": [],
@@ -1911,7 +1923,19 @@
             "deprecationReason": null
           },
           {
-            "name": "metadata",
+            "name": "videoMetadata",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "MediaMetaData",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "coverMetadata",
             "description": null,
             "args": [],
             "type": {
@@ -2477,6 +2501,18 @@
             "deprecationReason": null
           },
           {
+            "name": "clapped",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "clapsCount",
             "description": null,
             "args": [],
@@ -2539,6 +2575,18 @@
             "type": {
               "kind": "SCALAR",
               "name": "Date",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "metadata",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "MediaMetaData",
               "ofType": null
             },
             "isDeprecated": false,
@@ -3875,7 +3923,7 @@
                 "defaultValue": null
               },
               {
-                "name": "metadata",
+                "name": "videoMetadata",
                 "description": null,
                 "type": {
                   "kind": "NON_NULL",
@@ -3883,6 +3931,34 @@
                   "ofType": {
                     "kind": "INPUT_OBJECT",
                     "name": "IMetaData",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "coverMetadata",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "IMetaData",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "ownerProfile",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "IProfile",
                     "ofType": null
                   }
                 },
@@ -3905,9 +3981,13 @@
                 "name": "course",
                 "description": null,
                 "type": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
                 },
                 "defaultValue": null
               }
@@ -4033,11 +4113,62 @@
                   }
                 },
                 "defaultValue": null
+              },
+              {
+                "name": "metadata",
+                "description": null,
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "IMetaData",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "ownerProfile",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "IProfile",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
               }
             ],
             "type": {
               "kind": "UNION",
               "name": "UCreatePost",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "removePost",
+            "description": null,
+            "args": [
+              {
+                "name": "post",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "kind": "UNION",
+              "name": "URemovePost",
               "ofType": null
             },
             "isDeprecated": false,
@@ -4231,6 +4362,16 @@
                 "name": "String",
                 "ofType": null
               }
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "ownerProfile",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "IProfile",
+              "ofType": null
             },
             "defaultValue": null
           }
@@ -5067,6 +5208,20 @@
               "ofType": {
                 "kind": "ENUM",
                 "name": "EnumLevels",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "photoURL",
+            "description": null,
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
                 "ofType": null
               }
             },
@@ -6180,6 +6335,41 @@
       },
       {
         "kind": "OBJECT",
+        "name": "RemovePost",
+        "description": null,
+        "fields": [
+          {
+            "name": "post",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "success",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "Success",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
         "name": "ClapPost",
         "description": null,
         "fields": [
@@ -6288,6 +6478,27 @@
           {
             "kind": "OBJECT",
             "name": "CreatePost",
+            "ofType": null
+          },
+          {
+            "kind": "OBJECT",
+            "name": "ErrorResponse",
+            "ofType": null
+          }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "URemovePost",
+        "description": null,
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": [
+          {
+            "kind": "OBJECT",
+            "name": "RemovePost",
             "ofType": null
           },
           {

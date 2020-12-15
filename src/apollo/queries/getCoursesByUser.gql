@@ -3,18 +3,38 @@ query getCoursesByUser($uid: String, $lastCourse: String) {
     ... on GetCoursesByOwner {
       coursesByOwner {
         id
+        path
+        owner
         title
         description
         area
-        typeContent
         difficult
+        photoURL
+        videoURL
+        thumbnailURL
+        gifURL
+        videoPlaybackID
+        videoAssetId
+        typeContent
         viewsCount
+        clapsCount
+        clapped
+        claps
         commentsCount
         comments {
           id
           owner
           description
         }
+        ownerProfile {
+          uid
+          displayName
+          thumbnailURL
+          photoURL
+          profission
+        }
+        state
+        createdAt
       }
       success {
         message

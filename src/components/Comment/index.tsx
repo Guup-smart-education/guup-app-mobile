@@ -18,7 +18,7 @@ export default ({description, ownerProfile, createdAt}: Comments) => {
         <Avatar
           size="comment"
           {...{
-            image: ownerProfile?.thumbnailURL,
+            image: ownerProfile?.photoURL || ownerProfile?.thumbnailURL,
             firstText: ownerProfile?.displayName,
             secondText: ownerProfile?.profission,
           }}

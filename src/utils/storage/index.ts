@@ -2,12 +2,12 @@ import storage, {firebase} from '@react-native-firebase/storage';
 import {Alert} from 'react-native';
 import {GetUniqueId} from './../../helper';
 import {IMetaData} from './../../graphql/types.d';
-import {Primitive} from 'react-hook-form';
 
 enum STORAGE_FOLDERS {
   'courses' = 'courses',
   'profile' = 'profile',
   'posts' = 'posts',
+  'cover' = 'cover',
 }
 
 const createBlobFileName = (type: string) => {

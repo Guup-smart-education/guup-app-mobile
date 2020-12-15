@@ -1,0 +1,31 @@
+query getUser($uid: String!) {
+  getUser(uid: $uid) {
+    ... on GetUser {
+      user {
+        uid
+        email
+        password
+        emailVerified
+        phoneNumber
+        role
+        profile {
+          displayName
+          photoURL
+          thumbnailURL
+          profission
+          presentation
+          experience
+        }
+      }
+      success {
+        message
+      }
+    }
+    ... on ErrorResponse {
+      error {
+        type
+        message
+      }
+    }
+  }
+}

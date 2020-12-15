@@ -30,6 +30,7 @@ import {
   getDowloadUrl,
 } from './../../utils/storage';
 import AuthContext from './../../contexts/auth';
+import FastImage from 'react-native-fast-image';
 
 const PostCreate: React.FC<PropsApp> = ({navigation: {goBack}}) => {
   const {user} = useContext(AuthContext);
@@ -74,8 +75,20 @@ const PostCreate: React.FC<PropsApp> = ({navigation: {goBack}}) => {
     setUploadingProgress(progress);
   };
   const sendPosts = async () => {
-    let photoURL = '';
-    if (imageUpload && user) {
+    let mediaPhoto = '';
+    if (!user || !user.profile) {
+      Alert.alert(
+        'Erro de sessão',
+        'Não encontramos o usuario, tente logar novamente',
+      );
+      return null;
+    }
+    const {
+      uid,
+      profile: {displayName, profission, photoURL, thumbnailURL},
+    } = user;
+    let fileInformation: IMetaData | null = null;
+    if (imageUpload) {
       setUploading(true);
       const metaData: any = {...R.omit(['uri'], imageUpload.fileUploadInfo)};
       const blobFile: Blob = await getUriBlobFile(
@@ -84,22 +97,28 @@ const PostCreate: React.FC<PropsApp> = ({navigation: {goBack}}) => {
       const fileName: string = await createBlobFileName(
         imageUpload.fileUploadInfo.type,
       );
-      const fileInformation: IMetaData = await sendFileToStorage(
+      fileInformation = await sendFileToStorage(
         blobFile,
         metaData,
-        `${user.uid}`,
+        `${uid}`,
         fileName,
         STORAGE_FOLDERS.posts,
         onUploading,
       );
-      photoURL = await getDowloadUrl(fileInformation.fileFullPath);
+      mediaPhoto = await getDowloadUrl(fileInformation.fileFullPath);
       setUploading(false);
-      console.log('photoURL: ', photoURL);
     }
     createPost({
       variables: {
         description: post,
-        photoURL,
+        photoURL: mediaPhoto,
+        ownerProfile: {
+          displayName,
+          photoURL,
+          thumbnailURL,
+          profission,
+        },
+        metadata: fileInformation,
       },
     });
     // End handlers
@@ -117,7 +136,11 @@ const PostCreate: React.FC<PropsApp> = ({navigation: {goBack}}) => {
             />
           </CreateHeader>
           <CreateBody>
-            <CreateImage source={imageUpload?.source}>
+            <CreateImage
+              as={FastImage}
+              source={{
+                uri: imageUpload?.source.uri,
+              }}>
               <GuupImagePicker
                 title="Adicione uma imagen"
                 titleColor="ligth"

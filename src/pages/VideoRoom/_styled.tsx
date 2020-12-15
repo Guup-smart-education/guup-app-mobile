@@ -10,7 +10,7 @@ export const VideoRoomContainer = styled.SafeAreaView`
 `;
 
 export const VideoRoomHeader = styled.View`
-  padding-left: ${({theme}) => theme.spacing[15]};
+  padding-left: ${({theme}) => theme.spacing[20]};
   padding-right: ${({theme}) => theme.spacing[20]};
 `;
 
@@ -20,6 +20,15 @@ export const VideoRoomBody = styled.View`
   padding-right: ${({theme}) => theme.spacing[25]};
   padding-bottom: ${({theme}) => theme.spacing[25]};
   justify-content: flex-end;
+`;
+
+export const VideoRoomBodyTop = styled.View`
+  flex: 0.6;
+  justify-content: flex-end;
+`;
+
+export const VideoRoomBodyBottom = styled.View`
+  flex: 0.4;
 `;
 
 export const VideoRoomFooter = styled.View`

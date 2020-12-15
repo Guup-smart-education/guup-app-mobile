@@ -15,6 +15,7 @@ query getPostsByOwner($lastPost: String, $owner: String) {
         clapsCount
         commentsCount
         createdAt
+        photoURL
       }
       success {
         message

@@ -16,7 +16,7 @@ export const MenuListItemcontainer = styled.View<{
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  height: ${({compress}) => (compress ? 44 : 64)}px;
+  height: ${({compress}) => (compress ? 44 : 54)}px;
   width: 100%;
   border-bottom-width: ${({noBorder}) => (!noBorder ? 1 : 0)}px;
   border-bottom-color: ${({theme}) => theme.colors.veryLigthGrey};

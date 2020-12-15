@@ -19,7 +19,12 @@ import {LIMIT_PER_PAGE} from './../../constants';
 import AuthContext from './../../contexts/auth';
 
 // Component
-const Posts: React.FC<PropsApp> = ({navigation: {goBack, navigate}}) => {
+const Posts: React.FC<PropsApp> = ({
+  navigation: {goBack, navigate},
+  route: {
+    params: {owner, type},
+  },
+}) => {
   const authContext = useContext(AuthContext);
   const isFocused = useIsFocused();
   const [
@@ -39,11 +44,21 @@ const Posts: React.FC<PropsApp> = ({navigation: {goBack, navigate}}) => {
     }
   }, [refetch, isFocused]);
   useEffect(() => {
-    R.isEmpty(allPosts) && getPosts();
-  }, [allPosts, getPosts]);
+    console.log('(1): firstCall: ', allPosts.length);
+    R.isEmpty(allPosts) &&
+      getPosts({
+        variables: {
+          owner,
+        },
+      });
+    return () => {
+      setAllPosts([]);
+    };
+  }, [getPosts]);
 
   useEffect(() => {
     if (fetchMore && loadMore && snapshot && !isNoMorePosts) {
+      console.log('(2): fetchMore: ', allPosts.length);
       fetchMore({
         variables: {lastPost: snapshot},
       });
@@ -51,10 +66,14 @@ const Posts: React.FC<PropsApp> = ({navigation: {goBack, navigate}}) => {
   }, [snapshot, loadMore]);
 
   useEffect(() => {
-    if (data?.getPostsByOwner?.__typename === 'GetPostsOwner') {
+    if (!data || !data.getPostsByOwner) {
+      return;
+    }
+    if (data.getPostsByOwner.__typename === 'GetPostsOwner') {
+      console.log('(3): request: ', allPosts.length);
       const postsData: Array<any> = [
         ...(data.getPostsByOwner.allPostOwner || []),
-      ];
+      ].filter((item: Post | null) => !owner || (item && item.owner === owner));
       const unionCourses = R.union(
         [...(!isRefetch ? allPosts : [])],
         [...postsData],
@@ -64,9 +83,12 @@ const Posts: React.FC<PropsApp> = ({navigation: {goBack, navigate}}) => {
       setLoadMore(false);
       setSnapshot(null);
       setIsRefetch(false);
-    } else if (data?.getPostsByOwner?.__typename === 'ErrorResponse') {
+    } else if (data.getPostsByOwner.__typename === 'ErrorResponse') {
       Alert.alert('Aconteceu um erro', `${data.getPostsByOwner.error.message}`);
     }
+    return () => {
+      setAllPosts([]);
+    };
   }, [data]);
 
   // End effects
@@ -80,7 +102,7 @@ const Posts: React.FC<PropsApp> = ({navigation: {goBack, navigate}}) => {
     ({
       item: {
         id,
-        owner,
+        owner: ownerItem,
         ownerProfile,
         description,
         commentsCount,
@@ -99,7 +121,7 @@ const Posts: React.FC<PropsApp> = ({navigation: {goBack, navigate}}) => {
           <Separator size="tiny" />
           <PostComment
             owner={{
-              id: owner || ownerProfile?.uid,
+              id: ownerItem || ownerProfile?.uid,
               ownerName: ownerProfile?.displayName,
               ownerPicture: ownerProfile?.thumbnailURL,
               ownerProsiffion: ownerProfile?.profission,
@@ -116,21 +138,29 @@ const Posts: React.FC<PropsApp> = ({navigation: {goBack, navigate}}) => {
             clapped={clapped}
             menu
             card={false}
+            onRemove={(key: string) => console.log('onRemove: ', key)}
+            model={type}
           />
         </PostItemContainer>
       );
     },
     [navigate],
   );
-  const ListEmpty = useCallback(
-    () => (
+  const ListEmpty = useCallback(() => {
+    if (type === 'OWNER') {
+      return (
+        <EmptyContainer>
+          <Text center>Você não tem publicações ainda</Text>
+          <Link onPress={() => navigate('GuupPostCreate')}>Criar um post</Link>
+        </EmptyContainer>
+      );
+    }
+    return (
       <EmptyContainer>
-        <Text center>Você não tem publicações ainda</Text>
-        <Link onPress={() => navigate('GuupPostCreate')}>Criar um post</Link>
+        <Text center>O colega ainda não tem publicacoes feitas</Text>
       </EmptyContainer>
-    ),
-    [navigate],
-  );
+    );
+  }, [navigate]);
   const ListLoadMore = useCallback(() => {
     if (loadMore) {
       return (
@@ -145,13 +175,13 @@ const Posts: React.FC<PropsApp> = ({navigation: {goBack, navigate}}) => {
   }, [loadMore]);
   // End callbacks
   // Branchs
-  if (loading) {
-    return (
-      <Container>
-        <Text>Loading</Text>
-      </Container>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <Container>
+  //       <Text>Loading</Text>
+  //     </Container>
+  //   );
+  // }
   if (error) {
     return (
       <Container>
@@ -181,6 +211,10 @@ const Posts: React.FC<PropsApp> = ({navigation: {goBack, navigate}}) => {
     setIsRefetch(true);
     refetch && refetch();
   };
+  const handleBack = () => {
+    setAllPosts([]);
+    goBack();
+  };
   // End handlers
   return (
     <Container safe light>
@@ -188,16 +222,20 @@ const Posts: React.FC<PropsApp> = ({navigation: {goBack, navigate}}) => {
         <PostsHeader>
           <GuupHeader
             hasBack
-            title="Meus posts"
-            onLeftPress={() => goBack()}
+            title="Publicações"
+            onLeftPress={() => handleBack()}
             rightRenderIntem={
-              <Action onPress={() => navigate('GuupPostCreate')}>
-                <Icon source="plus" />
-              </Action>
+              type === 'PUBLIC' ? (
+                <></>
+              ) : (
+                <Action onPress={() => navigate('GuupPostCreate')}>
+                  <Icon source="plus" />
+                </Action>
+              )
             }
           />
         </PostsHeader>
-        {allPosts.length ? (
+        {!R.isEmpty(allPosts) && !loading ? (
           <PostsBody>
             <FlatList
               style={{height: '100%'}}
@@ -216,8 +254,12 @@ const Posts: React.FC<PropsApp> = ({navigation: {goBack, navigate}}) => {
               onRefresh={handleRefresh}
             />
           </PostsBody>
-        ) : (
+        ) : R.isEmpty(allPosts) && !loading ? (
           <ListEmpty />
+        ) : (
+          <Container center>
+            <ActivityIndicator size="small" />
+          </Container>
         )}
       </PostsContainer>
     </Container>

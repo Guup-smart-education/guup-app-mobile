@@ -17,6 +17,8 @@ query getCourses($lastCourse: String) {
         typeContent
         viewsCount
         clapsCount
+        clapped
+        claps
         commentsCount
         comments {
           id
@@ -32,6 +34,7 @@ query getCourses($lastCourse: String) {
           profission
         }
         createdAt
+        state
       }
       success {
         message

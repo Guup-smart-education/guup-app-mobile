@@ -1,7 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import R from 'ramda';
 import React, {useState, useEffect, useCallback, useContext} from 'react';
-import {Alert, View, FlatList, ActivityIndicator} from 'react-native';
+import {
+  Alert,
+  View,
+  FlatList,
+  ActivityIndicator,
+  ListRenderItem,
+} from 'react-native';
 import {Container, Text, Link, Icon, Separator} from './../../ui';
 import {
   GuupHeader,
@@ -21,7 +27,12 @@ import {usePathContext, PathTypes} from './../../contexts/path';
 import {GetUniqueId} from './../../helper';
 import {LIMIT_LIST} from './../../constants';
 import {useNavigation, useIsFocused} from '@react-navigation/native';
-import {Path, Course, useGetCoursesLazyQuery} from './../../graphql/types.d';
+import {
+  Course,
+  useGetCoursesLazyQuery,
+  useClapPostMutation,
+  ClapFor,
+} from './../../graphql/types.d';
 import AuthContext from './../../contexts/auth';
 
 // Principal component
@@ -29,13 +40,14 @@ const ExplorerScreen: React.FC = () => {
   const isFocused = useIsFocused();
   const {user} = useContext(AuthContext);
   const navigation = useNavigation<AppScreenNavigationProp>();
-  const [allCourseData, setAllCoursesData] = useState<Array<Path>>([]);
+  const [allCourseData, setAllCoursesData] = useState<Array<Course>>([]);
   const [toggleModal, setToggleModal] = useState<boolean>(false);
   const [loadMore, setLoadMore] = useState<boolean>(false);
   const [isRefetch, setIsRefetch] = useState<boolean>(false);
   const [isNoMoreData, setIsNoMoreData] = useState<boolean>(false);
   const [snapshot, setSnapshot] = useState<string | null>(null);
   const {dispatch} = usePathContext();
+  const [sendClap] = useClapPostMutation();
   const [
     getAllCourses,
     {
@@ -118,42 +130,72 @@ const ExplorerScreen: React.FC = () => {
   };
 
   const onRemoveCourse = (id: string) => {
-    console.log('onRemoveCourse: ', id);
-    const i = R.findIndex(R.propEq('id', id))(allCourseData);
-    const r = R.remove(i, 1, allCourseData);
-    console.log('onRemoveCourse', r.length);
-    setAllCoursesData(r);
+    const newList = R.filter((item) => item.id !== id, allCourseData);
+    setAllCoursesData(newList);
+  };
+
+  const onClapCourse = (id: string) => {
+    console.log('onClapCourse: ', id);
+    sendClap({
+      variables: {
+        collection: ClapFor.Course,
+        post: id,
+      },
+    });
   };
   // End handlers
 
   // Callbacks
   const keyExtractor = useCallback(
-    ({id}: Path) => `explorer-path-${id || GetUniqueId()}`,
+    ({id}: Course) => `explorer-course-${id || GetUniqueId()}`,
     [],
   );
 
-  const CourseItem = useCallback(({item}: {item: Course}) => {
-    const isOwner = user?.uid === item.owner;
-    return (
-      <ExplorerCourseItem>
-        <GuupCourseCard
-          id={`${item.id}`}
-          type="PATH"
-          model={isOwner ? 'OWNER' : 'PUBLIC'}
-          imageUri={item.gifURL || item.thumbnailURL || item.photoURL || ''}
-          title={item.title || 'Guup course'}
-          description={item.description || ''}
-          owner={item.ownerProfile || {}}
-          onPress={() => {
-            dispatch({type: PathTypes.SET_CURRENT_COURSE, payload: item});
-            navigation.navigate('GuupClassVideo', {id: `${item.id}`});
-          }}
-          onRemove={onRemoveCourse}
-        />
-        <Separator size="tiny" />
-      </ExplorerCourseItem>
-    );
-  }, []);
+  const CourseItem: ListRenderItem<Course> = useCallback(
+    ({item}: {item: Course}) => {
+      const {
+        id,
+        videoAssetId,
+        owner,
+        gifURL,
+        thumbnailURL,
+        photoURL,
+        title,
+        description,
+        ownerProfile,
+        claps,
+        state,
+      } = item;
+      const isOwner = user?.uid === owner;
+      console.log('isOwner: user?.uid => ', user?.uid);
+      console.log('isOwner: owner => ', owner);
+      const clapped = claps && R.includes(`${user?.uid}`, claps);
+      return (
+        <ExplorerCourseItem>
+          <GuupCourseCard
+            id={`${id}`}
+            assetId={`${videoAssetId}`}
+            type="PATH"
+            model={isOwner ? 'OWNER' : 'PUBLIC'}
+            imageUri={photoURL || gifURL || thumbnailURL || ''}
+            title={title || 'Guup course'}
+            description={description || ''}
+            owner={ownerProfile || {}}
+            onPress={() => {
+              dispatch({type: PathTypes.SET_CURRENT_COURSE, payload: item});
+              navigation.navigate('GuupClassVideo', {id: `${id}`});
+            }}
+            onRemove={onRemoveCourse}
+            onClap={onClapCourse}
+            status={`${state}`}
+            clapped={!!clapped}
+          />
+          <Separator size="tiny" />
+        </ExplorerCourseItem>
+      );
+    },
+    [],
+  );
 
   const ListHeader = useCallback(() => <Separator size="tiny" />, []);
   const ListEmpty = useCallback(
@@ -244,6 +286,7 @@ const ExplorerScreen: React.FC = () => {
                 onEndReached={handlefetchMoreData}
                 refreshing={loadingCourses}
                 onRefresh={handleRefresh}
+                initialNumToRender={5}
               />
             )}
           </ExplorerBody>

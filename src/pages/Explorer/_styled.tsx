@@ -42,17 +42,17 @@ export const ExplorerTitle = styled.View`
 export const ExplorerBody = styled.View`
   flex: 1;
   width: 100%;
-  background-color: ${({theme}) => theme.colors.veryLigthGrey};
+  /* background-color: ${({theme}) => theme.colors.veryLigthGrey}; */
 `;
 
 export const ExplorerFooter = styled.View``;
 
 export const ExplorerCourseItem = styled.View`
   width: 100%;
-  padding-right: 15px;
-  padding-left: 15px;
-  border-radius: 8px;
-  overflow: hidden;
+  /* padding-right: 15px;
+  padding-left: 15px; */
+  /* border-radius: 8px;
+  overflow: hidden; */
 `;
 
 export const ExplorerEmptyList = styled.View`

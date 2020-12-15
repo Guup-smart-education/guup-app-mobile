@@ -29,6 +29,7 @@ interface IGuupHeader {
 }
 
 export default ({
+  leftRenderIntem,
   rightRenderIntem,
   hasBack,
   hasGuupIcon,
@@ -39,28 +40,31 @@ export default ({
 }: IGuupHeader) => {
   return (
     <HeaderContainer>
-      <HeaderLeftItem>
-        {hasBack && !hasGuupIcon && (
-          <Action onPress={() => !loading && onLeftPress && onLeftPress()}>
-            <Icon
-              source="back"
-              tintColor={isDarkTheme ? 'ligth' : 'ultraDark'}
-            />
-          </Action>
-        )}
-        {!hasBack && hasGuupIcon && (
-          <Action onPress={() => Alert.alert('Guup press', 'Guup icon press')}>
-            <View style={{marginRight: 10}}>
-              <Icon source="guup" size="small" />
-            </View>
-          </Action>
-        )}
-        {title && (
-          <Text preset="header" color={isDarkTheme ? 'ligth' : 'ultraDark'}>
-            {title}
-          </Text>
-        )}
-      </HeaderLeftItem>
+      {leftRenderIntem || (
+        <HeaderLeftItem>
+          {hasBack && !hasGuupIcon && (
+            <Action onPress={() => !loading && onLeftPress && onLeftPress()}>
+              <Icon
+                source="back"
+                tintColor={isDarkTheme ? 'ligth' : 'ultraDark'}
+              />
+            </Action>
+          )}
+          {!hasBack && hasGuupIcon && (
+            <Action
+              onPress={() => Alert.alert('Guup press', 'Guup icon press')}>
+              <View style={{marginRight: 10}}>
+                <Icon source="guup" size="small" />
+              </View>
+            </Action>
+          )}
+          {title && (
+            <Text preset="header" color={isDarkTheme ? 'ligth' : 'ultraDark'}>
+              {title}
+            </Text>
+          )}
+        </HeaderLeftItem>
+      )}
       <HeaderRightItem>{rightRenderIntem}</HeaderRightItem>
     </HeaderContainer>
   );

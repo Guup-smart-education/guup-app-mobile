@@ -2,6 +2,7 @@ import React, {useContext} from 'react';
 import {ThemeContext} from 'styled-components';
 import {Text} from './../../ui';
 import {AvatarContainer, AvatarLeft, AvatarRight, Avatarimage} from './_style';
+import FastImage from 'react-native-fast-image';
 
 export enum ESizes {
   'comment' = 'comment',
@@ -37,9 +38,11 @@ export default ({
     <AvatarContainer>
       <AvatarLeft>
         <Avatarimage
+          as={FastImage}
           size={size}
+          resizeMode={FastImage.resizeMode.cover}
           {...(image
-            ? {source: {uri: image}}
+            ? {source: {uri: image, priority: FastImage.priority.low}}
             : {source: theme.images.avatar.blank})}
         />
       </AvatarLeft>

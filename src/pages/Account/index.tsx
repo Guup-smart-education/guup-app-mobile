@@ -7,11 +7,7 @@ import {
   AccountContainer,
   AccountHeader,
   AccountBody,
-  AccountFooter,
   AccountInformation,
-  AccountUserAvatar,
-  AccountUserName,
-  AccountUserDescription,
 } from './_styled';
 import AuthContext from './../../contexts/auth';
 import {useNavigation} from '@react-navigation/native';
@@ -24,11 +20,19 @@ const GuupAccount: React.FC<AppScreenNavigationProp> = () => {
   const MENU_ACCOUNT: Array<IMenuItemProps> = [
     {
       text: 'Meus conteudos',
-      onPress: () => navigate('GuupCourses'),
+      onPress: () =>
+        navigate('GuupCourses', {
+          owner: `${user?.uid}`,
+          type: 'OWNER',
+        }),
     },
     {
       text: 'Minhas publicações',
-      onPress: () => navigate('GuupPosts'),
+      onPress: () =>
+        navigate('GuupPosts', {
+          owner: `${user?.uid}`,
+          type: 'OWNER',
+        }),
     },
     {
       text: 'Sair do guup',
@@ -70,19 +74,11 @@ const GuupAccount: React.FC<AppScreenNavigationProp> = () => {
           <AccountInformation>
             {user && (
               <Avatar
-                image={user.profile?.thumbnailURL}
+                image={user.profile?.thumbnailURL || user.profile?.photoURL}
                 firstText={user.profile?.displayName || 'Sem nome'}
                 secondText={user.profile?.profission || 'Sem profissão'}
               />
             )}
-            {/* <Avatar image={user.photoURL}/>
-            <AccountUserAvatar source={{uri: `${user?.photoURL}`}} />
-            <AccountUserName>
-              <Text preset="comment" bold>
-                {user?.displayName || 'Adicione seu role'}
-              </Text>
-              <Text color="primary">{user?.profission}</Text>
-            </AccountUserName> */}
           </AccountInformation>
           <Separator size="medium" />
           {/* <AccountUserDescription>

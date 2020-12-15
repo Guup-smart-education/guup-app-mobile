@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Alert} from 'react-native';
+import {Alert, StyleSheet} from 'react-native';
 import {Maybe} from 'graphql/jsutils/Maybe';
 import {
   CardContainer,
@@ -16,15 +16,19 @@ import Avatar from './../Avatar';
 import Popover from './../Popover';
 import MenuList from './../MenuList';
 import {IMenuItemProps} from './../../@types/menu.item';
-import {EModel, ECourse} from './../../@enum/course.model';
+import {ECourse} from './../../@enum/course.model';
+import {EModel} from './../../@enum/model.type';
 import {
   UserProfile,
   EnumContentType,
   useRemoveCourseMutation,
+  MediaState,
 } from './../../graphql/types.d';
+import FastImage from 'react-native-fast-image';
 
 export interface Props {
   readonly id: string;
+  readonly assetId: string;
   readonly type: keyof typeof ECourse;
   readonly model?: keyof typeof EModel;
   readonly contentType?: keyof typeof EnumContentType;
@@ -37,6 +41,9 @@ export interface Props {
   readonly owners?: Maybe<UserProfile>[] | undefined | null;
   readonly onPress?: () => void;
   readonly onRemove: (id: string) => void;
+  readonly onClap: (id: string) => void;
+  readonly status?: string;
+  readonly clapped?: boolean;
 }
 
 const CourseCard: React.FC<Props> = ({
@@ -46,9 +53,12 @@ const CourseCard: React.FC<Props> = ({
   onPress,
   owner,
   id,
+  onClap,
   onRemove,
+  status = MediaState.Preparing,
+  clapped = false,
 }) => {
-  // const {navigate} = useNavigation<EditCollectionScreenNavigationProp>();
+  const [isClapped, setIsClapped] = useState<boolean>(clapped);
   const OPTIONS_ITEMS: Array<IMenuItemProps> =
     model === 'OWNER'
       ? [
@@ -56,11 +66,6 @@ const CourseCard: React.FC<Props> = ({
             text: 'Remover conteudo',
             onPress: () => remove(),
             icon: 'trash',
-          },
-          {
-            text: 'Editar conteudo',
-            onPress: () => Alert.alert('Ver!!', 'Ver mais tarde'),
-            icon: 'settings',
           },
         ]
       : [
@@ -108,6 +113,10 @@ const CourseCard: React.FC<Props> = ({
   }, [error]);
   // End effects
   // Handlers
+  const clap = () => {
+    setIsClapped(!isClapped);
+    onClap(id);
+  };
   const remove = () => {
     Alert.alert('Cuidado!!', 'Voce realmente deseja eliminar este conteudo?', [
       {
@@ -122,12 +131,12 @@ const CourseCard: React.FC<Props> = ({
             .then(() => {
               console.log('removeCourse');
               onRemove(id);
+              setShowOptions(false);
             })
             .catch((e) => {
-              console.log('error');
-              Alert.alert('Aconteceu um error 🛑', `Error: ${e}`);
-            })
-            .finally(() => setShowOptions(false)),
+              console.log('error', e);
+              Alert.alert('Aconteceu um error 🛑', `Error: ${e.message}`);
+            }),
       },
       {
         text: 'Nao',
@@ -135,22 +144,43 @@ const CourseCard: React.FC<Props> = ({
     ]);
   };
   // End handlers
+  if (status === MediaState.Preparing) {
+    return null;
+    // TODO: Criar a logica de conteudo em preparacao
+    // return (
+    //   <CardPreparing>
+    //     <CardPreparingInfo>
+    //       <Text preset="paragraph" bold>
+    //         {title}
+    //       </Text>
+    //       <Text preset="comment" color="darkGrey">
+    //         Preparando conteudo...
+    //       </Text>
+    //     </CardPreparingInfo>
+    //     <CardPreparingLoading>
+    //       <ActivityIndicator color="primary" size="small" />
+    //     </CardPreparingLoading>
+    //   </CardPreparing>
+    // );
+  }
   return (
     <CardContainer>
       <Action onPress={() => onPress && onPress()}>
         <CardWrapper>
-          <CardSectionHeader
+          <FastImage
+            style={StyleSheet.absoluteFill}
+            source={{
+              priority: FastImage.priority.high,
+              uri: imageUri,
+            }}
+            resizeMode={FastImage.resizeMode.cover}
             onLoadStart={() => setImgLoading(true)}
             onLoadEnd={() => setImgLoading(false)}
-            // loadingIndicatorSource={} TODO: Add loading image
-            source={{
-              uri:
-                imageUri ||
-                'https://media4.giphy.com/media/L2xmR6N2cX94M8iBcX/giphy.gif?cid=ecf05e47e734662ee2e2c424f003c2426d4028038bc1c6ff&rid=giphy.gif',
-            }}>
+          />
+          <CardSectionHeader>
             {imgLoading || loading ? (
               <CardLoading>
-                <ActivityIndicator color="dark" />
+                <ActivityIndicator color="dark" size="small" />
               </CardLoading>
             ) : (
               <>
@@ -173,9 +203,11 @@ const CourseCard: React.FC<Props> = ({
                     secondText={owner?.profission}
                     image={owner?.thumbnailURL}
                   />
-                  <Action
-                    onPress={() => Alert.alert('Clap!!', 'Clap this course')}>
-                    <Icon source="claps" tintColor="ligth" />
+                  <Action onPress={clap}>
+                    <Icon
+                      source={isClapped ? 'clapsActive' : 'claps'}
+                      tintColor={isClapped ? 'transparent' : 'ligth'}
+                    />
                   </Action>
                 </CardOwner>
               </>

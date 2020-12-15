@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {Alert} from 'react-native';
-import {Text, Separator, Action, Icon} from './../../ui';
+import {Alert, StyleSheet} from 'react-native';
+import {Text, Action, Icon, Separator} from './../../ui';
 import {
   CourseContainer,
   CourseBody,
@@ -8,14 +8,18 @@ import {
   CourseFooter,
   CourseData,
   CourseFooterItem,
-  CourseTitle,
   CourseAction,
+  CourseImage,
+  CourseOwner,
 } from './_styled';
 import Popover from './../Popover';
 import MenuList from './../MenuList';
+import GuupDate from './../Date';
+import GuupAvatar from './../Avatar';
 import {IMenuItemProps} from './../../@types/menu.item';
 import {Course, useRemoveCourseMutation} from './../../graphql/types.d';
-import {EModel} from './../../@enum/course.model';
+import {EModel} from './../../@enum/model.type';
+import FastImage from 'react-native-fast-image';
 
 interface CourseProps extends Course {
   readonly model?: keyof typeof EModel;
@@ -23,12 +27,14 @@ interface CourseProps extends Course {
 
 export default ({
   id,
+  videoAssetId = '',
   title,
   description,
   clapsCount,
-  commentsCount,
-  viewsCount,
   model,
+  photoURL,
+  createdAt,
+  ownerProfile,
 }: CourseProps) => {
   // Menu
   const OPTIONS_ITEMS: Array<IMenuItemProps> =
@@ -38,11 +44,6 @@ export default ({
             text: 'Remover conteudo',
             onPress: () => remove(),
             icon: 'trash',
-          },
-          {
-            text: 'Editar conteudo',
-            onPress: () => Alert.alert('Ver!!', 'Ver mais tarde'),
-            icon: 'settings',
           },
         ]
       : [
@@ -99,6 +100,7 @@ export default ({
           removeCourse({
             variables: {
               course: `${id}`,
+              assetId: `${videoAssetId}`,
             },
           });
         },
@@ -112,18 +114,31 @@ export default ({
   return (
     <>
       <CourseContainer>
-        <CourseHeader>
-          <CourseTitle>
-            <Text preset="paragraph" bold>
+        <CourseImage>
+          <CourseHeader>
+            <CourseAction>
+              <Action onPress={() => setShowOptions(true)}>
+                <Icon source="dots" blur tintColor="ligth" size="small" />
+              </Action>
+            </CourseAction>
+          </CourseHeader>
+          <FastImage
+            style={StyleSheet.absoluteFill}
+            source={{uri: `${photoURL}`, priority: FastImage.priority.normal}}
+          />
+          <CourseOwner>
+            <Text preset="header" bold color="ligth" style={{width: '75%'}}>
               {title}
             </Text>
-          </CourseTitle>
-          <CourseAction>
-            <Action onPress={() => setShowOptions(true)}>
-              <Icon source="dots" blur tintColor="darkGrey" />
-            </Action>
-          </CourseAction>
-        </CourseHeader>
+            <Separator size="small" />
+            <GuupAvatar
+              image={ownerProfile?.photoURL || ownerProfile?.thumbnailURL}
+              firstText={ownerProfile?.displayName}
+              secondText={ownerProfile?.profission}
+              ligth
+            />
+          </CourseOwner>
+        </CourseImage>
         <CourseBody>
           <CourseData>
             <Text preset="comment" color="dark">
@@ -133,22 +148,19 @@ export default ({
         </CourseBody>
         <CourseFooter>
           <CourseFooterItem>
-            <Icon source="heart" />
-            <Text preset="comment" bold>
-              {viewsCount || '0'}
-            </Text>
+            {createdAt && <GuupDate date={createdAt} />}
           </CourseFooterItem>
-          <CourseFooterItem>
+          {/* <CourseFooterItem>
             <Icon source="forum" />
             <Text preset="comment" bold>
               {commentsCount || '0'}
             </Text>
-          </CourseFooterItem>
+          </CourseFooterItem> */}
           <CourseFooterItem>
-            <Icon source="claps" />
             <Text preset="comment" bold>
               {clapsCount || '0'}
             </Text>
+            <Icon source="claps" />
           </CourseFooterItem>
         </CourseFooter>
       </CourseContainer>

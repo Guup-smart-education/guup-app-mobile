@@ -88,7 +88,7 @@ const Carousel: React.FC<IProps> = ({
         contentContainerStyle={{width: `${100 * size}%`}}
         horizontal
         showsHorizontalScrollIndicator={false}
-        scrollEventThrottle={200}
+        scrollEventThrottle={50}
         decelerationRate="fast"
         onContentSizeChange={init}
         onMomentumScrollEnd={onScrollEnd}

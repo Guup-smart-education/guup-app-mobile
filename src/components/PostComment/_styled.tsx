@@ -52,7 +52,9 @@ export const PostActionItem = styled.View`
 export const PostMedia = styled.View`
   width: 100%;
   height: ${Dimensions.get('window').width * 1.2}px;
-  background-color: aliceblue;
+  background-color: ${({theme}) => theme.colors.ligthGrey};
+  justify-content: center;
+  align-items: center;
 `;
 
 export const PostMediaImage = styled.ImageBackground`

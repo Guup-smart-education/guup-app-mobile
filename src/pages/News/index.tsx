@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import R from 'ramda';
 import React, {useEffect, useState, useCallback, useContext} from 'react';
-import {FlatList, ActivityIndicator} from 'react-native';
-import {Separator, Text, Icon, Link, Container} from './../../ui';
+import {FlatList, ActivityIndicator, Alert} from 'react-native';
+import {Separator, Text, Icon, Link, Container, BlockLoading} from './../../ui';
 import {PostComment, GuupHeader} from './../../components';
 import {
   NewsContainer,
@@ -10,15 +10,18 @@ import {
   NewsBody,
   NewsContent,
   NewsActions,
-  NewsTitle,
   NewsEmpty,
   NewsPost,
 } from './_styled';
 import {useIsFocused} from '@react-navigation/native';
 import {PropsApp} from './../../@types/app.navigation';
-import {GetUniqueId, shadowStyle} from './../../helper';
+import {GetUniqueId} from './../../helper';
 import {LIMIT_PER_PAGE} from './../../constants';
-import {Post, useGetAllPostsLazyQuery} from './../../graphql/types.d';
+import {
+  Post,
+  useGetAllPostsLazyQuery,
+  useRemovePostMutation,
+} from './../../graphql/types.d';
 // import NewsLoading from './_loading';
 import Authcontext from './../../contexts/auth';
 
@@ -61,6 +64,11 @@ const NewsScreen: React.FC<PropsApp> = ({navigation: {navigate}}) => {
     {data, error, loading, fetchMore, refetch},
   ] = useGetAllPostsLazyQuery();
 
+  const [
+    removePost,
+    {data: dataRemove, error: errorRemove, loading: loadingRemove},
+  ] = useRemovePostMutation();
+
   // Effects
   useEffect(() => {
     R.isEmpty(allPostsData) && getAllPosts();
@@ -96,7 +104,32 @@ const NewsScreen: React.FC<PropsApp> = ({navigation: {navigate}}) => {
       setIsRefetch(false);
     }
   }, [data]);
-
+  useEffect(() => {
+    if (!dataRemove || !dataRemove.removePost) {
+      return;
+    } else if (dataRemove.removePost.__typename === 'RemovePost') {
+      const postRemoved = dataRemove.removePost.post;
+      const newList = R.filter(
+        (item: Post) => item.id !== postRemoved,
+        allPostsData,
+      );
+      setAllPostsData(newList);
+      Alert.alert(
+        'Publicação removida!',
+        'A sua publicação foi removida com sucesso',
+      );
+    } else if (
+      dataRemove.removePost.__typename === 'ErrorResponse' ||
+      errorRemove
+    ) {
+      Alert.alert(
+        '`Oops!! ',
+        `Aconteceu um erro: ${
+          dataRemove.removePost.error.message || errorRemove?.message
+        }`,
+      );
+    }
+  }, [dataRemove, errorRemove]);
   // End effects
 
   // Calbacks
@@ -140,6 +173,9 @@ const NewsScreen: React.FC<PropsApp> = ({navigation: {navigate}}) => {
           clapped={!!clapped}
           menu
           card={false}
+          onRemove={handRemovePost}
+          model={item.owner === authUser.uid ? 'OWNER' : 'PUBLIC'}
+          loading={loadingRemove}
         />
         {/* <Separator size="stroke" /> */}
         <Separator size="tiny" />
@@ -185,10 +221,29 @@ const NewsScreen: React.FC<PropsApp> = ({navigation: {navigate}}) => {
     setIsRefetch(true);
     refetch && refetch();
   };
+
+  const handRemovePost = async (post: string) => {
+    Alert.alert('Remover conteudo', 'Deseja remover este conteudo?', [
+      {
+        text: 'Sim',
+        onPress: () =>
+          removePost({
+            variables: {
+              post,
+            },
+          }),
+      },
+      {
+        text: 'Não',
+        style: 'destructive',
+      },
+    ]);
+  };
   // End Handlers
 
   return (
     <Container safe light>
+      {/* {loadingRemove && <BlockLoading />} */}
       <NewsContainer>
         <NewsHeader>
           <NewsActions>
@@ -212,9 +267,9 @@ const NewsScreen: React.FC<PropsApp> = ({navigation: {navigate}}) => {
         </NewsHeader>
         <NewsBody>
           <NewsContent>
-            {!allPostsData.length && !loading ? (
+            {R.isEmpty(allPostsData) && !loading ? (
               <ListEmpty />
-            ) : allPostsData.length && !loading ? (
+            ) : !R.isEmpty(allPostsData) && !loading ? (
               <FlatList
                 showsVerticalScrollIndicator={false}
                 scrollEnabled={!!allPostsData.length}

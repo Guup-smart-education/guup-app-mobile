@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import R from 'ramda';
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState, useEffect, useCallback, useContext} from 'react';
 import {
   Text,
   Link,
@@ -44,6 +44,7 @@ import {FlatList, ActivityIndicator, Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {CommentScreenNavigationProp} from './../../@types/app.navigation';
 import {LIMIT_LIST} from './../../constants';
+import AuthContext from './../../contexts/auth';
 
 // List component
 const CommentListSection: React.FC<{
@@ -118,12 +119,18 @@ const CommentListSection: React.FC<{
       setLoadMore(false);
       setSnapshot(null);
     }
+    // return () => {
+    //   setComments([]);
+    // };
   }, [data]);
 
   useEffect(() => {
     if (newComment && !R.find(R.eqProps('id', newComment.id))(comments)) {
       setComments([{...newComment}, ...comments]);
     }
+    // return () => {
+    //   setComments([]);
+    // };
   }, [newComment]);
   // End effects
   // Handlers
@@ -179,6 +186,9 @@ const CommentListSection: React.FC<{
               card={false}
               navigateComments={false}
               clapped={post.clapped}
+              onRemove={(removeId: string) =>
+                console.log('removeId: ', removeId)
+              }
             />
           </CommentsDetail>
         </CommentsDetailContainer>
@@ -266,6 +276,7 @@ const CommentsScreen: React.FC<CommentPropsApp> = ({
     params: {post},
   },
 }) => {
+  const {user} = useContext(AuthContext);
   const [createComment, showCreateComment] = useState(false);
   const [newComment, setNewComment] = useState<Comments>();
   const [countComments, setCountComments] = useState<number>(0);
@@ -284,11 +295,26 @@ const CommentsScreen: React.FC<CommentPropsApp> = ({
     showCreateComment(!createComment);
   };
   const sendComment = (comment: string) => {
+    if (!user || !user.profile) {
+      Alert.alert(
+        'Sessão expirada',
+        'A sua sessão expirou, tente logar novamente',
+      );
+      return;
+    }
+    const {
+      profile: {displayName, profission, photoURL, thumbnailURL},
+    } = user;
     commentMutation({
       variables: {
         collection: CommentFor.Post,
         post: post?.id || '',
         description: comment,
+        ownerProfile: {
+          displayName,
+          profission,
+          photoURL: photoURL || thumbnailURL,
+        },
       },
       update: (store, {data: updateData}) => {
         if (updateData?.createComment?.__typename === 'PostComment') {

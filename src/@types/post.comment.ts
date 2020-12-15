@@ -1,4 +1,4 @@
-import {UserProfile} from './../graphql/types';
+import {EModel} from './../@enum/model.type';
 
 export type Owner = {
   readonly id?: string | undefined | null;
@@ -9,6 +9,7 @@ export type Owner = {
 
 export type PostProps = {
   readonly id?: string | undefined | null;
+  readonly model?: keyof typeof EModel;
   readonly owner?: Owner | undefined | null;
   readonly postComment?: string | undefined | null;
   readonly menu?: boolean | undefined | null;
@@ -23,4 +24,6 @@ export type PostProps = {
   readonly media?: string | undefined | null;
   readonly card?: boolean | undefined | null;
   readonly createdAt?: string | undefined | null;
+  readonly onRemove: (key: string) => void;
+  readonly loading?: boolean;
 };

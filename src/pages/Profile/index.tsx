@@ -1,9 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import R from 'ramda';
-import {ThemeContext} from 'styled-components';
-import React, {useState, useContext, useEffect} from 'react';
+import React, {useState, useContext, useEffect, useCallback} from 'react';
 import {Alert, StyleSheet, View} from 'react-native';
-import {Text, Separator, Container, Link, Action, InputArea} from './../../ui';
+import {
+  Text,
+  Separator,
+  Container,
+  Link,
+  Action,
+  InputArea,
+  Icon,
+  ActivityIndicator,
+} from './../../ui';
 import {
   GuupHeader,
   Modal,
@@ -11,6 +19,7 @@ import {
   GuupActions,
   SmartForm,
   GuupImagePicker,
+  GuupMenuList,
 } from './../../components';
 import {ProfilePropsApp} from './../../@types/app.navigation';
 import {IFileImagePicker} from './../../@types/fileDataUpload';
@@ -32,8 +41,19 @@ import AuthContext from './../../contexts/auth';
 import {
   useUpdateUserProfileMutation,
   UserProfile,
+  IMetaData,
+  User,
+  useGetUserLazyQuery,
 } from './../../graphql/types.d';
 import {useForm} from 'react-hook-form';
+import {
+  STORAGE_FOLDERS,
+  getUriBlobFile,
+  createBlobFileName,
+  sendFileToStorage,
+  getDowloadUrl,
+} from './../../utils/storage';
+import FastImage from 'react-native-fast-image';
 
 enum EInputs {
   'DISPLAY_NAME' = 'DISPLAY_NAME',
@@ -50,37 +70,50 @@ interface IUpdateForm {
 }
 
 const Profile: React.FC<ProfilePropsApp> = ({
-  navigation: {goBack},
+  navigation: {goBack, navigate},
   route: {
-    params: {type},
+    params: {type, id},
   },
 }) => {
-  const theme = useContext(ThemeContext);
-  const {user, setUpdateSession} = useContext(AuthContext);
+  const [uploading, setUploading] = useState(false);
+  const {user, setUpdateSession, signOut} = useContext(AuthContext);
   const [currentInput, setCurrentInput] = useState<keyof typeof EInputs>();
   const [editModal, togleEditModal] = useState<boolean>(false);
   const [imageLoading, setImageLoading] = useState<boolean>(false);
+  const [userProfile, setUserProfile] = useState<User | null | undefined>({});
+  const [newProfile, setNewProfile] = useState<UserProfile>();
   const [imageUpload, setImageUpload] = useState<IFileImagePicker | null>();
   const [
     updateProfile,
     {data, error, loading},
   ] = useUpdateUserProfileMutation();
+  const [
+    getUserProfile,
+    {data: dataProfile, error: errorProfile, loading: loadingProfile},
+  ] = useGetUserLazyQuery();
   const {register, errors, setValue, handleSubmit} = useForm<IUpdateForm>();
   // Handlers
   const toggleModal = () => togleEditModal(!editModal);
   const updateInfo: (input: keyof typeof EInputs) => void = (input) => {
+    if (type === 'PUBLIC') {
+      return;
+    }
     toggleModal();
     setCurrentInput(input);
   };
+  const [uploadingProgress, setUploadingProgress] = useState(0);
   // Effects
   useEffect(() => {
-    if (data?.updateUserProfile?.__typename === 'UpdateProfile') {
-      toggleModal();
+    if (!data || !data.updateUserProfile) {
+      return;
+    }
+    if (data.updateUserProfile.__typename === 'UpdateProfile') {
+      newProfile && setUpdateSession(newProfile);
+      togleEditModal(false);
     } else if (data?.updateUserProfile?.__typename === 'ErrorResponse') {
       Alert.alert('Oops! 😅', `${data.updateUserProfile.error.message}`, [
         {
           text: 'Ok',
-          onPress: () => toggleModal(),
         },
       ]);
     }
@@ -90,29 +123,41 @@ const Profile: React.FC<ProfilePropsApp> = ({
       Alert.alert('Oops! 😅', `${error.message}`, [
         {
           text: 'Ok',
-          onPress: () => toggleModal(),
         },
       ]);
     }
   }, [error]);
-  // End effects
-  // End handle
-  const sendNewProfileInfo: (profileData: IUpdateForm) => void = (
-    profileData,
-  ) => {
-    const newProfile: UserProfile = {
-      ...user?.profile,
-      ...R.filter((item) => !!item, {
-        ...profileData,
-      }),
+  useEffect(() => {
+    if (user && user.profile && type === 'OWNER') {
+      setUserProfile(user);
+    } else if (type === 'PUBLIC' && id) {
+      getUserProfile({
+        variables: {
+          uid: id,
+        },
+      });
+    }
+    return () => {
+      setUserProfile(null);
     };
-    setUpdateSession(newProfile);
-    updateProfile({
-      variables: {
-        ...newProfile,
-      },
-    });
-  };
+  }, [user]);
+  useEffect(() => {
+    if (!dataProfile || !dataProfile.getUser) {
+      return;
+    }
+    if (dataProfile.getUser.__typename === 'GetUser') {
+      const response: User = dataProfile.getUser.user || {};
+      setUserProfile(response);
+    } else if (dataProfile.getUser.__typename === 'ErrorResponse') {
+      Alert.alert(
+        'Usuario não encontrado',
+        `Aconteceu um erro: ${dataProfile.getUser.error.message}`,
+      );
+    }
+    return () => {
+      setUserProfile(null);
+    };
+  }, [dataProfile]);
   useEffect(() => {
     [
       'displayName',
@@ -122,50 +167,133 @@ const Profile: React.FC<ProfilePropsApp> = ({
       'presentation',
     ].forEach((name) => register({name, options: {required: false}}));
   }, [register]);
-  if (!user || !user.profile) {
+  // End effects
+  // End handle
+  const onUploading = (progress: number) => {
+    setUploadingProgress(progress);
+  };
+  const sendNewProfileInfo: (profileData: IUpdateForm) => void = (
+    profileData,
+  ) => {
+    const profile: UserProfile = {
+      ...userProfile?.profile,
+      ...R.filter((item) => !!item, {
+        ...profileData,
+      }),
+    };
+    setNewProfile(profile);
+    updateProfile({
+      variables: {
+        ...newProfile,
+      },
+    });
+  };
+  const sendProfilePhoto = async () => {
+    if (!imageUpload || !userProfile) {
+      Alert.alert('Oops!!m', 'Seleciona uma imagem para teu perfil');
+      return;
+    }
+    setUploading(true);
+    const metaData: any = {...R.omit(['uri'], imageUpload.fileUploadInfo)};
+    const blobFile: Blob = await getUriBlobFile(imageUpload.fileUploadInfo.uri);
+    const fileName: string = await createBlobFileName(
+      imageUpload.fileUploadInfo.type,
+    );
+    const fileInformation: IMetaData = await sendFileToStorage(
+      blobFile,
+      metaData,
+      `${userProfile.uid}`,
+      fileName,
+      STORAGE_FOLDERS.posts,
+      onUploading,
+    );
+    const photoURL = await getDowloadUrl(fileInformation.fileFullPath);
+    setUploading(false);
+    setUpdateSession({
+      ...userProfile.profile,
+      photoURL,
+      thumbnailURL: photoURL,
+    });
+    updateProfile({
+      variables: {
+        ...userProfile.profile,
+        photoURL,
+        thumbnailURL: photoURL,
+      },
+    });
+  };
+  // End handlers
+  // Callbacks
+  const ProfileHeaderCallBack = useCallback(
+    () => (
+      <ProfileHeader>
+        <GuupHeader
+          leftRenderIntem={
+            <Action onPress={() => goBack()}>
+              <Icon burble back source="back" size="small" tintColor="dark" />
+            </Action>
+          }
+          rightRenderIntem={
+            type === 'PUBLIC' ? (
+              <></>
+            ) : (
+              <GuupImagePicker
+                title="Foto de perfil"
+                titleColor="ligth"
+                onLoading={(imageLoad) => setImageLoading(imageLoad)}
+                onResponse={(imageDate: IFileImagePicker) => {
+                  console.log('imageDate: ', imageDate);
+                  setImageUpload(imageDate);
+                }}
+              />
+            )
+          }
+        />
+      </ProfileHeader>
+    ),
+    [],
+  );
+  // End Callbacks
+  if (loadingProfile) {
     return (
-      <Container safe center>
-        <Text>Não há informações para mostrar</Text>
-        <Link onPress={() => Alert.alert('Sair', 'Sair para logar novamente')}>
-          Faça login novamente
-        </Link>
+      <Container safe light>
+        <ProfileHeaderCallBack />
+        <Container center>
+          <ActivityIndicator size="small" />
+          <Separator size="tiny" />
+          <Text bold>Carregando{'\n'}Informações</Text>
+        </Container>
+      </Container>
+    );
+  }
+  if (!userProfile || !userProfile.profile || errorProfile) {
+    return (
+      <Container safe light>
+        <ProfileHeaderCallBack />
+        <Container center>
+          <Text>Não há informações para mostrar</Text>
+          <Link onPress={() => signOut()}>Fazer login</Link>
+        </Container>
       </Container>
     );
   }
   const {
     profile: {displayName, photoURL, profission, presentation},
-  } = user;
+  } = userProfile;
   return (
     <Container safe light>
       <ProfileContainer>
         <ProfileTop>
-          <ProfileHeader>
-            <GuupHeader
-              hasBack
-              isDarkTheme
-              onLeftPress={() => goBack()}
-              rightRenderIntem={
-                <GuupImagePicker
-                  title="Foto de perfil"
-                  titleColor="ligth"
-                  onLoading={(imageLoad) => setImageLoading(imageLoad)}
-                  onResponse={(imageDate: IFileImagePicker) => {
-                    console.log('imageDate: ', imageDate);
-                    setImageUpload(imageDate);
-                  }}
-                />
-              }
-            />
-          </ProfileHeader>
+          <ProfileHeaderCallBack />
           <ProfileuserData>
-            <Action onPress={() => updateInfo('DISPLAY_NAME')}>
-              <Text preset="title" color="ligth">
-                {displayName}
-              </Text>
-            </Action>
+            <Text preset="title" color="ligth">
+              {displayName}
+            </Text>
+            {/* <Action onPress={() => updateInfo('DISPLAY_NAME')}>
+            </Action> */}
             <Separator size="lili" />
             <Action onPress={() => updateInfo('PROFISSION')}>
-              <Text preset="comment" color="ligth" underline>
+              <Text preset="comment" color="ligth" underline={type === 'OWNER'}>
                 {profission || 'Adicionar uma profissão'}
               </Text>
             </Action>
@@ -192,32 +320,60 @@ const Profile: React.FC<ProfilePropsApp> = ({
           </ProfileBody>
           {imageUpload && (
             <View
-              style={(StyleSheet.hairlineWidth, {bottom: 0, width: '100%'})}>
+              style={
+                (StyleSheet.hairlineWidth,
+                {bottom: 0, width: '100%', paddingLeft: 25, paddingRight: 25})
+              }>
               <GuupActions
                 noPadding
-                loading={loading || imageLoading}
+                loading={loading || imageLoading || uploading}
                 leftAction={{
                   text: 'Cancelar',
                   onPress: () => setImageUpload(null),
                 }}
                 rightAction={{
                   text: 'Enviar foto',
-                  onPress: () =>
-                    Alert.alert('Enviar foto', 'Sim enviar outra foto'),
-                  // onPress: handleSubmit(sendNewProfileInfo),
+                  onPress: sendProfilePhoto,
                 }}
               />
             </View>
+          )}
+          {type === 'PUBLIC' && (
+            <GuupMenuList
+              padding
+              menuItems={[
+                {
+                  text: 'Publicacoes',
+                  // icon: 'news',
+                  onPress: () =>
+                    navigate('GuupPosts', {
+                      owner: `${userProfile.uid}`,
+                      type: user?.uid === id ? 'OWNER' : 'PUBLIC',
+                    }),
+                },
+                {
+                  text: 'Conteudos',
+                  // icon: 'video',
+                  onPress: () =>
+                    navigate('GuupCourses', {
+                      owner: `${userProfile.uid}`,
+                      type: user?.uid === id ? 'OWNER' : 'PUBLIC',
+                    }),
+                },
+              ]}
+            />
           )}
         </ProfileBottom>
       </ProfileContainer>
       {
         <ProfileUserPicture
+          as={FastImage}
           style={StyleSheet.absoluteFill}
-          blurRadius={imageLoading ? 40 : 0}
-          defaultSource={theme.images.bgc.empty.spaces}
-          loadingIndicatorSource={theme.images.bgc.empty.spaces}
-          source={imageUpload ? imageUpload.source : {uri: `${photoURL}`}}
+          source={{
+            uri: `${imageUpload ? imageUpload.source.uri : photoURL}`,
+            priority: FastImage.priority.low,
+          }}
+          resizeMode={FastImage.resizeMode.cover}
         />
       }
       <Modal

@@ -5,9 +5,11 @@ export const HeaderContainer = styled.View`
   padding-top: ${({theme}) => theme.spacing[10]};
   padding-bottom: ${({theme}) => theme.spacing[10]};
   justify-content: space-between;
+  align-items: center;
   flex-direction: row;
   position: relative;
   height: 54px;
+  z-index: 2;
 `;
 
 export const HeaderLeftItem = styled.View`

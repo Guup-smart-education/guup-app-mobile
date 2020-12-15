@@ -248,12 +248,14 @@ export type Course = {
   viewsCount?: Maybe<Scalars['Float']>;
   clapsCount?: Maybe<Scalars['Float']>;
   claps?: Maybe<Array<Maybe<Scalars['String']>>>;
+  clapped?: Maybe<Scalars['Boolean']>;
   commentsCount?: Maybe<Scalars['Float']>;
   comments?: Maybe<Array<Maybe<Comments>>>;
   ownerProfile?: Maybe<UserProfile>;
   createdAt?: Maybe<Scalars['Date']>;
   state?: Maybe<MediaState>;
-  metadata?: Maybe<MediaMetaData>;
+  videoMetadata?: Maybe<MediaMetaData>;
+  coverMetadata?: Maybe<MediaMetaData>;
 };
 
 export type User = {
@@ -318,11 +320,13 @@ export type Post = {
   linkURL?: Maybe<Scalars['String']>;
   viewsCount?: Maybe<Scalars['Float']>;
   commentsCount?: Maybe<Scalars['Float']>;
+  clapped?: Maybe<Scalars['Boolean']>;
   clapsCount?: Maybe<Scalars['Float']>;
   claps?: Maybe<Array<Maybe<Scalars['String']>>>;
   comments?: Maybe<Array<Maybe<Comments>>>;
   ownerProfile?: Maybe<UserProfile>;
   createdAt?: Maybe<Scalars['Date']>;
+  metadata?: Maybe<MediaMetaData>;
 };
 
 export type Review = {
@@ -530,6 +534,7 @@ export type Mutation = {
   createPath?: Maybe<UCreatePath>;
   updateStatusPath?: Maybe<UUpdatedStatusPath>;
   createPost?: Maybe<UCreatePost>;
+  removePost?: Maybe<URemovePost>;
   clapPost?: Maybe<UClapPost>;
   createReview?: Maybe<UPostReview>;
   createUser?: Maybe<UCreateUser>;
@@ -577,12 +582,14 @@ export type MutationUpdateCourseArgs = {
 
 export type MutationCreateCourseArgs = {
   course: ICourse;
-  metadata: IMetaData;
+  videoMetadata: IMetaData;
+  coverMetadata: IMetaData;
+  ownerProfile: IProfile;
 };
 
 
 export type MutationRemoveCourseArgs = {
-  course?: Maybe<Scalars['String']>;
+  course: Scalars['String'];
 };
 
 
@@ -601,6 +608,13 @@ export type MutationUpdateStatusPathArgs = {
 
 export type MutationCreatePostArgs = {
   post: InputPost;
+  metadata?: Maybe<IMetaData>;
+  ownerProfile: IProfile;
+};
+
+
+export type MutationRemovePostArgs = {
+  post: Scalars['String'];
 };
 
 
@@ -633,6 +647,7 @@ export enum CommentFor {
 export type IPostComment = {
   post: Scalars['String'];
   description: Scalars['String'];
+  ownerProfile?: Maybe<IProfile>;
 };
 
 export type GetComment = {
@@ -742,6 +757,7 @@ export type ICourse = {
   area: EnumAreas;
   typeContent: EnumContentType;
   difficult: EnumLevels;
+  photoURL: Scalars['String'];
 };
 
 export type IMetaData = {
@@ -905,6 +921,12 @@ export type CreatePost = {
   success?: Maybe<Success>;
 };
 
+export type RemovePost = {
+  __typename?: 'RemovePost';
+  post?: Maybe<Scalars['String']>;
+  success?: Maybe<Success>;
+};
+
 export type ClapPost = {
   __typename?: 'ClapPost';
   post?: Maybe<Scalars['String']>;
@@ -918,6 +940,8 @@ export type UGetPostsByOwner = GetPostsOwner | ErrorResponse;
 export type UGetPost = GetPost | ErrorResponse;
 
 export type UCreatePost = CreatePost | ErrorResponse;
+
+export type URemovePost = RemovePost | ErrorResponse;
 
 export type UClapPost = ClapPost | ErrorResponse;
 
@@ -1037,6 +1061,7 @@ export type CreateCommentMutationVariables = Exact<{
   collection: CommentFor;
   post: Scalars['String'];
   description: Scalars['String'];
+  ownerProfile: IProfile;
 }>;
 
 
@@ -1066,7 +1091,9 @@ export type CreateCommentMutation = (
 
 export type CreateCourseMutationVariables = Exact<{
   course: ICourse;
-  metadata: IMetaData;
+  videoMetadata: IMetaData;
+  coverMetadata: IMetaData;
+  ownerProfile: IProfile;
 }>;
 
 
@@ -1118,6 +1145,8 @@ export type CreatePostMutationVariables = Exact<{
   description: Scalars['String'];
   photoURL?: Maybe<Scalars['String']>;
   linkURL?: Maybe<Scalars['String']>;
+  ownerProfile: IProfile;
+  metadata?: Maybe<IMetaData>;
 }>;
 
 
@@ -1164,6 +1193,29 @@ export type RemoveCourseMutation = (
     & { error: (
       { __typename?: 'Error' }
       & Pick<Error, '[object Object]'>
+    ) }
+  )> }
+);
+
+export type RemovePostMutationVariables = Exact<{
+  post: Scalars['String'];
+}>;
+
+
+export type RemovePostMutation = (
+  { __typename?: 'Mutation' }
+  & { removePost?: Maybe<(
+    { __typename?: 'RemovePost' }
+    & Pick<RemovePost, '[object Object]'>
+    & { success?: Maybe<(
+      { __typename?: 'Success' }
+      & Pick<Success, '[object Object]' | '[object Object]'>
+    )> }
+  ) | (
+    { __typename?: 'ErrorResponse' }
+    & { error: (
+      { __typename?: 'Error' }
+      & Pick<Error, '[object Object]' | '[object Object]'>
     ) }
   )> }
 );
@@ -1297,7 +1349,7 @@ export type GetCoursesQuery = (
     { __typename?: 'GetCourses' }
     & { courses?: Maybe<Array<Maybe<(
       { __typename?: 'Course' }
-      & Pick<Course, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
+      & Pick<Course, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
       & { comments?: Maybe<Array<Maybe<(
         { __typename?: 'Comments' }
         & Pick<Comments, '[object Object]' | '[object Object]' | '[object Object]'>
@@ -1361,7 +1413,7 @@ export type GetAllPostsQuery = (
     { __typename?: 'GetPosts' }
     & { allPost?: Maybe<Array<Maybe<(
       { __typename?: 'Post' }
-      & Pick<Post, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
+      & Pick<Post, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
       & { ownerProfile?: Maybe<(
         { __typename?: 'UserProfile' }
         & Pick<UserProfile, '[object Object]' | '[object Object]' | '[object Object]'>
@@ -1394,7 +1446,7 @@ export type GetCommentByPostQuery = (
       & Pick<Comments, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
       & { ownerProfile?: Maybe<(
         { __typename?: 'UserProfile' }
-        & Pick<UserProfile, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
+        & Pick<UserProfile, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
       )> }
     )>>> }
   ) | (
@@ -1451,11 +1503,14 @@ export type GetCoursesByUserQuery = (
     { __typename?: 'GetCoursesByOwner' }
     & { coursesByOwner?: Maybe<Array<Maybe<(
       { __typename?: 'Course' }
-      & Pick<Course, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
+      & Pick<Course, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
       & { comments?: Maybe<Array<Maybe<(
         { __typename?: 'Comments' }
         & Pick<Comments, '[object Object]' | '[object Object]' | '[object Object]'>
-      )>>> }
+      )>>>, ownerProfile?: Maybe<(
+        { __typename?: 'UserProfile' }
+        & Pick<UserProfile, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
+      )> }
     )>>>, success?: Maybe<(
       { __typename?: 'Success' }
       & Pick<Success, '[object Object]'>
@@ -1514,12 +1569,41 @@ export type GetPostsByOwnerQuery = (
     { __typename?: 'GetPostsOwner' }
     & { allPostOwner?: Maybe<Array<Maybe<(
       { __typename?: 'Post' }
-      & Pick<Post, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
+      & Pick<Post, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
       & { ownerProfile?: Maybe<(
         { __typename?: 'UserProfile' }
         & Pick<UserProfile, '[object Object]' | '[object Object]' | '[object Object]'>
       )> }
     )>>>, success?: Maybe<(
+      { __typename?: 'Success' }
+      & Pick<Success, '[object Object]'>
+    )> }
+  ) | (
+    { __typename?: 'ErrorResponse' }
+    & { error: (
+      { __typename?: 'Error' }
+      & Pick<Error, '[object Object]' | '[object Object]'>
+    ) }
+  )> }
+);
+
+export type GetUserQueryVariables = Exact<{
+  uid: Scalars['String'];
+}>;
+
+
+export type GetUserQuery = (
+  { __typename?: 'Query' }
+  & { getUser?: Maybe<(
+    { __typename?: 'GetUser' }
+    & { user?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
+      & { profile?: Maybe<(
+        { __typename?: 'UserProfile' }
+        & Pick<UserProfile, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
+      )> }
+    )>, success?: Maybe<(
       { __typename?: 'Success' }
       & Pick<Success, '[object Object]'>
     )> }
@@ -1579,10 +1663,10 @@ export type ClapPostMutationHookResult = ReturnType<typeof useClapPostMutation>;
 export type ClapPostMutationResult = Apollo.MutationResult<ClapPostMutation>;
 export type ClapPostMutationOptions = Apollo.BaseMutationOptions<ClapPostMutation, ClapPostMutationVariables>;
 export const CreateCommentDocument = gql`
-    mutation createComment($collection: CommentFor!, $post: String!, $description: String!) {
+    mutation createComment($collection: CommentFor!, $post: String!, $description: String!, $ownerProfile: IProfile!) {
   createComment(
     collection: $collection
-    comment: {post: $post, description: $description}
+    comment: {post: $post, description: $description, ownerProfile: $ownerProfile}
   ) {
     ... on PostComment {
       comment {
@@ -1627,6 +1711,7 @@ export type CreateCommentMutationFn = Apollo.MutationFunction<CreateCommentMutat
  *      collection: // value for 'collection'
  *      post: // value for 'post'
  *      description: // value for 'description'
+ *      ownerProfile: // value for 'ownerProfile'
  *   },
  * });
  */
@@ -1637,8 +1722,13 @@ export type CreateCommentMutationHookResult = ReturnType<typeof useCreateComment
 export type CreateCommentMutationResult = Apollo.MutationResult<CreateCommentMutation>;
 export type CreateCommentMutationOptions = Apollo.BaseMutationOptions<CreateCommentMutation, CreateCommentMutationVariables>;
 export const CreateCourseDocument = gql`
-    mutation createCourse($course: ICourse!, $metadata: IMetaData!) {
-  createCourse(course: $course, metadata: $metadata) {
+    mutation createCourse($course: ICourse!, $videoMetadata: IMetaData!, $coverMetadata: IMetaData!, $ownerProfile: IProfile!) {
+  createCourse(
+    course: $course
+    videoMetadata: $videoMetadata
+    coverMetadata: $coverMetadata
+    ownerProfile: $ownerProfile
+  ) {
     ... on CreateCourse {
       createCourse
       success {
@@ -1669,7 +1759,9 @@ export type CreateCourseMutationFn = Apollo.MutationFunction<CreateCourseMutatio
  * const [createCourseMutation, { data, loading, error }] = useCreateCourseMutation({
  *   variables: {
  *      course: // value for 'course'
- *      metadata: // value for 'metadata'
+ *      videoMetadata: // value for 'videoMetadata'
+ *      coverMetadata: // value for 'coverMetadata'
+ *      ownerProfile: // value for 'ownerProfile'
  *   },
  * });
  */
@@ -1725,9 +1817,11 @@ export type CreatePathMutationHookResult = ReturnType<typeof useCreatePathMutati
 export type CreatePathMutationResult = Apollo.MutationResult<CreatePathMutation>;
 export type CreatePathMutationOptions = Apollo.BaseMutationOptions<CreatePathMutation, CreatePathMutationVariables>;
 export const CreatePostDocument = gql`
-    mutation createPost($title: String, $description: String!, $photoURL: String, $linkURL: String) {
+    mutation createPost($title: String, $description: String!, $photoURL: String, $linkURL: String, $ownerProfile: IProfile!, $metadata: IMetaData) {
   createPost(
     post: {title: $title, description: $description, photoURL: $photoURL, linkURL: $linkURL}
+    ownerProfile: $ownerProfile
+    metadata: $metadata
   ) {
     ... on CreatePost {
       createPost {
@@ -1779,6 +1873,8 @@ export type CreatePostMutationFn = Apollo.MutationFunction<CreatePostMutation, C
  *      description: // value for 'description'
  *      photoURL: // value for 'photoURL'
  *      linkURL: // value for 'linkURL'
+ *      ownerProfile: // value for 'ownerProfile'
+ *      metadata: // value for 'metadata'
  *   },
  * });
  */
@@ -1830,6 +1926,50 @@ export function useRemoveCourseMutation(baseOptions?: Apollo.MutationHookOptions
 export type RemoveCourseMutationHookResult = ReturnType<typeof useRemoveCourseMutation>;
 export type RemoveCourseMutationResult = Apollo.MutationResult<RemoveCourseMutation>;
 export type RemoveCourseMutationOptions = Apollo.BaseMutationOptions<RemoveCourseMutation, RemoveCourseMutationVariables>;
+export const RemovePostDocument = gql`
+    mutation removePost($post: String!) {
+  removePost(post: $post) {
+    ... on RemovePost {
+      post
+      success {
+        type
+        message
+      }
+    }
+    ... on ErrorResponse {
+      error {
+        type
+        message
+      }
+    }
+  }
+}
+    `;
+export type RemovePostMutationFn = Apollo.MutationFunction<RemovePostMutation, RemovePostMutationVariables>;
+
+/**
+ * __useRemovePostMutation__
+ *
+ * To run a mutation, you first call `useRemovePostMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemovePostMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removePostMutation, { data, loading, error }] = useRemovePostMutation({
+ *   variables: {
+ *      post: // value for 'post'
+ *   },
+ * });
+ */
+export function useRemovePostMutation(baseOptions?: Apollo.MutationHookOptions<RemovePostMutation, RemovePostMutationVariables>) {
+        return Apollo.useMutation<RemovePostMutation, RemovePostMutationVariables>(RemovePostDocument, baseOptions);
+      }
+export type RemovePostMutationHookResult = ReturnType<typeof useRemovePostMutation>;
+export type RemovePostMutationResult = Apollo.MutationResult<RemovePostMutation>;
+export type RemovePostMutationOptions = Apollo.BaseMutationOptions<RemovePostMutation, RemovePostMutationVariables>;
 export const AuthRequestAccessDocument = gql`
     mutation authRequestAccess($email: String!) {
   authRequestAccess(email: $email) {
@@ -2074,6 +2214,8 @@ export const GetCoursesDocument = gql`
         typeContent
         viewsCount
         clapsCount
+        clapped
+        claps
         commentsCount
         comments {
           id
@@ -2089,6 +2231,7 @@ export const GetCoursesDocument = gql`
           profission
         }
         createdAt
+        state
       }
       success {
         message
@@ -2214,6 +2357,7 @@ export const GetAllPostsDocument = gql`
         description
         claps
         clapsCount
+        clapped
         commentsCount
         createdAt
       }
@@ -2269,6 +2413,7 @@ export const GetCommentByPostDocument = gql`
           uid
           displayName
           thumbnailURL
+          photoURL
           profission
         }
         createdAt
@@ -2385,18 +2530,38 @@ export const GetCoursesByUserDocument = gql`
     ... on GetCoursesByOwner {
       coursesByOwner {
         id
+        path
+        owner
         title
         description
         area
-        typeContent
         difficult
+        photoURL
+        videoURL
+        thumbnailURL
+        gifURL
+        videoPlaybackID
+        videoAssetId
+        typeContent
         viewsCount
+        clapsCount
+        clapped
+        claps
         commentsCount
         comments {
           id
           owner
           description
         }
+        ownerProfile {
+          uid
+          displayName
+          thumbnailURL
+          photoURL
+          profission
+        }
+        state
+        createdAt
       }
       success {
         message
@@ -2524,6 +2689,7 @@ export const GetPostsByOwnerDocument = gql`
         clapsCount
         commentsCount
         createdAt
+        photoURL
       }
       success {
         message
@@ -2565,3 +2731,62 @@ export function useGetPostsByOwnerLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type GetPostsByOwnerQueryHookResult = ReturnType<typeof useGetPostsByOwnerQuery>;
 export type GetPostsByOwnerLazyQueryHookResult = ReturnType<typeof useGetPostsByOwnerLazyQuery>;
 export type GetPostsByOwnerQueryResult = Apollo.QueryResult<GetPostsByOwnerQuery, GetPostsByOwnerQueryVariables>;
+export const GetUserDocument = gql`
+    query getUser($uid: String!) {
+  getUser(uid: $uid) {
+    ... on GetUser {
+      user {
+        uid
+        email
+        password
+        emailVerified
+        phoneNumber
+        role
+        profile {
+          displayName
+          photoURL
+          thumbnailURL
+          profission
+          presentation
+          experience
+        }
+      }
+      success {
+        message
+      }
+    }
+    ... on ErrorResponse {
+      error {
+        type
+        message
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetUserQuery__
+ *
+ * To run a query within a React component, call `useGetUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserQuery({
+ *   variables: {
+ *      uid: // value for 'uid'
+ *   },
+ * });
+ */
+export function useGetUserQuery(baseOptions: Apollo.QueryHookOptions<GetUserQuery, GetUserQueryVariables>) {
+        return Apollo.useQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, baseOptions);
+      }
+export function useGetUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserQuery, GetUserQueryVariables>) {
+          return Apollo.useLazyQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, baseOptions);
+        }
+export type GetUserQueryHookResult = ReturnType<typeof useGetUserQuery>;
+export type GetUserLazyQueryHookResult = ReturnType<typeof useGetUserLazyQuery>;
+export type GetUserQueryResult = Apollo.QueryResult<GetUserQuery, GetUserQueryVariables>;

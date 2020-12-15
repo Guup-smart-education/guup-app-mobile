@@ -2,10 +2,15 @@ mutation createComment(
   $collection: CommentFor!
   $post: String!
   $description: String!
+  $ownerProfile: IProfile!
 ) {
   createComment(
     collection: $collection
-    comment: {post: $post, description: $description}
+    comment: {
+      post: $post
+      description: $description
+      ownerProfile: $ownerProfile
+    }
   ) {
     ... on PostComment {
       comment {

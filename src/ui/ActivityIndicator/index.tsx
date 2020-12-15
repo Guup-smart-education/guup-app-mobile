@@ -1,10 +1,11 @@
 import React from 'react';
+import {ActivityIndicatorProps} from 'react-native';
 import {ActivityIndicator} from './_styled';
 import {EColors} from './../../@enum/color.enum';
-interface IActivityIndicator {
+interface IActivityIndicator extends ActivityIndicatorProps {
   readonly color?: keyof typeof EColors;
 }
 
-export default ({color = 'primary'}: IActivityIndicator) => {
-  return <ActivityIndicator {...{color}} />;
+export default ({color = 'primary', size = 'large'}: IActivityIndicator) => {
+  return <ActivityIndicator {...{color, size}} />;
 };

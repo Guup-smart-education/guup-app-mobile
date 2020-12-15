@@ -1,0 +1,17 @@
+mutation removePost($post: String!) {
+  removePost(post: $post) {
+    ... on RemovePost {
+      post
+      success {
+        type
+        message
+      }
+    }
+    ... on ErrorResponse {
+      error {
+        type
+        message
+      }
+    }
+  }
+}

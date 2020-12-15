@@ -45,6 +45,7 @@ const HomeRouter: React.FC = () => {
         activeTintColor: theme.colors.primary,
         inactiveTintColor: theme.colors.dark,
         showLabel: false,
+        keyboardHidesTabBar: true,
         style: {
           // backgroundColor: 'transparent',
           backgroundColor: `${theme.colors.ligth}`,
@@ -117,6 +118,7 @@ const AppRouter: React.FC = () => {
         component={GuupUserProfile}
         initialParams={{
           type: 'PUBLIC',
+          id: '',
         }}
       />
       <AppStack.Screen
@@ -138,11 +140,19 @@ const AppRouter: React.FC = () => {
         options={{header: () => null}}
         name="GuupCourses"
         component={GuupCourses}
+        initialParams={{
+          owner: '',
+          type: 'PUBLIC',
+        }}
       />
       <AppStack.Screen
         options={{header: () => null}}
         name="GuupPosts"
         component={GuupPosts}
+        initialParams={{
+          owner: '',
+          type: 'PUBLIC',
+        }}
       />
       <AppStack.Screen
         options={{header: () => null}}

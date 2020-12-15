@@ -20,3 +20,12 @@ export const Icon = styled.Image.attrs(({source, theme}: IStyledProps) => ({
       theme.iconsSizes[size || 'normal']
     };`};
 `;
+
+export const BurbleIcon = styled.View`
+  border-radius: 23px;
+  height: 45px;
+  width: 45px;
+  justify-content: center;
+  align-items: center;
+  padding-right: 5px;
+`;

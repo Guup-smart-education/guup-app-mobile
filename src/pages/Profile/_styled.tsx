@@ -1,7 +1,7 @@
 import {Dimensions} from 'react-native';
 import styled from 'styled-components/native';
 
-export const ProfileContainer = styled.SafeAreaView`
+export const ProfileContainer = styled.View`
   /* background-color: ${({theme}) => theme.colors.contrast}; */
   width: 100%;
   flex: 1;
@@ -18,8 +18,6 @@ export const ProfileTop = styled.View`
 export const ProfileBottom = styled.View`
   flex: 1;
   width: 100%;
-  padding-left: ${({theme}) => theme.spacing.padding[25]};
-  padding-right: ${({theme}) => theme.spacing.padding[25]};
 `;
 
 export const ProfileHeader = styled.View`
@@ -47,6 +45,8 @@ export const ProfileContent = styled.View`
 export const ProfileBody = styled.View`
   width: 100%;
   flex: 1;
+  padding-left: ${({theme}) => theme.spacing.padding[25]};
+  padding-right: ${({theme}) => theme.spacing.padding[25]};
 `;
 
 export const ProfileEditContainer = styled.View`
