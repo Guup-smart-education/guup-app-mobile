@@ -22,7 +22,7 @@
       {
         "kind": "ENUM",
         "name": "MediaState",
-        "description": null,
+        "description": "# Enums",
         "fields": null,
         "inputFields": null,
         "interfaces": null,
@@ -367,7 +367,7 @@
       {
         "kind": "OBJECT",
         "name": "Success",
-        "description": null,
+        "description": "# Common",
         "fields": [
           {
             "name": "type",
@@ -474,7 +474,7 @@
       {
         "kind": "OBJECT",
         "name": "Content",
-        "description": null,
+        "description": "# Content",
         "fields": [
           {
             "name": "id",
@@ -1006,7 +1006,7 @@
       {
         "kind": "OBJECT",
         "name": "Comments",
-        "description": null,
+        "description": "# Comments",
         "fields": [
           {
             "name": "id",
@@ -1077,7 +1077,7 @@
       {
         "kind": "OBJECT",
         "name": "CourseModuleContent",
-        "description": null,
+        "description": "# Courses",
         "fields": [
           {
             "name": "id",
@@ -2402,7 +2402,7 @@
       {
         "kind": "OBJECT",
         "name": "Post",
-        "description": null,
+        "description": "# Post",
         "fields": [
           {
             "name": "id",
@@ -2601,7 +2601,7 @@
       {
         "kind": "OBJECT",
         "name": "Review",
-        "description": null,
+        "description": "# Review",
         "fields": [
           {
             "name": "id",
@@ -2684,7 +2684,7 @@
       {
         "kind": "OBJECT",
         "name": "Company",
-        "description": null,
+        "description": "# Company",
         "fields": [
           {
             "name": "id",
@@ -2755,7 +2755,7 @@
       {
         "kind": "OBJECT",
         "name": "JWT",
-        "description": null,
+        "description": "# Json web Token",
         "fields": [
           {
             "name": "token",
@@ -2788,337 +2788,9 @@
         "possibleTypes": null
       },
       {
-        "kind": "ENUM",
-        "name": "TypesSignInUsers",
-        "description": null,
-        "fields": null,
-        "inputFields": null,
-        "interfaces": null,
-        "enumValues": [
-          {
-            "name": "NEW_USERS",
-            "description": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "OLD_USERS",
-            "description": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "possibleTypes": null
-      },
-      {
-        "kind": "INPUT_OBJECT",
-        "name": "InputUser",
-        "description": null,
-        "fields": null,
-        "inputFields": [
-          {
-            "name": "email",
-            "description": null,
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "defaultValue": null
-          },
-          {
-            "name": "password",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
-          {
-            "name": "phoneNumber",
-            "description": null,
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "defaultValue": null
-          },
-          {
-            "name": "displayName",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
-          {
-            "name": "role",
-            "description": null,
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "ENUM",
-                "name": "EnumUserRole",
-                "ofType": null
-              }
-            },
-            "defaultValue": null
-          }
-        ],
-        "interfaces": null,
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "OBJECT",
-        "name": "RequestAccess",
-        "description": null,
-        "fields": [
-          {
-            "name": "expireIn",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "success",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "OBJECT",
-              "name": "Success",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "inputFields": null,
-        "interfaces": [],
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "OBJECT",
-        "name": "SigInSuccess",
-        "description": null,
-        "fields": [
-          {
-            "name": "access",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "OBJECT",
-              "name": "JWT",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "user",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "OBJECT",
-              "name": "User",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "success",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "OBJECT",
-              "name": "Success",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "inputFields": null,
-        "interfaces": [],
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "OBJECT",
-        "name": "SuccessAccess",
-        "description": null,
-        "fields": [
-          {
-            "name": "type",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "ENUM",
-              "name": "TypesSignInUsers",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "message",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "inputFields": null,
-        "interfaces": [],
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "OBJECT",
-        "name": "SignUpSuccess",
-        "description": null,
-        "fields": [
-          {
-            "name": "access",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "OBJECT",
-              "name": "JWT",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "user",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "OBJECT",
-              "name": "User",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "success",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "OBJECT",
-              "name": "Success",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "inputFields": null,
-        "interfaces": [],
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "UNION",
-        "name": "URequestAccess",
-        "description": null,
-        "fields": null,
-        "inputFields": null,
-        "interfaces": null,
-        "enumValues": null,
-        "possibleTypes": [
-          {
-            "kind": "OBJECT",
-            "name": "RequestAccess",
-            "ofType": null
-          },
-          {
-            "kind": "OBJECT",
-            "name": "SigInSuccess",
-            "ofType": null
-          },
-          {
-            "kind": "OBJECT",
-            "name": "ErrorResponse",
-            "ofType": null
-          }
-        ]
-      },
-      {
-        "kind": "UNION",
-        "name": "USignInResult",
-        "description": null,
-        "fields": null,
-        "inputFields": null,
-        "interfaces": null,
-        "enumValues": null,
-        "possibleTypes": [
-          {
-            "kind": "OBJECT",
-            "name": "SigInSuccess",
-            "ofType": null
-          },
-          {
-            "kind": "OBJECT",
-            "name": "ErrorResponse",
-            "ofType": null
-          }
-        ]
-      },
-      {
-        "kind": "UNION",
-        "name": "USignUp",
-        "description": null,
-        "fields": null,
-        "inputFields": null,
-        "interfaces": null,
-        "enumValues": null,
-        "possibleTypes": [
-          {
-            "kind": "OBJECT",
-            "name": "SignUpSuccess",
-            "ofType": null
-          },
-          {
-            "kind": "OBJECT",
-            "name": "ErrorResponse",
-            "ofType": null
-          }
-        ]
-      },
-      {
         "kind": "OBJECT",
         "name": "Query",
-        "description": null,
+        "description": "# Queries",
         "fields": [
           {
             "name": "authQuery",
@@ -3665,9 +3337,337 @@
         "possibleTypes": null
       },
       {
+        "kind": "ENUM",
+        "name": "TypesSignInUsers",
+        "description": "# Enum",
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": [
+          {
+            "name": "NEW_USERS",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "OLD_USERS",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "InputUser",
+        "description": "# inputs",
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "email",
+            "description": null,
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "password",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "phoneNumber",
+            "description": null,
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "displayName",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "role",
+            "description": null,
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "ENUM",
+                "name": "EnumUserRole",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RequestAccess",
+        "description": "# Types",
+        "fields": [
+          {
+            "name": "expireIn",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "success",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "Success",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "SigInSuccess",
+        "description": null,
+        "fields": [
+          {
+            "name": "access",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "JWT",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "user",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "User",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "success",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "Success",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "SuccessAccess",
+        "description": null,
+        "fields": [
+          {
+            "name": "type",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "ENUM",
+              "name": "TypesSignInUsers",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "message",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "SignUpSuccess",
+        "description": null,
+        "fields": [
+          {
+            "name": "access",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "JWT",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "user",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "User",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "success",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "Success",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "UNION",
+        "name": "URequestAccess",
+        "description": "# Union",
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": [
+          {
+            "kind": "OBJECT",
+            "name": "RequestAccess",
+            "ofType": null
+          },
+          {
+            "kind": "OBJECT",
+            "name": "SigInSuccess",
+            "ofType": null
+          },
+          {
+            "kind": "OBJECT",
+            "name": "ErrorResponse",
+            "ofType": null
+          }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "USignInResult",
+        "description": null,
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": [
+          {
+            "kind": "OBJECT",
+            "name": "SigInSuccess",
+            "ofType": null
+          },
+          {
+            "kind": "OBJECT",
+            "name": "ErrorResponse",
+            "ofType": null
+          }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "USignUp",
+        "description": null,
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": [
+          {
+            "kind": "OBJECT",
+            "name": "SignUpSuccess",
+            "ofType": null
+          },
+          {
+            "kind": "OBJECT",
+            "name": "ErrorResponse",
+            "ofType": null
+          }
+        ]
+      },
+      {
         "kind": "OBJECT",
         "name": "Mutation",
-        "description": null,
+        "description": "# Mutations",
         "fields": [
           {
             "name": "authRequestAccess",
@@ -4311,7 +4311,7 @@
       {
         "kind": "ENUM",
         "name": "CommentFor",
-        "description": null,
+        "description": "# Enum",
         "fields": null,
         "inputFields": null,
         "interfaces": null,
@@ -4334,7 +4334,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "IPostComment",
-        "description": null,
+        "description": "# Inputs",
         "fields": null,
         "inputFields": [
           {
@@ -4383,7 +4383,7 @@
       {
         "kind": "OBJECT",
         "name": "GetComment",
-        "description": null,
+        "description": "# Types",
         "fields": [
           {
             "name": "comments",
@@ -4457,7 +4457,7 @@
       {
         "kind": "UNION",
         "name": "UGetComment",
-        "description": null,
+        "description": "# Union",
         "fields": null,
         "inputFields": null,
         "interfaces": null,
@@ -4499,7 +4499,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "ICompany",
-        "description": null,
+        "description": "# Inputs",
         "fields": null,
         "inputFields": [
           {
@@ -4552,7 +4552,7 @@
       {
         "kind": "OBJECT",
         "name": "GetCompanies",
-        "description": null,
+        "description": "# Types",
         "fields": [
           {
             "name": "companies",
@@ -4661,7 +4661,7 @@
       {
         "kind": "UNION",
         "name": "UGetCompanies",
-        "description": null,
+        "description": "# Unions",
         "fields": null,
         "inputFields": null,
         "interfaces": null,
@@ -4724,7 +4724,7 @@
       {
         "kind": "OBJECT",
         "name": "GetContents",
-        "description": null,
+        "description": "# Types",
         "fields": [
           {
             "name": "allContents",
@@ -4798,7 +4798,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "IContent",
-        "description": null,
+        "description": "# Inputs",
         "fields": null,
         "inputFields": [
           {
@@ -4881,7 +4881,7 @@
       {
         "kind": "UNION",
         "name": "UGetAllContents",
-        "description": null,
+        "description": "# Unions",
         "fields": null,
         "inputFields": null,
         "interfaces": null,
@@ -5288,7 +5288,7 @@
       {
         "kind": "OBJECT",
         "name": "GetCourses",
-        "description": null,
+        "description": "# Types",
         "fields": [
           {
             "name": "courses",
@@ -5692,7 +5692,7 @@
       {
         "kind": "ENUM",
         "name": "PathType",
-        "description": null,
+        "description": "# Enum",
         "fields": null,
         "inputFields": null,
         "interfaces": null,
@@ -5773,7 +5773,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "InputPath",
-        "description": null,
+        "description": "# Inputs",
         "fields": null,
         "inputFields": [
           {
@@ -5822,7 +5822,7 @@
       {
         "kind": "OBJECT",
         "name": "GetPaths",
-        "description": null,
+        "description": "# Types",
         "fields": [
           {
             "name": "allPaths",
@@ -6005,7 +6005,7 @@
       {
         "kind": "UNION",
         "name": "UGetAllPaths",
-        "description": null,
+        "description": "# Unions",
         "fields": null,
         "inputFields": null,
         "interfaces": null,
@@ -6110,7 +6110,7 @@
       {
         "kind": "ENUM",
         "name": "ClapFor",
-        "description": null,
+        "description": "# Enum",
         "fields": null,
         "inputFields": null,
         "interfaces": null,
@@ -6133,7 +6133,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "InputPost",
-        "description": null,
+        "description": "# Inputs",
         "fields": null,
         "inputFields": [
           {
@@ -6188,7 +6188,7 @@
       {
         "kind": "OBJECT",
         "name": "GetPosts",
-        "description": null,
+        "description": "# Types",
         "fields": [
           {
             "name": "allPost",
@@ -6406,7 +6406,7 @@
       {
         "kind": "UNION",
         "name": "UGetAllPost",
-        "description": null,
+        "description": "# Unions",
         "fields": null,
         "inputFields": null,
         "interfaces": null,
@@ -6532,7 +6532,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "IPostReview",
-        "description": null,
+        "description": "# Inputs",
         "fields": null,
         "inputFields": [
           {
@@ -6581,7 +6581,7 @@
       {
         "kind": "OBJECT",
         "name": "GetReview",
-        "description": null,
+        "description": "# Types",
         "fields": [
           {
             "name": "reviews",
@@ -6655,7 +6655,7 @@
       {
         "kind": "UNION",
         "name": "UGetReview",
-        "description": null,
+        "description": "# Union",
         "fields": null,
         "inputFields": null,
         "interfaces": null,
@@ -6697,7 +6697,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "IProfile",
-        "description": null,
+        "description": "# Inputs",
         "fields": null,
         "inputFields": [
           {
@@ -6917,7 +6917,7 @@
       {
         "kind": "OBJECT",
         "name": "GetUser",
-        "description": null,
+        "description": "# Types",
         "fields": [
           {
             "name": "user",
@@ -7061,7 +7061,7 @@
       {
         "kind": "UNION",
         "name": "UGetUser",
-        "description": null,
+        "description": "# Union",
         "fields": null,
         "inputFields": null,
         "interfaces": null,
@@ -7141,39 +7141,6 @@
             "ofType": null
           }
         ]
-      },
-      {
-        "kind": "ENUM",
-        "name": "CacheControlScope",
-        "description": null,
-        "fields": null,
-        "inputFields": null,
-        "interfaces": null,
-        "enumValues": [
-          {
-            "name": "PUBLIC",
-            "description": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "PRIVATE",
-            "description": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "possibleTypes": null
-      },
-      {
-        "kind": "SCALAR",
-        "name": "Upload",
-        "description": "The `Upload` scalar type represents a file upload.",
-        "fields": null,
-        "inputFields": null,
-        "interfaces": null,
-        "enumValues": null,
-        "possibleTypes": null
       },
       {
         "kind": "OBJECT",

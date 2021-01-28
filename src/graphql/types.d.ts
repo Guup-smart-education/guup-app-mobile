@@ -10,11 +10,10 @@ export type Scalars = {
   Int: number;
   Float: number;
   Date: any;
-  /** The `Upload` scalar type represents a file upload. */
-  Upload: any;
 };
 
 
+/** # Enums */
 export enum MediaState {
   Preparing = 'preparing',
   Ready = 'ready',
@@ -83,6 +82,7 @@ export enum CollectionType {
   Course = 'COURSE'
 }
 
+/** # Common */
 export type Success = {
   __typename?: 'Success';
   type?: Maybe<Scalars['String']>;
@@ -100,6 +100,7 @@ export type ErrorResponse = {
   error: Error;
 };
 
+/** # Content */
 export type Content = {
   __typename?: 'Content';
   id?: Maybe<Scalars['String']>;
@@ -146,6 +147,7 @@ export type Path = {
   createdAt?: Maybe<Scalars['Date']>;
 };
 
+/** # Comments */
 export type Comments = {
   __typename?: 'Comments';
   id?: Maybe<Scalars['String']>;
@@ -155,6 +157,7 @@ export type Comments = {
   createdAt?: Maybe<Scalars['Date']>;
 };
 
+/** # Courses */
 export type CourseModuleContent = {
   __typename?: 'CourseModuleContent';
   id?: Maybe<Scalars['String']>;
@@ -310,6 +313,7 @@ export type UserPublic = {
   role?: Maybe<EnumUserRole>;
 };
 
+/** # Post */
 export type Post = {
   __typename?: 'Post';
   id?: Maybe<Scalars['String']>;
@@ -329,6 +333,7 @@ export type Post = {
   metadata?: Maybe<MediaMetaData>;
 };
 
+/** # Review */
 export type Review = {
   __typename?: 'Review';
   id?: Maybe<Scalars['String']>;
@@ -339,6 +344,7 @@ export type Review = {
   ownerProfile?: Maybe<UserProfile>;
 };
 
+/** # Company */
 export type Company = {
   __typename?: 'Company';
   id?: Maybe<Scalars['String']>;
@@ -348,57 +354,14 @@ export type Company = {
   members?: Maybe<Scalars['Int']>;
 };
 
+/** # Json web Token */
 export type Jwt = {
   __typename?: 'JWT';
   token?: Maybe<Scalars['String']>;
   refreshToken?: Maybe<Scalars['String']>;
 };
 
-export enum TypesSignInUsers {
-  NewUsers = 'NEW_USERS',
-  OldUsers = 'OLD_USERS'
-}
-
-export type InputUser = {
-  email: Scalars['String'];
-  password?: Maybe<Scalars['String']>;
-  phoneNumber: Scalars['String'];
-  displayName?: Maybe<Scalars['String']>;
-  role: EnumUserRole;
-};
-
-export type RequestAccess = {
-  __typename?: 'RequestAccess';
-  expireIn?: Maybe<Scalars['Int']>;
-  success?: Maybe<Success>;
-};
-
-export type SigInSuccess = {
-  __typename?: 'SigInSuccess';
-  access?: Maybe<Jwt>;
-  user?: Maybe<User>;
-  success?: Maybe<Success>;
-};
-
-export type SuccessAccess = {
-  __typename?: 'SuccessAccess';
-  type?: Maybe<TypesSignInUsers>;
-  message?: Maybe<Scalars['String']>;
-};
-
-export type SignUpSuccess = {
-  __typename?: 'SignUpSuccess';
-  access?: Maybe<Jwt>;
-  user?: Maybe<User>;
-  success?: Maybe<Success>;
-};
-
-export type URequestAccess = RequestAccess | SigInSuccess | ErrorResponse;
-
-export type USignInResult = SigInSuccess | ErrorResponse;
-
-export type USignUp = SignUpSuccess | ErrorResponse;
-
+/** # Queries */
 export type Query = {
   __typename?: 'Query';
   authQuery?: Maybe<User>;
@@ -425,101 +388,169 @@ export type Query = {
 };
 
 
+/** # Queries */
 export type QueryAuthQueryArgs = {
   id?: Maybe<Scalars['Int']>;
 };
 
 
+/** # Queries */
 export type QueryGetCommentByCourseArgs = {
   course: Scalars['String'];
 };
 
 
+/** # Queries */
 export type QueryGetCommentByPostArgs = {
   post: Scalars['String'];
   lastComment?: Maybe<Scalars['String']>;
 };
 
 
+/** # Queries */
 export type QueryGetAllCompanyByIdArgs = {
   id?: Maybe<Scalars['String']>;
 };
 
 
+/** # Queries */
 export type QueryGetAllContentArgs = {
   lastContent?: Maybe<Scalars['String']>;
 };
 
 
+/** # Queries */
 export type QueryGetCoursesArgs = {
   lastCourse?: Maybe<Scalars['String']>;
 };
 
 
+/** # Queries */
 export type QueryGetCoursesByUserArgs = {
   uid?: Maybe<Scalars['String']>;
   lastCourse?: Maybe<Scalars['String']>;
 };
 
 
+/** # Queries */
 export type QueryGetCoursesByPathArgs = {
   path: Scalars['String'];
   lastCourse?: Maybe<Scalars['String']>;
 };
 
 
+/** # Queries */
 export type QueryGetCourseByIdArgs = {
   id?: Maybe<Scalars['String']>;
 };
 
 
+/** # Queries */
 export type QueryGetAllPathsArgs = {
   lastPath?: Maybe<Scalars['String']>;
 };
 
 
+/** # Queries */
 export type QueryGetPathsByOwnerArgs = {
   lastPath?: Maybe<Scalars['String']>;
   owner?: Maybe<Scalars['String']>;
 };
 
 
+/** # Queries */
 export type QueryGetPathByIdArgs = {
   id: Scalars['String'];
 };
 
 
+/** # Queries */
 export type QueryGetAllPostsArgs = {
   lastPost?: Maybe<Scalars['String']>;
 };
 
 
+/** # Queries */
 export type QueryGetPostsByOwnerArgs = {
   lastPost?: Maybe<Scalars['String']>;
   owner?: Maybe<Scalars['String']>;
 };
 
 
+/** # Queries */
 export type QueryGetPostsByIdArgs = {
   id: Scalars['String'];
 };
 
 
+/** # Queries */
 export type QueryGetReviewByCourseArgs = {
   course: Scalars['String'];
 };
 
 
+/** # Queries */
 export type QueryGetReviewByOwnerArgs = {
   course: Scalars['String'];
   owner?: Maybe<Scalars['String']>;
 };
 
 
+/** # Queries */
 export type QueryGetUserArgs = {
   uid?: Maybe<Scalars['String']>;
 };
 
+/** # Enum */
+export enum TypesSignInUsers {
+  NewUsers = 'NEW_USERS',
+  OldUsers = 'OLD_USERS'
+}
+
+/** # inputs */
+export type InputUser = {
+  email: Scalars['String'];
+  password?: Maybe<Scalars['String']>;
+  phoneNumber: Scalars['String'];
+  displayName?: Maybe<Scalars['String']>;
+  role: EnumUserRole;
+};
+
+/** # Types */
+export type RequestAccess = {
+  __typename?: 'RequestAccess';
+  expireIn?: Maybe<Scalars['Int']>;
+  success?: Maybe<Success>;
+};
+
+export type SigInSuccess = {
+  __typename?: 'SigInSuccess';
+  access?: Maybe<Jwt>;
+  user?: Maybe<User>;
+  success?: Maybe<Success>;
+};
+
+export type SuccessAccess = {
+  __typename?: 'SuccessAccess';
+  type?: Maybe<TypesSignInUsers>;
+  message?: Maybe<Scalars['String']>;
+};
+
+export type SignUpSuccess = {
+  __typename?: 'SignUpSuccess';
+  access?: Maybe<Jwt>;
+  user?: Maybe<User>;
+  success?: Maybe<Success>;
+};
+
+/** # Union */
+export type URequestAccess = RequestAccess | SigInSuccess | ErrorResponse;
+
+export type USignInResult = SigInSuccess | ErrorResponse;
+
+export type USignUp = SignUpSuccess | ErrorResponse;
+
+/** # Mutations */
 export type Mutation = {
   __typename?: 'Mutation';
   authRequestAccess: URequestAccess;
@@ -542,44 +573,52 @@ export type Mutation = {
 };
 
 
+/** # Mutations */
 export type MutationAuthRequestAccessArgs = {
   email: Scalars['String'];
 };
 
 
+/** # Mutations */
 export type MutationAuthSignInArgs = {
   email: Scalars['String'];
   tokenAccess: Scalars['Int'];
 };
 
 
+/** # Mutations */
 export type MutationAuthSignUpArgs = {
   user?: Maybe<InputUser>;
 };
 
 
+/** # Mutations */
 export type MutationCreateCommentArgs = {
   collection: CommentFor;
   comment: IPostComment;
 };
 
 
+/** # Mutations */
 export type MutationCreateCompanyArgs = {
   company: ICompany;
 };
 
 
+/** # Mutations */
 export type MutationCreateContentArgs = {
   collection: CollectionType;
   content: IContent;
 };
 
 
+/** # Mutations */
 export type MutationUpdateCourseArgs = {
   course?: Maybe<ICourse>;
 };
 
 
+/** # Mutations */
 export type MutationCreateCourseArgs = {
   course: ICourse;
   videoMetadata: IMetaData;
@@ -588,11 +627,13 @@ export type MutationCreateCourseArgs = {
 };
 
 
+/** # Mutations */
 export type MutationRemoveCourseArgs = {
   course: Scalars['String'];
 };
 
 
+/** # Mutations */
 export type MutationCreatePathArgs = {
   path: InputPath;
   access: PathAccess;
@@ -600,12 +641,14 @@ export type MutationCreatePathArgs = {
 };
 
 
+/** # Mutations */
 export type MutationUpdateStatusPathArgs = {
   path: Scalars['String'];
   status: PathStatus;
 };
 
 
+/** # Mutations */
 export type MutationCreatePostArgs = {
   post: InputPost;
   metadata?: Maybe<IMetaData>;
@@ -613,43 +656,51 @@ export type MutationCreatePostArgs = {
 };
 
 
+/** # Mutations */
 export type MutationRemovePostArgs = {
   post: Scalars['String'];
 };
 
 
+/** # Mutations */
 export type MutationClapPostArgs = {
   collection: ClapFor;
   post: Scalars['String'];
 };
 
 
+/** # Mutations */
 export type MutationCreateReviewArgs = {
   collection: CommentFor;
   review: IPostReview;
 };
 
 
+/** # Mutations */
 export type MutationCreateUserArgs = {
   user?: Maybe<InputUser>;
 };
 
 
+/** # Mutations */
 export type MutationUpdateUserProfileArgs = {
   user?: Maybe<InputUserProfile>;
 };
 
+/** # Enum */
 export enum CommentFor {
   Course = 'COURSE',
   Post = 'POST'
 }
 
+/** # Inputs */
 export type IPostComment = {
   post: Scalars['String'];
   description: Scalars['String'];
   ownerProfile?: Maybe<IProfile>;
 };
 
+/** # Types */
 export type GetComment = {
   __typename?: 'GetComment';
   comments?: Maybe<Array<Maybe<Comments>>>;
@@ -662,16 +713,19 @@ export type PostComment = {
   success?: Maybe<Success>;
 };
 
+/** # Union */
 export type UGetComment = GetComment | ErrorResponse;
 
 export type UPostComment = PostComment | ErrorResponse;
 
+/** # Inputs */
 export type ICompany = {
   name: Scalars['String'];
   domain: Scalars['String'];
   indetifier: Scalars['String'];
 };
 
+/** # Types */
 export type GetCompanies = {
   __typename?: 'GetCompanies';
   companies?: Maybe<Array<Maybe<Company>>>;
@@ -690,12 +744,14 @@ export type PostCompany = {
   success?: Maybe<Success>;
 };
 
+/** # Unions */
 export type UGetCompanies = GetCompanies | ErrorResponse;
 
 export type UGetCompany = GetCompany | ErrorResponse;
 
 export type UCreateCompany = PostCompany | ErrorResponse;
 
+/** # Types */
 export type GetContents = {
   __typename?: 'GetContents';
   allContents?: Maybe<Array<Maybe<Content>>>;
@@ -708,6 +764,7 @@ export type CreateContent = {
   success?: Maybe<Success>;
 };
 
+/** # Inputs */
 export type IContent = {
   title: Scalars['String'];
   description: Scalars['String'];
@@ -717,6 +774,7 @@ export type IContent = {
   typeContent?: Maybe<EnumContentType>;
 };
 
+/** # Unions */
 export type UGetAllContents = GetContents | ErrorResponse;
 
 export type UCreateContent = CreateContent | ErrorResponse;
@@ -766,6 +824,7 @@ export type IMetaData = {
   fileContentType: Scalars['String'];
 };
 
+/** # Types */
 export type GetCourses = {
   __typename?: 'GetCourses';
   courses?: Maybe<Array<Maybe<Course>>>;
@@ -822,6 +881,7 @@ export type UGetCoursesByPath = GetCoursesByPath | ErrorResponse;
 
 export type UGetCourseDetail = GetCourseDetail | ErrorResponse;
 
+/** # Enum */
 export enum PathType {
   Path = 'PATH',
   Course = 'COURSE'
@@ -839,12 +899,14 @@ export enum PathStatus {
   Paused = 'PAUSED'
 }
 
+/** # Inputs */
 export type InputPath = {
   title: Scalars['String'];
   description: Scalars['String'];
   photoURL?: Maybe<Scalars['String']>;
 };
 
+/** # Types */
 export type GetPaths = {
   __typename?: 'GetPaths';
   allPaths?: Maybe<Array<Maybe<Path>>>;
@@ -875,6 +937,7 @@ export type UpdateStatusPath = {
   success?: Maybe<Success>;
 };
 
+/** # Unions */
 export type UGetAllPaths = GetPaths | ErrorResponse;
 
 export type UGetPathsOwner = GetPathsOwner | ErrorResponse;
@@ -885,11 +948,13 @@ export type UCreatePath = CreatePath | ErrorResponse;
 
 export type UUpdatedStatusPath = UpdateStatusPath | ErrorResponse;
 
+/** # Enum */
 export enum ClapFor {
   Course = 'COURSE',
   Post = 'POST'
 }
 
+/** # Inputs */
 export type InputPost = {
   title?: Maybe<Scalars['String']>;
   description: Scalars['String'];
@@ -897,6 +962,7 @@ export type InputPost = {
   linkURL?: Maybe<Scalars['String']>;
 };
 
+/** # Types */
 export type GetPosts = {
   __typename?: 'GetPosts';
   allPost?: Maybe<Array<Maybe<Post>>>;
@@ -933,6 +999,7 @@ export type ClapPost = {
   success?: Maybe<Success>;
 };
 
+/** # Unions */
 export type UGetAllPost = GetPosts | ErrorResponse;
 
 export type UGetPostsByOwner = GetPostsOwner | ErrorResponse;
@@ -945,12 +1012,14 @@ export type URemovePost = RemovePost | ErrorResponse;
 
 export type UClapPost = ClapPost | ErrorResponse;
 
+/** # Inputs */
 export type IPostReview = {
   post: Scalars['String'];
   commentary?: Maybe<Scalars['String']>;
   starts: Scalars['Int'];
 };
 
+/** # Types */
 export type GetReview = {
   __typename?: 'GetReview';
   reviews?: Maybe<Array<Maybe<Review>>>;
@@ -963,10 +1032,12 @@ export type PostReview = {
   success?: Maybe<Success>;
 };
 
+/** # Union */
 export type UGetReview = GetReview | ErrorResponse;
 
 export type UPostReview = PostReview | ErrorResponse;
 
+/** # Inputs */
 export type IProfile = {
   displayName?: Maybe<Scalars['String']>;
   photoURL?: Maybe<Scalars['String']>;
@@ -995,6 +1066,7 @@ export type InputUserProfile = {
   achievements?: Maybe<Array<Maybe<IAchievements>>>;
 };
 
+/** # Types */
 export type GetUser = {
   __typename?: 'GetUser';
   user?: Maybe<User>;
@@ -1019,6 +1091,7 @@ export type UpdateProfile = {
   success?: Maybe<Success>;
 };
 
+/** # Union */
 export type UGetUser = GetUser | ErrorResponse;
 
 export type UGetAllUsers = GetAllUsers | ErrorResponse;
@@ -1026,12 +1099,6 @@ export type UGetAllUsers = GetAllUsers | ErrorResponse;
 export type UUpdateProfile = UpdateProfile | ErrorResponse;
 
 export type UCreateUser = CreateUser | ErrorResponse;
-
-export enum CacheControlScope {
-  Public = 'PUBLIC',
-  Private = 'PRIVATE'
-}
-
 
 export type ClapPostMutationVariables = Exact<{
   collection: ClapFor;
