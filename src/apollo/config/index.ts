@@ -12,9 +12,7 @@ import Config from 'react-native-config';
 
 // Http Link connection
 const httpLink = createHttpLink({
-  // uri: `${Config.API_URL}`,
-  uri: 'http://192.168.15.78:4000/graphql', // IP: Home
-  // uri: 'http://172.16.204.98:4000/graphql', // IP: Qsaude
+  uri: `${Config.API_URL}`,
   credentials: 'same-origin',
 });
 

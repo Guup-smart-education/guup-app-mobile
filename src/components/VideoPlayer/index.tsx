@@ -57,7 +57,6 @@ export default (props: IProps) => {
   };
   const onVideoIsPlaying = (data: OnProgressData) => {
     if (!videoProgressData && data.currentTime > 0.5) {
-      console.log('onVideoIsPlaying: ', data);
       setVideoProgressData(data);
     }
   };

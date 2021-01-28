@@ -6,7 +6,8 @@ import {
   createStackNavigator,
   StackNavigationOptions,
 } from '@react-navigation/stack';
-import {CustomImage} from './../ui';
+import {CustomImage, Text} from './../ui';
+import Config from 'react-native-config';
 
 const AuthStack = createStackNavigator<RootAuth>();
 
@@ -38,7 +39,11 @@ const AuthRouter: React.FC = () => {
           return {
             headerLeft: () => <CustomImage module="logo" name="large" />,
             headerTitle: () => null,
-            headerRight: () => null,
+            headerRight: () => (
+              <Text preset="tiny" color="primary" bold>
+                {Config.ENV_NAME}
+              </Text>
+            ),
           };
         }}
         name="AuthOnboarding"

@@ -127,7 +127,6 @@ const VideoRoom: React.FC<PropsApp> = ({navigation: {goBack}}) => {
       </VideoRoomContainer>
       {videoUrl && (
         <VideoPlayer
-          // resizeMode="cover"
           source={{
             uri: videoUrl,
           }}
@@ -135,7 +134,6 @@ const VideoRoom: React.FC<PropsApp> = ({navigation: {goBack}}) => {
           videoPoster={`${currentCourse?.photoURL}`}
           onEnd={onEnd}
           repeat
-          muted
           {...{paused}}
         />
       )}

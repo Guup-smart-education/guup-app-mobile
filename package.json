@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "start": "react-native start",
-    "start:ios": "react-native run-ios --simulator='iPhone 12'",
-    "start:ios:iphone8": "react-native run-ios --simulator='iPhone 8'",
+    "start:ios:dev": "yarn cache clean && react-native run-ios --configuration Debug --simulator='iPhone 12'",
+    "start:ios:stg": "yarn cache clean && react-native run-ios --configuration Staging --simulator='iPhone 12'",
+    "start:ios:prod": "yarn cache clean && react-native run-ios --configuration Release --simulator='iPhone 12'",
     "start:android": "react-native run-android",
     "install:clean": "rm -rf node_modules && yarn",
     "test": "jest",
